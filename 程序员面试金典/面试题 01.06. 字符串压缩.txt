@@ -1,0 +1,21 @@
+class Solution {
+public:
+    string compressString(string s) {
+        int N=s.size(),cnt=1;
+        string res="";
+        char x=s[0];
+        for(int i=1;i<N;i++)
+        {
+            if(x==s[i])
+                cnt++;
+            else
+            {
+                res+=x+to_string(cnt);//字符串拼接时 使用+=符号可以节省临时空间
+                x=s[i];
+                cnt=1;
+            }                        
+        }
+        res+=x+to_string(cnt);
+        return res.size()>N?s:res;
+    }
+};

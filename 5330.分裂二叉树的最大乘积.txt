@@ -1,0 +1,29 @@
+//用unorderer_map加快查找速度
+//深度优先搜索遍历树进行求和
+//乘积的最大必然靠近sum/2
+class Solution {
+public:
+    unordered_map<TreeNode*,int> H;
+    void dfs(TreeNode* root)
+    {
+        if(!root)
+            return;
+        dfs(root->left);
+        dfs(root->right);
+        H[root]=H[root->left]+H[root->right]+root->val;
+    }
+    int maxProduct(TreeNode* root) {
+        H.clear();
+        dfs(root);
+        int sum=H[root];
+        int temp=0;
+        for(auto [a,b]:H)
+        {
+            if(b<=sum/2)
+                temp=max(temp,b);
+            if(sum-b<=sum/2)
+                temp=max(sum-b,temp);
+        }
+        return (int64_t)temp*(sum-temp)%1000000007;
+    }
+};

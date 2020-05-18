@@ -1,0 +1,26 @@
+class Solution {
+public:
+    vector<int> luckyNumbers (vector<vector<int>>& matrix) {
+        int N=matrix.size();
+        int M=matrix[0].size();
+        vector<int> v;
+        for(int i=0;i<N;i++)
+        {
+            int min_luc=1000000;
+            int curCow=0;
+            for(int j=0;j<M;j++)
+                if(matrix[i][j]<min_luc)
+                {
+                    min_luc=matrix[i][j];
+                    curCow=j;
+                }
+            int max_luc=0;
+            for(int k=0;k<N;k++)
+                if(matrix[k][curCow]>max_luc)
+                    max_luc=matrix[k][curCow];
+            if(min_luc==max_luc)
+                v.push_back(min_luc);
+        }
+        return v;
+    }
+};

@@ -1,0 +1,32 @@
+//暴力
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int N=prices.size();
+        int max=0;
+        for(int i=0;i<N;i++)
+            for(int j=i+1;j<N;j++)
+            {
+                if(prices[i]<prices[j]&&max<prices[j]-prices[i])
+                    max=prices[j]-prices[i];
+            }
+        return max;
+    }
+};
+
+//一次遍历  Max已经包含最高卖出的价格信息
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        if(size(prices)==0)
+            return 0;
+        int minPrice=INT_MAX,buy=prices[0],Max=0;
+        for(int x:prices)//在x块卖的话,遍历过的天数中的最低买入价即利润最大
+        {
+            if(x<minPrice)
+                minPrice=x;
+            Max=max(Max,x-minPrice);
+        }
+        return Max;
+    }
+};

@@ -1,0 +1,24 @@
+class Solution {
+public:
+    vector<int> arrayRankTransform(vector<int>& a) {
+        vector<int> b(a);
+        sort(a.begin(),a.end());
+        //默认从小到大排列 若要从大到小排列 添加第三个参数cmp
+        //并添加函数
+        //bool cmp(int a,int b)
+        //{return a>b;}
+        a.erase(unique(a.begin(),a.end()),a.end());
+        for(int i=0;i<b.size();i++)//for(auto &x:b)
+        {
+            b[i]=lower_bound(a.begin(),a.end(),b[i])-a.begin()+1;
+            //x=lower_bound(a.begin(),a.end(),x)-a.begin();
+        }
+        return b;
+    }
+};
+//unique返回无重复字符的末尾的下一个的位置，配合erase删除重复。
+//lower_bound在从小到大排列数组中采用二分查找返回第一个大于或等于x的地址
+//lower_bound在从大到小排列数组中采用二分查找返回第一个小于或等于x的地址
+//upper_bound在从小到大排列数组中采用二分查找返回第一个大于x的地址
+//upper_bound在从大到小排列数组中采用二分查找返回第一个小于x的地址
+//减去数组起始位置得到x在数组下标

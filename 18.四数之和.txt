@@ -1,0 +1,47 @@
+class Solution {
+public:
+    vector<vector<int>> fourSum(vector<int>& nums, int target) {
+        int N=nums.size();
+        if(N<4)
+          return {};
+        vector<vector<int> > result;
+        sort(nums.begin(),nums.end());
+        int maxSum3=nums[N-1]+nums[N-2]+nums[N-3];
+        int maxSum2=nums[N-1]+nums[N-2];
+        for(int i=0;i<N-3;i++)
+        {
+            if(4*nums[i]>target)
+              break;
+            if(i>0&&nums[i]==nums[i-1])
+              continue;
+            if(nums[i]+maxSum3<target)
+              continue;
+            for(int j=i+1;j<N-2;j++)
+            {
+                if(2*(nums[i]+nums[j])>target)
+                  break;
+                if(j>i+1&&nums[j]==nums[j-1])
+                  continue;
+                if(nums[i]+nums[j]+maxSum2<target)
+                  continue;
+                int low=j+1;
+                int high=N-1;
+                int t=target-(nums[i]+nums[j]);
+                while(low<high)
+                {
+                    if(nums[low]+nums[high]>t)
+                      high--;
+                    else if(nums[low]+nums[high]<t)
+                      low++;
+                    else
+                    {
+                        result.push_back({nums[i],nums[j],nums[low],nums[high]});
+                        while(low<high&&nums[low]==nums[++low]);
+                        while(low<high&&nums[high]==nums[--high]);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+};

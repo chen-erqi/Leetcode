@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int compress(vector<char>& chars) {
+        int cur=0;
+        int N=chars.size();
+        for(int i=0,j=0;i<N;j=i)//j=i×÷Îª½áÎ²
+        {
+            while(i<N&&chars[j]==chars[i])
+                i++;
+            chars[cur++]=chars[j];
+            if(i-j==1)
+                continue;
+            string s=to_string(i-j);
+            for(int k=0;k<s.size();k++)
+                chars[cur++]=s[k];
+        }
+        return cur;
+    }
+};

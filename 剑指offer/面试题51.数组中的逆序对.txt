@@ -1,0 +1,43 @@
+//归并排序 利用归并排序中合并两个数组中能获得排序的相对情况 来进行计算 n logn
+class Solution {
+public:
+    int reversePairs(vector<int>& nums) {
+        if(nums.empty())
+            return 0;
+        vector<int> tmp(nums.size(),0);
+        return mergeSort(nums,tmp,0,nums.size()-1);
+    }
+    int mergeSort(vector<int>& nums,vector<int>& tmp,int L,int R)
+    {
+        if(L==R)
+            return 0;
+        int mid=L+(R-L)/2;
+        int leftP=mergeSort(nums,tmp,L,mid);
+        int rightP=mergeSort(nums,tmp,mid+1,R);
+        if(nums[mid]<=nums[mid+1])
+            return leftP+rightP;
+        int midP=merge(nums,tmp,L,mid,R);
+        return leftP+rightP+midP;
+    }
+    int merge(vector<int>& nums,vector<int>& tmp,int L,int mid,int R)
+    {
+        for(int i=L;i<=R;i++)
+            tmp[i]=nums[i];
+        int i=L,j=mid+1,count=0;
+        for(int k=L;k<=R;k++)
+        {
+            if(i==mid+1)
+                nums[k]=tmp[j++];
+            else if(j==R+1)
+                nums[k]=tmp[i++];
+            else if(tmp[i]<=tmp[j])
+                nums[k]=tmp[i++];
+            else
+            {
+                nums[k]=tmp[j++];
+                count+=(mid-i+1);
+            }
+        }
+        return count;
+    }
+};

@@ -1,0 +1,39 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeZeroSumSublists(ListNode* head) {
+        unordered_map<int,ListNode*> m;
+        ListNode *dummy=new ListNode(0);
+        dummy->next=head;
+        m[0]=dummy;
+        ListNode *p=dummy,*_next;
+        int cur=0,cur_tmp=0;
+        while(p=p->next)
+        {
+            cur+=p->val;
+            if(m.count(cur))
+            {
+                ListNode *temp=m[cur];
+                _next=temp->next;
+                temp->next=p->next;
+                cur_tmp=cur;
+                while(_next!=p)
+                {
+                    cur_tmp+=_next->val;
+                    m.erase(cur_tmp);
+                    _next=_next->next;
+                }
+            }
+            else
+                m[cur]=p;
+        } 
+        return dummy->next;
+    }
+};

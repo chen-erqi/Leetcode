@@ -1,0 +1,93 @@
+//sort快排
+class Solution {
+public:
+    vector<int> getLeastNumbers(vector<int>& arr, int k) {
+        sort(arr.begin(),arr.end());
+        vector<int> v(k,0);
+        for(int i=0;i<k;i++)
+            v[i]=arr[i];
+        return v;
+    }
+};
+//堆 在c++中优先队列本质为大根堆 O(nlogk)
+class Solution {
+public:
+    vector<int> getLeastNumbers(vector<int>& arr, int k) {
+        vector<int> v(k,0);
+        if(k==0)
+            return v;
+        priority_queue<int> q;//本质为大根堆
+        for(int i=0;i<k;i++)
+            q.push(arr[i]);
+        for(int i=k;i<arr.size();i++)
+            if(q.top()>arr[i])
+            {
+                q.pop();
+                q.push(arr[i]);
+            }
+        for(int i=0;i<k;i++)
+        {
+            v[i]=q.top();
+            q.pop();
+        }
+        return v;
+    }
+};
+//快速选择
+srand是随机数发生器的初始化函数
+为防止随机数重复,常用系统时间初始化,用time函数来获得系统时间。
+传入一个空指针,往往不需要经过参数获得的数据
+期望的时间复杂度为O(n)
+class Solution {
+public:
+    int partition(vector<int>& nums,int l,int r)
+    {
+        int pivot=nums[r];
+        int i=l-1;
+        for(int j=l;j<r;j++)
+        {
+            if(nums[j]<=pivot)
+            {
+                i++;
+                swap(nums[i],nums[j]);
+            }
+        }
+        swap(nums[i+1],nums[r]);
+        return i+1;
+    }
+    int rand_partition(vector<int>& nums,int l,int r)
+    {
+        int i=rand()%(r-l+1)+l;
+        swap(nums[r],nums[i]);
+        return partition(nums,l,r);
+    }
+    void rand_selected(vector<int>& arr,int l,int r,int k)
+    {
+        if(l>=r)
+            return;
+        int pos=rand_partition(arr,l,r);
+        int num=pos-l+1;
+        if(k==num)//k=num,找到了最小个数
+            return;
+        else if(k<num)//k<m,最小个数一定都在,对左侧递归
+            rand_selected(arr,l,pos-1,k);
+        else//k>num num个数都属于最小的k的个数 在右侧中寻找最小的k-num个数
+            rand_selected(arr,pos+1,r,k-num);
+    }
+    vector<int> getLeastNumbers(vector<int>& arr, int k) {
+        srand((unsigned)time(NULL));//随机化
+        rand_selected(arr,0,arr.size()-1,k);
+        vector<int> v;
+        for(int i=0;i<k;i++)
+            v.push_back(arr[i]);
+        return v;
+    }
+};
+
+
+
+
+
+
+
+

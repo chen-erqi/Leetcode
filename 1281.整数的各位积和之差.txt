@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int subtractProductAndSum(int n) {
+        stringstream ss;
+        string s;
+        ss<<n;
+        ss>>s;
+
+        int N=s.size();
+        int a=0,b=1;
+        for(int i=0;i<N;i++)
+        {
+            a+=(s[i]-'0');
+            b*=(s[i]-'0');
+        }
+        return b-a;
+    }
+};
+
+class Solution {
+public:
+    int subtractProductAndSum(int n) {
+        int a=0,b=1;
+        while(n!=0)
+        {
+            a+=n%10;
+            b*=n%10;
+            n/=10;
+        }
+        return b-a;
+    }
+};

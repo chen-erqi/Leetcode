@@ -1,0 +1,37 @@
+class Solution {
+public:
+    int findTheCity(int n, vector<vector<int>>& edges, int distanceThreshold) {
+        int INF=1000000;
+        vector<vector<int>> f(n,vector<int>(n,INF));
+        for(int i=0;i<n;i++)
+          f[i][i]=0;
+        for(int i=0;i<edges.size();i++)
+        {
+            int from=edges[i][0];
+            int to=edges[i][1];
+            int weight=edges[i][2];
+            f[from][to]=min(weight,f[from][to]);
+            f[to][from]=min(weight,f[to][from]);
+        }
+        for(int k=0;k<n;k++)
+          for(int i=0;i<n;i++)
+            for(int j=0;j<n;j++)
+              f[i][j]=min(f[i][j],f[i][k]+f[k][j]);//floyd经典三重循环！
+        vector<int> temp;
+        for(int i=0;i<n;i++)
+        {
+            int count=0;
+            for(int j=0;j<n;j++)
+            {
+                if(f[i][j]<=distanceThreshold)
+                  count++;
+            }
+            temp.push_back(count);
+        }
+        int res=0;
+        for(int i=0;i<n;i++)
+          if(temp[i]<=temp[res])//城市数目最少
+            res=i;
+        return res;
+    }
+};

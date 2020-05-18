@@ -1,0 +1,44 @@
+//bfs shared_ptr÷«ª€÷∏’Î
+class Solution {
+public:
+    int orangesRotting(vector<vector<int>>& grid) {
+        N=grid.size();
+        M=grid[0].size();
+        queue<shared_ptr<Node>> q;
+        int cnt=0;
+        for(int i=0;i<N;i++)
+            for(int j=0;j<M;j++)
+                if(grid[i][j]==2)
+                    q.push(make_shared<Node>(i,j,0));
+                else if(grid[i][j]==1)
+                    cnt+=1;
+        if(cnt==0)
+            return 0;
+        int total;
+        while(!q.empty())
+        {
+            auto now=q.front();
+            q.pop();
+            total=now->min;
+            for(int i=0;i<4;i++)
+            {
+                int nx=now->x+dis[i][0];
+                int ny=now->y+dis[i][1];
+                if(nx<0||nx>=N||ny<0||ny>=M||grid[nx][ny]!=1)
+                    continue;
+                grid[nx][ny]=2;
+                cnt-=1;
+                q.push(make_shared<Node>(nx,ny,now->min+1));
+            }
+        }
+        return cnt<=0?total:-1;
+    }
+private:
+    int N,M;
+    int dis[4][2]={{0,1},{0,-1},{1,0},{-1,0}};
+    struct Node
+    {
+        int x,y,min;
+        Node(int _x,int _y,int _m):x(_x),y(_y),min(_m){};
+    };
+};

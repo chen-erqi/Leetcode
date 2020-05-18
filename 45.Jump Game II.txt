@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int jump(vector<int>& nums) {
+        int max_pos=0,end=0,step=0;
+        for(int i=0;i<nums.size()-1;i++)
+        {
+            if(max_pos>=i) //greedy search
+            {
+                max_pos=max(max_pos,i+nums[i]); //renew the max reachable boundary
+                if(i==end) // complete the last greedy search
+                {
+                    end=max_pos;  //renew the boundary
+                    step++; 
+                }
+            }
+        }
+        return step;
+    }
+};

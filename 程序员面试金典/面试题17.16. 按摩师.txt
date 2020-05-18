@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int massage(vector<int>& nums) {
+        if(!nums.size())
+            return 0;
+        int dp0=0,dp1=nums[0];
+        for(int i=1;i<nums.size();i++)
+        {
+            int tdp0=max(dp0,dp1);//不接客 继承上一个状态
+            int tdp1=dp0+nums[i];//接客 上一个不接客状态+当前状态
+
+            dp0=tdp0;//更新
+            dp1=tdp1;
+        }
+        return max(dp0,dp1);
+    }
+};

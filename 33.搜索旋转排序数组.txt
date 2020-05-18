@@ -1,0 +1,45 @@
+/*
+首先 根据题意 O(logN)的时间复杂度提示用二分搜索 二分需要有序 题目会出现局部有序 所以需要加一些判定
+根据nums[0]和nums[mid]可以确定旋转位置和是否有序
+当nums[mid]>=nums[0] 若target在其中 则hi=mid 
+当nums[mid]<=nums[0] 若target<=nums[mid] || target>=nums[0] 则hi=mid
+其余条件lo=mid+1
+根据逻辑列出真值表 采用异或的思想
+比较用异或 找不同！
+二分查找只需找一种关系 剩下的用else即可
+*/
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int N=nums.size();
+        int lo=0,hi=N-1;
+        while(lo<hi)
+        {
+            int mid=(lo+hi)/2;
+            if((nums[0]<=target)^(target<=nums[mid])^(nums[mid]<nums[0]))
+                lo=mid+1;
+            else
+                hi=mid;
+        }
+        return lo==hi&&nums[lo]==target?lo:-1;
+    }
+};
+
+class Solution {
+public:
+    int search(vector<int>& nums, int target) {
+        int N=nums.size();
+        int lo=0,hi=N-1;
+        while(lo<=hi)
+        {
+            int mid=(lo+hi)/2;
+            if(nums[mid]==target)
+                return mid;
+            if((nums[0]<=target)^(target<=nums[mid])^(nums[mid]<nums[0]))
+                lo=mid+1;
+            else
+                hi=mid-1;
+        }
+        return -1;
+    }
+};

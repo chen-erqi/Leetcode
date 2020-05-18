@@ -1,0 +1,38 @@
+vector<string> split(const string &s,char stop)
+{
+    vector<string> res;
+    string t;
+    for(auto a:s)
+    {
+        if(a==stop)
+        {
+            res.push_back(t);
+            t="";
+        }
+        else
+          t+=a;
+    }
+    res.push_back(t);
+    return res;
+}
+class Solution {
+public:
+    vector<string> printVertically(string s) {
+        vector<string> w;
+        auto v=split(s,' ');
+        int n=v.size();
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<v[i].size();j++)
+            {
+                while(j>=w.size())//w.size有最长的单词长度决定 当j大于此时的w.size时，w增加新的字符串
+                  w.push_back("");
+            for(int k=0;k<i;k++)
+              if(k>=w[j].size())
+                w[j].push_back(' ');//补充到第i个单词 在结果矩阵中 列是由初始单词个数决定
+            w[j].push_back(v[i][j]);
+            }
+        }
+        return w;
+    }
+};

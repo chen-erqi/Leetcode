@@ -1,0 +1,20 @@
+//当nums[i-1]>nums[i]时 必定要修改一个数字 
+//借助nums[i-2]进行判定 nums[i-2]<=nums[i-1] 所以 当nums[i-2]>nums[i]时 nums[i]=nums[i-1] 其余情况 nums[i-1]=nums[i]
+class Solution {
+public:
+    bool checkPossibility(vector<int>& nums) {
+        int flag=1;
+        for(int i=1;i<nums.size()&&flag>=0;i++)
+        {
+            if(nums[i-1]>nums[i])
+            {
+                flag--;
+                if(i-2>=0&&nums[i-2]>nums[i])
+                    nums[i]=nums[i-1];
+                else
+                    nums[i-1]=nums[i];
+            }
+        }
+        return flag>=0;
+    }
+};

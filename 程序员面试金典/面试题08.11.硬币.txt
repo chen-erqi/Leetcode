@@ -1,0 +1,38 @@
+//数学 首先确定25分硬币多少个 剩余为r=10*a+5*b+c 则10分硬币最多用r/10 设此时用了x个
+//此时剩余 r1=10*(r/10-x)+5*b+c 令10分都用5分代替 则r1=5(2r/10-2x+b)+c 所以此时5分最多用了r/5-2x+b个
+//b为此时最多的5分硬币 
+//所以 把x的范围为0-r/5 等差数列求和即可
+class Solution {
+public:
+    int waysToChange(int n) {
+        constexpr int mod=1000000007;
+        int ans=0;
+        for(int i=0;i*25<=n;i++)
+        {
+            int r=n-25*i;
+            int a=r/10;
+            int b=r%10/5;
+            ans=(ans+(long long)(a+b+1)*(a+1)%mod)%mod;
+        }
+        return ans;
+    }
+};
+
+//动态规划 
+参考零钱兑换 主要是dp数组中 需要回溯到i-coin处 且当前状态是拿走一枚硬币 要加上剩余钱数的硬币组合 所以是减去
+class Solution {
+public:
+    int waysToChange(int n) {
+        constexpr int mod=1000000007;
+        vector<int> dp(n+1,0);
+        dp[0]=1;
+        vector<int> coins{25,10,5,1};
+        for(int c=0;c<4;c++)
+        {
+            int coin=coins[c];
+            for(int i=coin;i<=n;i++)
+                dp[i]=(dp[i]+dp[i-coin])%mod;
+        }
+        return dp[n];
+    }
+};

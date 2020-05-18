@@ -1,0 +1,23 @@
+
+
+//Sum of prefixes
+//Array subscript means the sum of prefixes in this subscript.
+//Array's key means the number of this sum.
+class Solution {
+public:
+    int numberOfSubarrays(vector<int>& nums, int k) {
+        int res=0,sum=0;
+        unordered_map<int,int> pre;
+        pre[0]=1;
+        for(int i=0;i<nums.size();i++)
+        {
+            sum+=(nums[i]&1);
+            pre[sum]++;
+            if(sum>=k)
+                res+=pre[sum-k];
+        }
+        return res;
+    }
+};
+
+

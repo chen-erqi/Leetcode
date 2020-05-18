@@ -1,0 +1,52 @@
+class Solution {
+public:
+    int numberOfSubstrings(string s) {
+        int n=s.size();
+        vector<vector<int>> v(n+1,vector<int>(3));
+        for(int i=0;i<n;i++)
+        {                  //v矩阵上是记录abc出现的位置 而此时min位置为abc共同出现的最临近位置 +上当前位置信息        
+            int x=s[i]-'a';
+            v[i+1]=v[i];
+            v[i+1][x]=i+1;
+        }
+        long long res=0;
+        for(int i=1;i<n+1;i++)
+        {
+            res+=min({v[i][0],v[i][1],v[i][2]});
+        }
+        return res;
+    }
+};
+
+//双指针
+class Solution {
+public:
+    int numberOfSubstrings(string s) {
+        int n=s.size();
+        unordered_map<char,int> abc{{'a',0},{'b',0},{'c',0}};
+        auto check=[&abc](){return (abc['a']>0)&&(abc['b']>0)&&(abc['c']>0);};
+        int pl=0;
+        int pr=pl;
+        abc[s[pl]]=1;
+        int res=0;
+        while(pr<n)
+        {
+            if(!check())
+            {
+                pr++;
+                abc[s[pr]]++;                                
+                if(pr>=n)
+                  break;                
+            }
+            else
+            {
+                abc[s[pl]]--;
+                pl++;  
+                res+=(n-pr);              
+                if(pl>=n)
+                  break;              
+            }
+        }
+        return res;
+    }
+};

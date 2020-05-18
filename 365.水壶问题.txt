@@ -1,0 +1,53 @@
+//深度搜索 用unordered_set过滤重复情况 手动构建hash函数 利用hash模板及lambo表达式
+//任意一个时刻 仅可以采取6种操作
+//decltype也是用来推断数据类型 与auto相似 
+//auto不保留顶层const decltype保留
+//auto推断原有类型 decltype推断引用
+using PII=pair<int,int>;
+class Solution {
+public:
+    bool canMeasureWater(int x, int y, int z) {
+        stack<PII> stk;
+        stk.emplace(0,0);
+        auto hash_fun=[](const PII& o){return hash<int>()(o.first)^hash<int>()(o.second);};
+        unordered_set<PII,decltype(hash_fun)> seen(0,hash_fun);
+        while(!stk.empty())
+        {
+            if(seen.count(stk.top()))
+            {
+                stk.pop();
+                continue;
+            }
+            seen.emplace(stk.top());
+            auto [remain_x,remain_y]=stk.top();
+            stk.pop();
+            if(remain_x==z||remain_y==z||remain_x+remain_y==z)
+                return true;
+            stk.emplace(x,remain_y);
+            stk.emplace(remain_x,y);
+            stk.emplace(0,remain_y);
+            stk.emplace(remain_x,0);
+            //x倒进y,直至满或空
+            stk.emplace(remain_x-min(remain_x,y-remain_y),remain_y+min(remain_x,y-remain_y));
+            //y倒进x,直至满或空
+            stk.emplace(remain_x+min(remain_y,x-remain_x),remain_y-min(remain_y,x-remain_x));
+        }
+        return false;
+    }
+};
+
+//数学
+//对一个不满的桶倒满，或者把一个不满的桶倒掉，都没有意义
+//且不可能同时有两个桶的水不满
+//所以每次变化量为x或y，即ax+by=z 
+//由贝祖定理，ax+by=z有解当且仅当z为xy的最大公倍数
+class Solution {
+public:
+    bool canMeasureWater(int x, int y, int z) {
+        if(x+y<z)
+            return false;
+        if(x==0||y==0)
+            return z==0||x+y==z;
+        return z%gcd(x,y)==0;
+    }
+};

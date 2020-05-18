@@ -1,0 +1,50 @@
+动态规划
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        if(nums.size()==0)
+            return NULL;
+        int sum=0;
+        int res=INT_MIN;
+        for(int i=0;i<nums.size();i++)
+        {
+            sum=max(sum+nums[i],nums[i]);
+            res=max(res,sum);
+        }
+        return res;
+    }
+};
+分治法
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        if(nums.size()==0)
+            return NULL;
+        return divideandconquer(nums,0,nums.size()-1);
+    }
+    int divideandconquer(vector<int>& nums,int left,int right)
+    {
+        if(left==right)
+            return nums[left];
+        if(left>right)
+            return INT_MIN;
+        int mid=(left+right)/2;
+        int l=divideandconquer(nums,left,mid-1);
+        int r=divideandconquer(nums,mid+1,right);
+        //若连续子数组出现在中间
+        int k=nums[mid];
+        int num_max=nums[mid];
+        for(int i=mid-1;i>=left;i--)
+        {
+            k+=nums[i];
+            num_max=max(k,num_max);
+        }
+        k=num_max;
+        for(int i=mid+1;i<=right;i++)
+        {
+            k+=nums[i];
+            num_max=max(num_max,k);
+        }
+        return max(max(r,l),num_max);
+    }
+};

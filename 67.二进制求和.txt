@@ -1,0 +1,158 @@
+//遍历求和 if-else if选择
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        if(a.size()<b.size())
+        {
+            string temp;
+            temp=a;
+            a=b;
+            b=temp;
+        }
+        int i=a.size()-1;
+        int j=b.size()-1;
+        int flag=0;
+        string res;
+        if(i!=j)
+        {
+            for(int k=i-j;k>0;k--)
+                b='0'+b;
+        }
+        for(int k=i;k>=0;k--)
+        {
+            if(a[k]-'0'+b[k]-'0'+flag==0)
+            {
+                res='0'+res;
+                flag=0;
+            }
+            else if(a[k]-'0'+b[k]-'0'+flag==1)
+            {
+                res='1'+res;
+                flag=0;
+            }
+            else if(a[k]-'0'+b[k]-'0'+flag==2)
+            {
+                res='0'+res;
+                flag=1;
+            }
+            else if(a[k]-'0'+b[k]-'0'+flag==3)
+            {
+                res='1'+res;
+                flag=1;
+            }
+        }
+        if(flag==1)
+            res='1'+res;
+        return res;
+    }
+};
+
+//针对内存进行优化 直接在a字符串基础上进行操作 (差别不大)
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        if(a.size()<b.size())
+        {
+            string temp;
+            temp=a;
+            a=b;
+            b=temp;
+        }
+        int i=a.size()-1;
+        int j=b.size()-1;
+        int flag=0;
+        if(i!=j)
+        {
+            for(int k=i-j;k>0;k--)
+                b='0'+b;
+        }
+        for(int k=i;k>=0;k--)
+        {
+            if(a[k]-'0'+b[k]-'0'+flag==0)
+            {
+                a[k]='0';
+                flag=0;
+            }
+            else if(a[k]-'0'+b[k]-'0'+flag==1)
+            {
+                a[k]='1';
+                flag=0;
+            }
+            else if(a[k]-'0'+b[k]-'0'+flag==2)
+            {
+                a[k]='0';
+                flag=1;
+            }
+            else if(a[k]-'0'+b[k]-'0'+flag==3)
+            {
+                a[k]='1';
+                flag=1;
+            }
+        }
+        if(flag==1)
+            a='1'+a;
+        return a;
+    }
+};
+
+//switch选择
+class Solution {
+public:
+    string addBinary(string a, string b) {
+        if(a.size()<b.size())
+        {
+            string temp;
+            temp=a;
+            a=b;
+            b=temp;
+        }
+        int i=a.size()-1;
+        int j=b.size()-1;
+        int flag=0;
+        if(i!=j)
+        {
+            for(int k=i-j;k>0;k--)
+                b='0'+b;
+        }
+        for(int k=i;k>=0;k--)
+        {
+            int num=a[k]-'0'+b[k]-'0'+flag;
+            switch(num)
+            {
+                case 0:
+                    {
+                        a[k]='0';
+                        flag=0;
+                        break;
+                    }
+                case 1:
+                    {
+                        a[k]='1';
+                        flag=0;
+                        break;
+                    }
+                case 2:
+                    {
+                        a[k]='0';
+                        flag=1;
+                        break;
+                    }
+                case 3:
+                    {
+                        a[k]='1';
+                        flag=1;
+                        break;
+                    }
+            }
+        }
+        if(flag==1)
+            a='1'+a;
+        return a;
+    }
+};
+
+//针对a/b字符串长度不等进行优化 效果差别不大
+while(a.size()<b.size())
+            a.insert(a.begin(),'0');
+        while(a.size()>b.size())
+            b.insert(b.begin(),'0');

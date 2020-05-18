@@ -1,0 +1,81 @@
+//找到一个之前没出现过的数时，将之前某个重复出现的数增加成这个没出现的数
+//之前某个的数可以任意选择 因为将p增加至x，将q增加至y，与将q增加至x，将p增加至y所需操作数相同
+//且可以在遇到重复的数时，先将结果减去该数，之后遇到未出现的数再加上该数即可
+//用一个数组记录数字出现的情况
+class Solution {
+public:
+    int minIncrementForUnique(vector<int>& A) {
+        int v[80000]={0};
+        for(int x:A)
+            v[x]++;
+        int taken=0,res=0;
+        for(int i=0;i<80000;i++)
+        {
+            if(v[i]>1)
+            {
+                taken+=v[i]-1;
+                res-=(i*(v[i]-1));
+            }
+            else if(taken>0&&v[i]==0)
+            {
+                taken--;
+                res+=i;
+            }
+        }
+        return res;
+    }
+};
+
+//先排序 之后扫描数组
+//若前后不相等 则中间存在未使用的顺序排列的数列 该数列全部减去A[i-1]时即为公差为1 长度为A[i]-A[i-1]-1的等差数列
+//此时应与taken相比较
+class Solution {
+public:
+    int minIncrementForUnique(vector<int>& A) {
+        sort(A.begin(),A.end());
+        int taken=0,ans=0;
+        for(int i=1;i<A.size();i++)
+        {
+            if(A[i-1]==A[i])
+            {
+                taken++;
+                ans-=A[i];
+            }
+            else
+            {
+                int give=min(taken,A[i]-A[i-1]-1);
+                taken-=give;
+                ans+=(give*A[i-1]+give*(give+1)/2);
+            }
+        }
+        if(taken>0)
+            ans+=(taken*A[A.size()-1]+taken*(taken+1)/2);
+        return ans;
+    }
+};
+//hash映射思想 并解决地址冲突 且冲突位置不小于原数组对应元素
+class Solution {
+public:
+    int minIncrementForUnique(vector<int>& A) {
+        vector<int> pos(80000,-1);
+        int cnt=0;
+        for(int x:A)
+        {
+            int b=findPos(pos,x);
+            cnt+=b-x;
+        }
+        return cnt;
+    }
+    int findPos(vector<int>& pos,int a)
+    {
+        int b=pos[a];
+        if(b==-1)
+        {
+            pos[a]=a;
+            return a;
+        }
+        b=findPos(pos,b+1);
+        pos[a]=b;
+        return b;
+    }
+};

@@ -1,0 +1,49 @@
+struct num
+    {
+      int num;
+      int count;
+    };
+inline bool cmp(num a,num b)
+    {
+        if(a.count!=b.count)
+            return a.count<b.count;
+        else
+            return a.num<b.num;
+    }
+class Solution {
+public:
+    vector<int> sortByBits(vector<int>& arr) {
+        int n=arr.size();   
+        vector<num> v;
+        vector<int> res(n);
+        for(int i=0;i<n;i++)
+        {
+            num X;
+            bitset<15> tem(arr[i]);
+            X.num=arr[i];
+            X.count=tem.count();
+            v.push_back(X);
+        }
+        sort(v.begin(),v.end(),cmp);
+        for(int i=0;i<n;i++)
+        {
+            res[i]=v[i].num;
+        }
+        return res;
+
+    }
+};
+
+class Solution {
+public:
+    vector<int> sortByBits(vector<int>& arr) {
+        sort(arr.begin(),arr.end(),[](int a,int b)
+        {
+            if(__builtin_popcount(a)!=__builtin_popcount(b))//内建函数查表方式快速计算1的个数
+                return __builtin_popcount(a)<__builtin_popcount(b);
+            else
+                return a<b;
+        });
+        return arr;
+    }
+};

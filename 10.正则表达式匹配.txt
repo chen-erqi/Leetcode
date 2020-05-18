@@ -1,0 +1,54 @@
+//调库 regex_match() 正则表达式
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        return regex_match(s,regex(p));
+    }
+};
+
+//暴力解法
+class Solution {
+public:
+    bool domatch(const string& s,int sindex,const string& p,int pindex)
+    {
+        if(pindex>=p.size())
+            return sindex>=s.size();
+        bool currentmatch=sindex<s.size()&&(s[sindex]==p[pindex]||p[pindex]=='.');
+        if(pindex+1<p.size()&&p[pindex+1]=='*')
+            return domatch(s,sindex,p,pindex+2)||(currentmatch&&domatch(s,sindex+1,p,pindex));
+        else
+            return currentmatch&&domatch(s,sindex+1,p,pindex+1);//currentmatch判定一定要在前边 隐含了对sindex的判定
+    }
+    bool isMatch(string s, string p) {
+        return domatch(s,0,p,0);
+    }
+};
+
+//回溯 用mem记录发生情况 防止相同参数调用domatch
+class Solution {
+public:
+    bool domatch(const string& s,int sindex,const string& p,int pindex,vector<vector<int>>& mem)
+    {
+        if(mem[sindex][pindex]!=-1)
+            return mem[sindex][pindex];
+        bool res;
+        if(pindex>=p.size())
+            res=sindex>=s.size();
+        else
+        {
+            bool currentmatch=(sindex<s.size()&&(s[sindex]==p[pindex]||p[pindex]=='.'));
+            if(pindex+1<p.size()&&p[pindex+1]=='*')
+                res=domatch(s,sindex,p,pindex+2,mem)||(currentmatch&&domatch(s,sindex+1,p,pindex,mem));
+            else
+                res=currentmatch&&domatch(s,sindex+1,p,pindex+1,mem);
+        }
+        mem[sindex][pindex]=res;
+        return res;
+    }
+    bool isMatch(string s, string p) {
+        vector<vector<int>> mem(s.size()+1,vector<int>(p.size()+1,-1));
+        return domatch(s,0,p,0,mem);
+    }
+};
+
+//

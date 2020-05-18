@@ -1,0 +1,13 @@
+class Solution {
+public:
+    int removePalindromeSub(string s) {
+        if(s=="")
+            return 0;
+        auto t=s;
+        reverse(s.begin(),s.end());
+        if(s==t)
+            return 1;
+        return 2;
+    }
+};
+//由于序列只由a或b组成 最坏情况下先把所有a删除 再把所有b删除 即2次

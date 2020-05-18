@@ -1,0 +1,14 @@
+//记录有多少个字符出现次数为奇数 输出时作减法即可
+class Solution {
+public:
+    int longestPalindrome(string s) {
+        unordered_map<char,int> v;
+        for(char x:s)
+            v[x]++;
+        int cnt=0;
+        for(auto x:v)
+            if(x.second%2==1)
+                cnt++;
+        return cnt==0?s.size():s.size()-cnt+1;
+    }
+};

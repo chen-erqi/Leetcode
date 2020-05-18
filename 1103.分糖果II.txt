@@ -1,0 +1,68 @@
+//暴力
+class Solution {
+public:
+    vector<int> distributeCandies(int candies, int num_people) {
+        vector<int> v(num_people,0);
+        int n=0,i=0;
+        while(candies)
+        {
+            if(i<num_people)
+            {
+                if(candies<=n+1+i)
+                {
+                    v[i]+=candies;
+                    candies=0;
+                }
+                else
+                {
+                    v[i]+=(n+1+i);
+                    candies-=(n+1+i);
+                }
+                i++;
+            }
+            if(i==num_people)
+            {
+                n+=num_people;
+                i=0;
+            }
+        }
+        return v;
+    }
+};
+
+//用i%num_people优化
+class Solution {
+public:
+    vector<int> distributeCandies(int candies, int num_people) {
+        vector<int> v(num_people,0);
+        int i=0;
+        while(candies)
+        {
+            v[i%num_people]+=min(candies,i+1);
+            candies-=min(candies,i+1);
+            i++;
+        }
+        return v;
+    }
+};
+
+//数学优化
+class Solution {
+public:
+    vector<int> distributeCandies(int candies, int num_people) {
+        vector<int> v(num_people,0);
+        int p=(int)(sqrt(2*candies+0.25)-0.5);
+        int remain=candies-(p*(p+1))/2;
+        int n=num_people;
+        int row=p/n;
+        int col=p%n;
+        for(int i=0;i<n;i++)
+        {
+            v[i]=(i+1)*row+n*(row*(row-1)/2);
+            if(i<col)
+                v[i]+=(i+1)+n*row;
+        }
+        v[col]+=remain;
+        return v;
+    }
+};

@@ -1,0 +1,57 @@
+//dp
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int N=nums.size();
+        if(N==0)
+            return 0;
+        vector<int> dp(N,0);
+        for(int i=0;i<N;i++)
+        {
+            dp[i]=1;
+            for(int j=0;j<i;j++)
+            {
+                if(nums[j]<nums[i])
+                    dp[i]=max(dp[i],dp[j]+1);
+            }
+        }
+        return *max_element(dp.begin(),dp.end());
+    }
+};
+
+//贪心+二分
+//使上升序列上升尽可能慢 加上的数尽可能小 
+//二分插入时 利用序列的单调性 虽然插入的数可能不是序列 但是可以满足使加上的数尽可能小 是一种贪心思想
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int N=nums.size();
+        if(N==0)
+            return 0;
+        vector<int> d(N+1,0);
+        int len=1;
+        d[len]=nums[0];
+        for(int i=1;i<N;i++)
+        {
+            if(nums[i]>d[len])
+                d[++len]=nums[i];
+            else
+            {
+                int l=1,r=len,pos=0;
+                while(l<=r)
+                {
+                    int mid=(l+r)/2;
+                    if(d[mid]<nums[i])
+                    {
+                        pos=mid;
+                        l=mid+1;
+                    }
+                    else
+                        r=mid-1;
+                }
+                d[pos+1]=nums[i];
+            }
+        }
+        return len;
+    }
+};

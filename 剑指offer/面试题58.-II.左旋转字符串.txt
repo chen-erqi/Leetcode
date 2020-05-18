@@ -1,0 +1,46 @@
+class Solution {
+public:
+    string reverseLeftWords(string s, int n) {
+        string t(s.begin(),s.begin()+n);
+        s.append(t);
+        s=s.substr(n);
+        return s;
+    }
+};
+
+class Solution {
+public:
+    string reverseLeftWords(string s, int n) {
+        int len=s.size();
+        int mid=n/2;
+        int i=0;
+        while(i<mid)
+        {
+            char x=s[i];
+            s[i]=s[n-1-i];
+            s[n-1-i]=x;
+            i++;
+        }
+
+        i=0;
+        mid=(len+n)/2;
+        while(i+n<mid)
+        {
+            char x=s[n+i];
+            s[n+i]=s[len-1-i];
+            s[len-1-i]=x;
+            i++;
+        }
+
+        i=0;
+        mid=len/2;
+        while(i<mid)
+        {
+            char x=s[i];
+            s[i]=s[len-i-1];
+            s[len-i-1]=x;
+            i++;
+        }
+        return s;
+    }
+};

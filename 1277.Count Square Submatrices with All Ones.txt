@@ -1,0 +1,50 @@
+//dynamic programming
+//dp's fun:min(dp[i-1][j],dp[i][j-1],dp[i][j])
+//let the coordinate(i,j) as the lower right corner of a square.Then we can figure out that
+three adjacent square are smaller than the square.And then we could write the function when 
+we draw the picture which describe their connection.
+
+class Solution {
+public:
+    int countSquares(vector<vector<int>>& matrix) {
+        int N=matrix.size(),M=matrix[0].size(),ans=0;
+        vector<vector<int>> dp(N,vector<int>(M,0));
+        for(int i=0;i<N;i++)
+            for(int j=0;j<M;j++)
+            {
+                if(i==0||j==0)
+                    dp[i][j]=matrix[i][j];
+                else if(matrix[i][j]==0)
+                    dp[i][j]=0;
+                else
+                    dp[i][j]=min(min(dp[i-1][j],dp[i][j-1]),dp[i-1][j-1])+1;
+                ans+=dp[i][j];
+            }
+        return ans;
+    }
+};
+
+//optimization
+//space complexity is O(1).We can moify the original matrix directly cuz the matrix is
+nonempty matrix.
+
+class Solution {
+public:
+    int countSquares(vector<vector<int>>& matrix) {
+        int N=matrix.size(),M=matrix[0].size(),ans=0;
+        for(int i=0;i<N;i++)
+            for(int j=0;j<M;j++)
+            {
+                if(matrix[i][j]==0)
+                    continue;
+                else if(i==0||j==0)
+                    ans++;
+                else
+                {
+                    matrix[i][j]=min(min(matrix[i-1][j],matrix[i][j-1]),matrix[i-1][j-1])+1;
+                    ans+=matrix[i][j];
+                }
+            }
+        return ans;
+    }
+};

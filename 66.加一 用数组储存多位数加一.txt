@@ -1,0 +1,71 @@
+//flag±ê¼Ç
+class Solution {
+public:
+    vector<int> plusOne(vector<int>& digits) {
+        int i=0;
+        int flag=1;
+        int size=digits.size();
+        for(i=size-1;i>=0;i--)
+        {
+            if(flag==1)
+            {
+                digits[i]=(digits[i]+flag)%10;
+                flag=(digits[i]==0?1:0);
+            }
+            else
+                break;
+        }
+        if(i>=0||flag==0)
+            return digits;
+        else
+        {
+            digits.insert(digits.begin(),1);
+            return digits;
+        }
+    }
+};
+
+//±éÀú
+class Solution {
+public:
+    vector<int> plusOne(vector<int>& digits) {
+        int i=0;
+        int size=digits.size();
+        for(i=size-1;i>=0;i--)
+        {
+            digits[i]++;
+            digits[i]=digits[i]%10;
+            if(digits[i]!=0)
+                return digits;
+        }
+        if(i==-1)
+        {
+            digits.insert(digits.begin(),1);
+        }
+        return digits;
+    }
+};
+
+//µÝ¹é
+class Solution {
+public:
+    void PlusOneAtPos(vector<int>& digits,int pos)
+        {
+            digits[pos]=(digits[pos]+1)%10;
+            if(digits[pos]==0)
+            {
+                if(pos==0)
+                {
+                    digits.insert(digits.begin(),1);
+                    return;
+                }
+                else
+                    PlusOneAtPos(digits,--pos);
+            }
+        }
+    vector<int> plusOne(vector<int>& digits) {
+        int size=digits.size();
+        PlusOneAtPos(digits,size-1);
+        return digits;
+    }
+};

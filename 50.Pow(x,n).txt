@@ -1,0 +1,48 @@
+//quick power algorithm
+//For example,x^77
+//x-x^2->x^4->x^9->x^19->x^38->x^77
+//the key is floor the N/2 everytime and figure out N%2==0?
+//if N%2==1,times x.
+//We can only consider the natural index cuz we can cout x^-N and its reciprocal 
+when the index is negative
+
+class Solution {
+public:
+    double myPow(double x, int n) {
+        long long N=n;
+        return N>=0?quickMul(x,N):1.0/quickMul(x,-N);
+    }
+    double quickMul(double x,long long N)
+    {
+        if(N==0)
+            return 1.0;
+        double y=quickMul(x,N/2);
+        return N%2==0?y*y:y*y*x;
+    }
+};
+
+//iteration
+//the key is spill the single x from multiplication.
+//We should know that in the process of multiplication, the square contributed by the original single x.
+//So we just need to figure out when to time the single x.
+//Timing the single x when the current index%2==1! which meet positions of 1 in the original N's binary.
+
+class Solution {
+public:
+    double myPow(double x, int n) {
+        long long N=n;
+        return N>=0?quickMul(x,N):1.0/quickMul(x,-N);
+    }
+    double quickMul(double x,long long N)
+    {
+        double ans=1.0,x_contribute=x;
+        while(N>0)
+        {
+            if(N&1==1)
+                ans*=x_contribute;
+            x_contribute*=x_contribute;
+            N>>=1;
+        }
+        return ans;
+    }
+};

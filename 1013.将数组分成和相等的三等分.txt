@@ -1,0 +1,45 @@
+//累加
+class Solution {
+public:
+    bool canThreePartsEqualSum(vector<int>& A) {
+        int s=accumulate(A.begin(),A.end(),0);
+        if(s%3!=0)
+            return false;
+        int target=s/3,i=0,cur=0,N=A.size();
+        while(i<N)
+        {
+            cur+=A[i];
+            if(cur==target)
+                break;
+            i++;
+        }
+        if(cur!=target)
+            return false;
+        int j=i+1;
+        while(j+1<N)//需要满足最后一个数组非空
+        {
+            cur+=A[j];
+            if(cur==target*2)
+                return true;
+            j++;
+        }
+        return false;
+    }
+};
+
+//计数
+class Solution {
+public:
+    bool canThreePartsEqualSum(vector<int>& A) {
+        int N=A.size();
+        for(int i=1;i<N;i++)
+            A[i]+=A[i-1];
+        if(A[N-1]%3!=0)
+            return false;
+        int target=A[N-1]/3,num=1;
+        for(int i=0;i<N-1&&num<3;i++)//保证最后数组非空
+            if(A[i]==target*num)
+                num++;
+        return num==3;
+    }
+};

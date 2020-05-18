@@ -1,0 +1,44 @@
+class Solution {
+public:
+    string intToRoman(int num) {
+        //暴力枚举
+        vector<vector<string>> v
+        {
+            {"","I","II","III","IV","V","VI","VII","VIII","IX"},//1~9
+            {"","X","XX","XXX","XL","L","LX","LXX","LXXX","XC"},//10~90
+            {"","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"},//100~900
+            {"","M","MM","MMM"}//1000~3000
+        };
+
+        string res="";
+        res.append(v[3][num/1000]);
+        res.append(v[2][num/100%10]);
+        res.append(v[1][num/10%10]);
+        res.append(v[0][num%10]);
+
+        return res;
+
+    }
+};
+
+class Solution {
+public:
+    string intToRoman(int num) {
+        //查表
+        vector<int> v1{1000,900,500,400,100,90,50,40,10,9,5,4,1};
+        vector<string> v2{"M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I"};
+
+        string res="";
+        for(int i=0;i<13;)
+        {
+            if(num>=v1[i])
+            {
+                res+=v2[i];
+                num-=v1[i];
+            }
+            else
+                i++;
+        } 
+        return res;
+    }
+};

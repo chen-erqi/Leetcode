@@ -1,0 +1,30 @@
+//工作难度数组起始为1
+class Solution {
+public://动态规划
+    int minDifficulty(vector<int>& a, int d) {
+        int n=a.size();
+        if(n<d)
+          return -1;
+        
+        //记录前i天完成前j项任务的最小难度 并初始化
+        const int INF=1000000000;
+        vector<vector<int>> f(d+1,vector<int>(n+1,INF));
+        f[0][0]=0;
+
+        int v[n][n];//记录在当前天,j的长度控制当前天工作任务数,此时元素代表接下来工作的最高难度。
+        for(int i=0;i<n;i++)
+        {
+            v[i][i]=a[i];
+            for(int j=i+1;j<n;j++)
+              v[i][j]=max(v[i][j-1],a[j]);
+        }
+        
+        for(int i=1;i<=d;i++)//第i天
+          for(int j=1;j<=n;j++)//第i天的第j项
+            for(int k=0;k<j;k++)
+              f[i][j]=min(f[i][j],f[i-1][k]+v[k][j-1]);//k体现了在当前天中 控制前一天完成任务项及接下来完成任务数的最高难度
+        
+        int res=f[d][n];
+        return res;
+    }
+};

@@ -1,0 +1,50 @@
+//使用multiset 平衡树 内部自动排序 允许重复
+class Solution {
+public:
+    bool isPossibleDivide(vector<int>& nums, int k) {
+        int n=nums.size();
+        if(n%k!=0)
+          return false;
+        multiset<int> H(nums.begin(),nums.end());
+        
+        while(!H.empty())
+        {
+            int x=*H.begin();
+            for(int i=0;i<k;i++)
+            {
+                auto it=H.find(x+i);
+                if(it==H.end())
+                  return false;
+                H.erase(it);
+            }
+        }
+        return true;
+    }
+};
+
+//使用map 自动排序 记录每个数字出现次数 思想都是remove
+class Solution {
+public:
+    bool isPossibleDivide(vector<int>& nums, int k) {
+        int n=nums.size();
+        if(n%k!=0)
+          return false;
+        map<int,int> H;
+        for(int x:nums)
+          H[x]++;
+        for(auto &[x,y]:H)
+        {
+            if(y>0)
+            {
+                for(int i=1;i<k;i++)
+               {
+                if(H.count(x+i)&&H[x+i]>=y)
+                  H[x+i]-=y;
+                else 
+                  return false;
+               }
+            }
+        }
+        return true;
+    }
+};

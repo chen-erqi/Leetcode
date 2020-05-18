@@ -1,0 +1,20 @@
+class Solution {
+public:
+    double area(vector<int> &p1,vector<int> &p2,vector<int> &p3)
+    {
+        int dx1=p2[0]-p1[0];
+        int dx2=p3[0]-p1[0];
+        int dy1=p2[1]-p1[1];
+        int dy2=p3[1]-p1[1];
+        return abs(dx1*dy2-dx2*dy1)/2.0;
+    }
+    double largestTriangleArea(vector<vector<int>>& points) {
+        int N=points.size();
+        double res=0.0;
+        for(int i=0;i<N-2;i++)
+            for(int j=1;j<N-1;j++)
+                for(int k=2;k<N;k++)
+                    res=max(res,area(points[i],points[j],points[k]));
+        return res;
+    }
+};

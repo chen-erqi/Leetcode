@@ -1,0 +1,89 @@
+//暴力向后遍历 分辨空格
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int len=0;
+        int pre=0;
+        int flag=0;
+        for(int i=0;i<s.size();i++)
+        {
+            if(s[i]==' '&&flag==0)
+            {
+                pre=len;
+                len=0;
+                flag=1;
+            }
+            else if(s[i]!=' ')
+            {
+                flag=0;
+                len++;
+            }
+        }
+        if(flag)
+            return pre;
+        else
+            return len;
+    }
+};
+
+//向前遍历 判断遇到的空格是否在字符前
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int len=0;
+        int flag=0;
+        for(int i=s.size()-1;i>=0;i--)
+        {
+            if(s[i]!=' ')
+            {
+                flag=1;
+                len++;
+            }
+            if(s[i]==' '&&flag==1)
+                return len;
+        }
+        return len;
+    }
+};
+
+//使用find_last_of和erase删除最末尾空格 边查找最后一个空格边判断是否是在末尾
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int pos=s.find_last_of(' ');
+        while(pos==s.size()-1)
+        {
+            if(s.empty())
+                return 0;
+            s.erase(pos);
+            pos=s.find_last_of(' ');
+        }
+        return s.size()-pos-1;
+    }
+};
+
+//先将字符串末尾的空格清除完再查找最后一个空格
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        int size=s.size()-1;
+        while(s[size]==' '&&size>=0)
+        {
+            s.erase(size);
+            size--;
+        }
+        int pos=s.find_last_of(' ');
+        return size-pos;
+    }
+};
+
+//基于stringstream进行字符串分割
+class Solution {
+public:
+    int lengthOfLastWord(string s) {
+        string word;
+        stringstream ss(s);
+        while(ss>>word);
+        return word.size();
+    }
+};

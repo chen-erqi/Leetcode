@@ -1,0 +1,90 @@
+// TreeNode Type unify the return Type
+//recursive in original function
+
+class Solution {
+public:
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(!root||root->val==p->val||root->val==q->val)
+            return root;
+        TreeNode* Left=lowestCommonAncestor(root->left,p,q);
+        TreeNode* Right=lowestCommonAncestor(root->right,p,q);
+        if(Left&&Right)
+            return root;
+        return Left?Left:Right;
+    }
+};
+
+
+//recursive
+//define x=LCA,fx=(fLson&&fRson)||(x==p||x==q)&&(fLson||fRson)
+//The first criterion:both left and right subtrees contain p or q.
+//The second criterion:when the X happens to equal to p or q,its subtrees must contain another node.
+
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* ans;
+    bool dfs(TreeNode* root,TreeNode* p,TreeNode* q)
+    {
+        if(!root)
+            return false;
+        bool Lson=dfs(root->left,p,q);
+        bool Rson=dfs(root->right,p,q);
+        if((Lson&&Rson)||(root->val==p->val||root->val==q->val)&&(Lson||Rson))
+            ans=root;
+        return Lson||Rson||root->val==p->val||root->val==q->val;
+        
+    }
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        dfs(root,p,q);
+        return ans;
+    }
+};
+
+
+//store all father nodes with hash table
+//keep querying the father nodes'hash from the P and record the inquiry.
+
+class Solution {
+public:
+    unordered_map<int,TreeNode*> faNode;
+    unordered_map<int,bool> vis;
+    void dfs(TreeNode* root)
+    {
+        if(root->left)
+        {
+            faNode[root->left->val]=root;
+            dfs(root->left);
+        }
+        if(root->right)
+        {
+            faNode[root->right->val]=root;
+            dfs(root->right);
+        }
+    }
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        faNode[root->val]=nullptr;
+        dfs(root);
+        while(p!=nullptr)
+        {
+            vis[p->val]=true;
+            p=faNode[p->val];
+        }
+        while(q!=nullptr)
+        {
+            if(vis[q->val])
+                return q;
+            q=faNode[q->val];
+        }
+        return nullptr;
+    }
+};

@@ -1,0 +1,29 @@
+1.两数之和
+ 
+暴力遍历：
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        map<int,int> mymap; //定义map类
+        vector<int> result; //注意vector类
+        for(int i=0;i<nums.size();i++)
+        {
+            if(mymap.find(target-nums[i])==mymap.end()){
+                mymap[nums[i]]=i;
+            }
+            else
+            {
+                result={mymap[target-nums[i]],i};
+                break;
+            }
+        }
+        return result;
+    }
+};
+    使用count，返回的是被查找元素的个数。如果有，返回1；
+否则，返回0。注意，map中不存在相同元素，所以返回值只能是1或0。
+    使用find，返回的是被查找元素的位置，没有则返回map.end()。
+    在unordered_map中，键值通常用于唯一标识元素，而映射值是与该键关联的内容的对象。键和映射值的类型可能不同。
+在内部，unordered_map中的元素没有按照它们的键值或映射值的任何顺序排序，而是根据它们的散列值组织成桶以允许通过它们的键值直接快速访问单个元素（具有常数平均时间复杂度）。
+unordered_map容器比映射容器更快地通过它们的键来访问各个元素，尽管它们通过其元素的子集进行范围迭代通常效率较低。
+无序映射实现直接访问操作符（operator []），该操作符允许使用其键值作为参数直接访问映射值。

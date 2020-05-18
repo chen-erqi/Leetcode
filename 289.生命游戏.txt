@@ -1,0 +1,98 @@
+//原地运算 利用绝对值性质 将1变为-1 但是通过绝对值可以获得上一个状态 
+class Solution {
+public:
+    void gameOfLife(vector<vector<int>>& board) {
+        int d[3]={0,1,-1},rows=board.size(),cols=board[0].size();
+        for(int col=0;col<cols;col++)
+            for(int row=0;row<rows;row++)
+            {
+                int live=0;
+                for(int i=0;i<3;i++)
+                    for(int j=0;j<3;j++)
+                    {
+                        if(!(d[i]==0&&d[j]==0))
+                        {
+                            int r=row+d[i];
+                            int c=col+d[j];
+                            if((r<rows&&r>=0)&&(c<cols&&c>=0)&&abs(board[r][c])==1)
+                                live+=1;
+                        }
+                    }
+                if(board[row][col]==1&&(live<2||live>3))
+                    board[row][col]=-1;
+                if(board[row][col]==0&&live==3)
+                    board[row][col]=2;
+            }
+        for(int row=0;row<rows;row++)
+            for(int col=0;col<cols;col++)
+            {
+                if(board[row][col]==-1)
+                    board[row][col]=0;
+                if(board[row][col]==2)
+                    board[row][col]=1;
+            }
+    }
+};
+//位运算
+class Solution {
+public:
+    void gameOfLife(vector<vector<int>>& board) {
+        int d[3]={0,-1,1},rows=board.size(),cols=board[0].size();
+        for(int row=0;row<rows;row++)
+            for(int col=0;col<cols;col++)
+            {
+                int sum=0;
+                for(int i=0;i<3;i++)
+                    for(int j=0;j<3;j++)                    
+                        if(!(d[i]==0&&d[j]==0))  
+                        {                      
+                            int r=row+d[i];
+                            int c=col+d[j];
+                            if(r<rows&&r>=0&&c<cols&&c>=0)
+                                sum+=(board[r][c]&1);  
+                        }            
+                //第二个bit表示当前活着的状态
+                if(sum==3||(sum==2&&board[row][col]&1))
+                    board[row][col]|=2;                     
+            }
+        for(int row=0;row<rows;row++)
+            for(int col=0;col<cols;col++)
+                board[row][col]>>=1;
+    }
+};
+
+//用1去影响四周
+class Solution {
+public:
+    void gameOfLife(vector<vector<int>>& board) {
+        int d[3]={0,-1,1},rows=board.size(),cols=board[0].size();
+        for(int row=0;row<rows;row++)
+            for(int col=0;col<cols;col++)
+            {
+                if((board[row][col]&1)==1)
+                {
+                    for(int i=0;i<3;i++)
+                        for(int j=0;j<3;j++)
+                        {
+                            if(!(d[i]==0&&d[j]==0))
+                            {
+                                int r=row+d[i];
+                                int c=col+d[j];
+                                if(r<rows&&r>=0&&c<cols&&c>=0)
+                                    board[r][c]+=10;
+                            }
+                        }
+                }
+            }
+        for(int row=0;row<rows;row++)
+            for(int col=0;col<cols;col++)
+            {
+                int x=board[row][col]&1;
+                int y=board[row][col]/10;
+                if(y==3||(y==2&&x==1))
+                    board[row][col]=1;
+                else 
+                    board[row][col]=0;
+            }
+    }
+};

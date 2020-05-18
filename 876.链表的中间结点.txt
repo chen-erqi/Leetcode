@@ -1,0 +1,70 @@
+//用数组来判断中间
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* middleNode(ListNode* head) {
+        vector<ListNode*> A{head};
+        while(A.back()->next!=NULL)
+            A.push_back(A.back()->next);
+        return  A[A.size()/2];
+    }
+};
+
+//单指针遍历
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* middleNode(ListNode* head) {
+        ListNode *p=head;
+        int cnt=0;
+        while(p!=NULL)
+        {
+            cnt++;
+            p=p->next;
+        }
+        int k=0;
+        p=head;
+        while(k<cnt/2)
+        {
+            p=p->next;
+            k++;
+        }
+        return p;
+    }
+};
+
+//快慢指针
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* middleNode(ListNode* head) {
+        ListNode *p=head,*q=head;
+        while(q!=NULL&&q->next!=NULL)
+        {
+            p=p->next;
+            q=q->next->next;    
+        }
+        return p;
+    }
+};

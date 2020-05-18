@@ -1,0 +1,67 @@
+//DFS 用树的深度和当前答案数组的长度做比较
+//因为每一层必定有一个入数组 且每一层的第一个右结点必定第一个遍历到
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> ans;
+    void dfs(TreeNode* x,int depth)
+    {
+        if(!x)
+            return;
+        if(depth==ans.size())
+            ans.push_back(x->val);        
+        dfs(x->right,depth+1);
+        dfs(x->left,depth+1);
+    }
+    vector<int> rightSideView(TreeNode* root) {
+        int depth=0;
+        dfs(root,depth);
+        return ans;
+    }
+};
+
+//BFS 核心都是在与测量当前行的个数 最后一个时进行记录
+//每一次必然都是一层！
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> rightSideView(TreeNode* root) {
+        if(!root)
+            return {};
+        vector<int> ans;
+        queue<TreeNode*> q;
+        q.push(root);
+        while(!q.empty())
+        {
+            int size=q.size();
+            for(int i=0;i<size;i++)
+            {
+                TreeNode* x=q.front();
+                q.pop();
+                if(x->left)
+                    q.push(x->left);
+                if(x->right)
+                    q.push(x->right);
+                if(i==size-1)
+                    ans.push_back(x->val);
+            }
+        }
+        return ans;
+    }
+};

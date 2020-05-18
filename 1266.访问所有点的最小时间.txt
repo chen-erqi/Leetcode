@@ -1,0 +1,16 @@
+//切比雪夫距离 点的最少移动次数为max(dx,dy)
+class Solution {
+public:
+    int minTimeToVisitAllPoints(vector<vector<int>>& points) {
+        int N=points.size();
+        int x0=points[0][0],y0=points[0][1];
+        int ans=0;
+        for(int i=1;i<N;i++)
+        {
+            ans+= max(abs(points[i][0]-x0),abs(points[i][1]-y0));
+            x0=points[i][0];
+            y0=points[i][1];
+        }
+        return ans;
+    }
+};

@@ -1,0 +1,29 @@
+class Solution {
+public:
+    string reformat(string s) {
+        string s1,s2;
+        int s1F=0,s2F=0,flag;
+        for(int i=0;i<s.size();i++)
+        {
+            if(isdigit(s[i]))
+                s1+=s[i];
+            else
+                s2+=s[i];
+        }
+        if(abs((int)s1.size()-(int)s2.size())>1)
+            return "";
+        string ans;
+        if(s1.size()>s2.size())
+            flag=0;
+        else
+            flag=1;
+        for(int i=0;i<s.size();i++)
+        {
+            if(flag==0)
+            {ans+=s1[0];s1.erase(0,1);flag=1;}
+            else
+            {ans+=s2[0];s2.erase(0,1);flag=0;}
+        }
+        return ans;
+    }
+};

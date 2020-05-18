@@ -1,0 +1,72 @@
+//暴力 对于数组中每个元素 找出下雨后水能到达的最高位置 等于两边最大高度的较小值减去当前高度的值
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int ret=0;
+        for(int i=1;i<height.size();i++)
+        {
+            int max_left=0,max_right=0;
+            for(int j=i;j>=0;j--)
+                max_left=max(max_left,height[j]);
+            for(int j=i;j<height.size();j++)
+                max_right=max(max_right,height[j]);
+            ret+=min(max_left,max_right)-height[i];
+        }
+        return ret;
+    }
+};
+
+//栈记录出入 当然格子的注水情况与相邻格子有关
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int ans=0,cur=0;
+        stack<int> s;
+        while(cur<height.size())
+        {
+            while(!s.empty()&&height[cur]>height[s.top()])
+            {
+                int top=s.top();
+                s.pop();
+                if(s.empty())
+                    break;
+                int dis=cur-s.top()-1;
+                int b_h=min(height[cur],height[s.top()])-height[top];
+                ans+=dis*b_h;
+            }
+            s.push(cur++);
+        }
+        return ans;
+    }
+};
+
+//双指针
+//最朴素的思想 左右开始遍历 记录当前左右最大高度 若当前高度在左右最大高度之下 必然可以蓄水
+//如果当前左边大于右边 则当前积水必依赖于右边最高
+//如果当前右边大于左边 则当前积水必依赖于左边最高
+class Solution {
+public:
+    int trap(vector<int>& height) {
+        int left=0,right=height.size()-1,ans=0,left_max=0,right_max=0;
+        while(left<right)
+        {
+            if(height[left]<height[right])
+            {
+                if(height[left]>left_max)
+                    left_max=height[left];
+                else
+                    ans+=left_max-height[left];
+                left++;
+            }
+            else
+            {
+                if(height[right]>right_max)
+                    right_max=height[right];
+                else
+                    ans+=right_max-height[right];
+                right--;
+            }
+        }
+        return ans;
+    }
+};

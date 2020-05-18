@@ -1,0 +1,49 @@
+//枚举 用set类排除重复字符 map构建对应关系 
+class Solution {
+public:
+    int maxFreq(string s, int maxLetters, int minSize, int maxSize) {
+        unordered_map<string,int> H;
+        int n=s.size();
+        int res=0;
+        for(int i=0;i<n;i++)
+        {
+            unordered_set<char> temp;
+            string cur;
+            for(int j=i;j<min(n,i+maxSize);j++)
+            {
+                temp.insert(s[j]);
+                if(temp.size()>maxLetters)
+                  break;
+                cur+=s[j];
+                if(j-i+1>=minSize)
+                {
+                    H[cur]++;
+                    res=max(res,H[cur]);
+                }
+            }
+        }
+        return res;
+    }
+};
+
+//优化 只需大于minSize即可 最大的子串必然小于maxSize 所以枚举所有长度为minSize的子串
+class Solution {
+public:
+    int maxFreq(string s, int maxLetters, int minSize, int maxSize) {
+        unordered_map<string,int> H;
+        int n=s.size();
+        int res=0;
+        for(int i=0;i<n-minSize+1;i++)
+        {
+            string cur=s.substr(i,minSize);//第二个参数为长度
+            unordered_set<char> temp(cur.begin(),cur.end());
+            if(temp.size()<=maxLetters)
+            {
+                H[cur]++;
+                res=max(res,H[cur]);
+            }
+        }
+        return res;
+    }
+};
+

@@ -1,0 +1,78 @@
+//∂”¡–
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        vector<string> v{"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+        queue<string> q;
+        int cnt=0;
+        for(int i=0;i<digits.size();i++)
+        {
+            if(q.empty())
+            {
+                for(auto x:v[digits[i]-'0'])
+                {
+                    string tem;
+                    tem.push_back(x);
+                    q.push(tem);
+                }
+                cnt=q.size();
+            }
+            else
+            {
+                for(int j=0;j<cnt;j++)
+                {
+                    string ss=q.front();
+                    q.pop();
+                    for(auto x:v[digits[i]-'0'])
+                    {
+                        string tem=ss;
+                        tem.push_back(x);
+                        q.push(tem);
+                    }
+                }
+                cnt=q.size();
+            }
+        }
+        vector<string> res;
+        while(!q.empty())
+        {
+            res.push_back(q.front());
+            q.pop();
+        }
+        return res; 
+
+    }
+};
+
+//DFSªÿÀ›
+class Solution {
+public:
+    vector<string> letterCombinations(string digits) {
+        vector<string> v
+        {"","","abc","def","ghi","jkl","mno","pqrs","tuv","wxyz"};
+        string s;
+        vector<string> res;
+        if(digits=="")
+            return res;
+        int pos=0;
+        DFS(digits,pos,s,res,v);
+        return res;
+    }
+    void DFS(string& digits,int pos,string& s,vector<string>& res,vector<string>& v)
+    {
+        if(pos==digits.size())
+        {
+            res.push_back(s);
+            return;
+        }
+        string tem=v[digits[pos]-'0'];
+        for(int i=0;i<tem.size();i++)
+        {
+            s.push_back(tem[i]);
+            DFS(digits,pos+1,s,res,v);
+            s.pop_back();
+        }
+        return;
+        
+    }
+};

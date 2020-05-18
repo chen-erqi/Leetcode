@@ -1,0 +1,25 @@
+class Solution {
+public:
+    int sumFourDivisors(vector<int>& nums) {
+        int res=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            int cnt=0,tem=0;
+            for(int j=1;j<=(int)sqrt(nums[i]);j++)
+                if(nums[i]%j==0)
+                {
+                    if(j==sqrt(nums[i]))
+                    {
+                        cnt+=1;
+                        tem+=j;
+                        continue;
+                    }
+                    cnt+=2;
+                    tem+=(j+nums[i]/j);
+                }
+            if(cnt==4)
+                res+=tem;
+        }
+        return res;
+    }
+};

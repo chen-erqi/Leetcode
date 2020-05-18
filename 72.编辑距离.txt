@@ -1,0 +1,22 @@
+class Solution {
+public:
+    int minDistance(string word1, string word2) {
+        int n=word1.size(),m=word2.size();
+        if(n*m==0)
+            return n+m;
+        int dp[n+1][m+1];
+        for(int i=0;i<n+1;i++)
+            dp[i][0]=i;
+        for(int i=0;i<m+1;i++)
+            dp[0][i]=i;
+        for(int i=1;i<n+1;i++)
+            for(int j=1;j<m+1;j++)
+            {
+                int up=dp[i-1][j]+1;
+                int left=dp[i][j-1]+1;
+                int up_left=dp[i-1][j-1]+(int)(word1[i-1]!=word2[j-1]);//若是此时i-1与j-1处相同 即不用替换
+                dp[i][j]=min(up,min(left,up_left));
+            }
+        return dp[n][m];
+    }
+};

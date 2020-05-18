@@ -1,0 +1,67 @@
+//多源广度优先搜索
+class Solution {
+private:
+    static constexpr int dirs[4][2]={{0,1},{0,-1},{1,0},{-1,0}};
+public:
+    vector<vector<int>> updateMatrix(vector<vector<int>>& matrix) {
+        int m=matrix.size(),n=matrix[0].size();
+        vector<vector<int>> dist(m,vector<int>(n));
+        vector<vector<int>> seen(m,vector<int>(n));
+        queue<pair<int,int>> q;
+        for(int i=0;i<m;i++)
+            for(int j=0;j<n;j++)
+                if(matrix[i][j]==0)
+                {
+                    seen[i][j]=1;
+                    q.push(make_pair(i,j));
+                }
+        while(!q.empty())
+        {
+            auto [i,j]=q.front();
+            q.pop();
+            for(int d=0;d<4;d++)
+            {
+                int ni=i+dirs[d][0];
+                int nj=j+dirs[d][1];
+                if(ni>=0&&ni<m&&nj>=0&&nj<n&&!seen[ni][nj])
+                {
+                    dist[ni][nj]=dist[i][j]+1;
+                    q.push(make_pair(ni,nj));
+                    seen[ni][nj]=1;
+                }
+            }
+        }
+        return dist;
+    }
+};
+
+//动态规划
+//从左上和右下分别规划 难点在于dp构建时 matrix==0时 dp==0
+//min的话 matrix==1 dp==10000 肯定要大于其他的距离 所以可以进行更新
+class Solution {
+public:
+    vector<vector<int>> updateMatrix(vector<vector<int>>& matrix) {
+        int m=matrix.size(),n=matrix[0].size();
+        vector<vector<int>> dp(m,vector<int>(n));
+        for(int i=0;i<m;i++)
+            for(int j=0;j<n;j++)
+                dp[i][j]=matrix[i][j]==0?0:100001;  
+        for(int i=0;i<m;i++)
+            for(int j=0;j<n;j++)
+            {
+                if(i-1>=0)
+                    dp[i][j]=min(dp[i][j],dp[i-1][j]+1);
+                if(j-1>=0)
+                    dp[i][j]=min(dp[i][j],dp[i][j-1]+1);
+            }     
+        for(int i=m-1;i>=0;i--)
+            for(int j=n-1;j>=0;j--)
+            {
+                if(i+1<m)
+                    dp[i][j]=min(dp[i][j],dp[i+1][j]+1);
+                if(j+1<n)
+                    dp[i][j]=min(dp[i][j],dp[i][j+1]+1);
+            }     
+        return dp;
+    }
+};

@@ -1,0 +1,32 @@
+class Solution {
+public:
+int maxEvents(vector<vector<int>>& events) {
+        int n=events.size();
+        if(n==1)
+            return 1;
+        vector<int> v(100001,0);
+        sort(events.begin(),events.end());
+        int sum=0;
+        for(int i=n-1;i>=0;i--)
+        {
+            if(events[i][0]==events[i][1]&&v[events[i][0]]==0)
+                v[events[i][0]]++;
+            else if(events[i][0]!=events[i][1])
+            {
+                for(int j=events[i][1];j>=events[i][0];j--)
+                {
+                    if(v[j]==0)
+                    {
+                        v[j]++;
+                        break;
+                    }
+                }
+            }
+        }
+        for(int i=0;i<v.size();i++)
+            if(v[i]==1)
+                sum++;
+        return sum;
+        
+    }
+};

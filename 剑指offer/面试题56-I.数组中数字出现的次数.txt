@@ -1,0 +1,21 @@
+//如果是出现一次的数字只有一个 那么就是全员异或 此时出现个数有两个 所以要分组
+//那么 借助a^b的结果 可以得出当结构某一位为1时 此时a b不相同 所以依据这里可以进行分组
+//分组异或 必须满足相同的数字必须在同一组 两个只出现一次的数字必须在不同组
+
+class Solution {
+public:
+    vector<int> singleNumbers(vector<int>& nums) {
+        int a=0,b=0,res=0;
+        for(int x:nums)
+            res^=x;
+        int lowbit=res&(-res);
+        for(int x:nums)
+        {
+            if((x&lowbit)==0)
+                a^=x;
+            else
+                b^=x;
+        }
+        return vector<int>{a,b};
+    } 
+};

@@ -1,0 +1,33 @@
+class Solution {
+public:
+    int minSteps(string s, string t) {
+        int n=s.size();
+        int step=0;
+        vector<int> vs(26,0);
+        vector<int> vt(26,0);
+        for(auto x:s)
+            vs[x-97]++;
+        for(auto x:t)
+            vt[x-97]++;
+        for(int i=0;i<26;i++)
+        {
+            if(vs[i]==vt[i])
+            {
+                
+                vt[i]=0;
+            }
+            else if(vs[i]>vt[i])
+            {
+                
+                vt[i]=0;
+            }
+            else
+            {
+                vt[i]=(vt[i]-vs[i]);
+            }
+        }
+        for(auto x:vt)
+            step+=x;
+        return step;
+    }
+};

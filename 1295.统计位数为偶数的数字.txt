@@ -1,0 +1,17 @@
+#include <sstream>
+class Solution {
+public:
+    int findNumbers(vector<int>& nums) {
+        int res=0;
+        for(auto x:nums)
+        {
+            stringstream ss;
+            string temp;
+            ss<<x;
+            ss>>temp;
+            if(temp.size()%2==0)
+              res++;
+        }
+        return res;
+    }
+};

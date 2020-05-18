@@ -1,0 +1,26 @@
+//¼Ð±Æ·¨
+class Solution {
+public:
+    int maxArea(vector<int>& height) {
+        int i,j,Max=0,current;
+        int size=height.size()-1;
+        for(i=0;i<size;)
+        {
+            if(height[i]>height[size])
+              {
+                  current=(size-i)*height[size];
+                  if(current>Max)
+                    Max=current;
+                    size--;
+              }
+            else
+              {
+                  current=(size-i)*height[i];
+                  if(current>Max)
+                    Max=current;
+                  i++;
+              }
+        }
+        return Max;
+    }
+};

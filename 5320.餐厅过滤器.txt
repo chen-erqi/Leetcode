@@ -1,0 +1,23 @@
+class Solution {
+public:
+    vector<int> filterRestaurants(vector<vector<int>>& restaurants, int veganFriendly, int maxPrice, int maxDistance) {
+        vector<int> res;
+        vector<pair<int,int>> temp;
+        for(int i=0;i<restaurants.size();i++)
+        {
+            if((veganFriendly==0||restaurants[i][2]==veganFriendly)&&restaurants[i][3]<=maxPrice&&restaurants[i][4]<=maxDistance)
+              temp.push_back({restaurants[i][1],restaurants[i][0]});
+        }
+
+        sort(temp.begin(),temp.end(),greater<pair<int,int>>());
+        for(int i=0;i<temp.size();i++)
+        {
+            res.push_back(temp[i].second);
+        }
+
+        return res;
+    }
+};
+//注意pair类
+//sort的第三个参数 greater<data-type>() 为降序
+                              less<data-type>()为升序

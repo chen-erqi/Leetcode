@@ -1,0 +1,21 @@
+//先排序 一定要升序 能合并的区间一定是有序的
+//若无重叠则先入数组 后续更新有节点即可 记得取最大值
+class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        int N=intervals.size();
+        if(!N)
+            return {};
+        sort(intervals.begin(),intervals.end());
+        vector<vector<int>> res;
+        for(int i=0;i<N;i++)
+        {
+            int L=intervals[i][0],R=intervals[i][1];
+            if(!res.size()||res.back()[1]<L)
+                res.push_back({L,R});
+            else
+                res.back()[1]=max(R,res.back()[1]);
+        }
+        return res;
+    }
+};

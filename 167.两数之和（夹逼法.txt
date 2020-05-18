@@ -1,0 +1,43 @@
+夹逼法
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& numbers, int target) {
+        int i=0;
+        int j=numbers.size()-1;
+        vector<int> values;
+        while(i<j)
+        {
+            if(numbers[i]+numbers[j]==target)
+            {
+                values.push_back(++i);
+                values.push_back(++j);
+                break;
+            }
+            else if(numbers[i]+numbers[j]>target)
+              j--;
+            else
+              i++;
+        }
+        return values;
+    }
+};
+map
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& numbers, int target) {
+        vector<int> values;
+        unordered_map<int,int> map;
+        for(int i=0;i<numbers.size();i++)
+          map[numbers[i]]=i;
+        for(int i=0;i<numbers.size();i++)
+        {
+            if(map.count(target-numbers[i])&&map[target-numbers[i]]!=i)
+            {
+                values.emplace_back(i+1);//要注意i++改变i本身的值影响下一语句
+                values.emplace_back(map[target-numbers[i]]+1);
+                break;
+            }
+        }
+        return values;
+    }
+};

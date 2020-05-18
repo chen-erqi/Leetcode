@@ -1,0 +1,13 @@
+//完全平方数是一个等差数列和 1 3 5 7....
+class Solution {
+public:
+    bool isPerfectSquare(int num) {
+        int x=1;
+        while(num>0)
+        {
+            num-=x;
+            x+=2;
+        }
+        return num==0;
+    }
+};

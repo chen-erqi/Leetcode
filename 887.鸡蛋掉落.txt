@@ -1,0 +1,41 @@
+//原问题要分解成子问题 由于不知道真正的F值 所以必须保证最坏情况下dp(K,N)的值最大 即局部贪心策略
+//而dp(K,N-X)随X递增而减小 dp(K-1,X-1)随X递增而增大 所以是二分查找寻找相交点 
+//而F是离散的 所以最优点可以通过夹逼得到
+class Solution {
+public:
+    unordered_map<int,int> memo;
+    int dp(int K,int N)
+    {
+        if(memo.find(N*100+K)==memo.end())//映射到一维哈希中
+        {
+            int ans;
+            if(N==0)
+                ans=0;
+            else if(K==1)
+                ans=N;
+            else
+            {
+                int lo=1,hi=N;
+                while(lo+1<hi)
+                {
+                    int X=(lo+hi)/2;
+                    int t1=dp(K,N-X);
+                    int t2=dp(K-1,X-1);
+
+                    if(t1<t2)//t2即向下找步数多 所以应该向下
+                        hi=X;
+                    else if(t2<t1)
+                        lo=X;
+                    else
+                        lo=hi=X;
+                }
+                ans=1+min(max(dp(K,N-lo),dp(K-1,lo-1)),max(dp(K,N-hi),dp(K-1,hi-1)));
+            }
+            memo[N*100+K]=ans;
+        }
+        return memo[N*100+K];
+    }
+    int superEggDrop(int K, int N) {
+        return dp(K,N);
+    }
+};

@@ -1,0 +1,229 @@
+//string c++库 find函数 
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        if(needle.empty())
+            return 0;
+        int pos=haystack.find(needle);
+        return pos;
+    }
+};
+
+//Sunday算法 时间复杂度 最坏为O(M*N) 平均复杂度为O(N) N为源串长度
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        if(needle.empty())
+            return 0;
+        
+        int slen=haystack.size();
+        int tlen=needle.size();
+        int i=0,j=0;//i指向源串首位 j指向子串首位
+        int k;
+        int m=tlen;//第一次匹配时 源串中参与匹配的元素的下一位
+        
+        for(;i<slen;)
+        {
+            if(haystack[i]!=needle[j])
+            {
+                for(k=tlen-1;k>=0;k--)//遍历查找此时子串与源串[i+tlen+1]相等的最右位置
+                {
+                    if(needle[k]==haystack[m])
+                        break;
+                }
+                i=m-k;//i为下一次匹配源串开始首位 Sunday算法核心：最大限度跳过相同元素
+                j=0;//j依然为子串首位
+                m=i+tlen;//m为下一次参与匹配的源串最后一位元素的下一位
+                if(m>slen)//当下一次参与匹配的源串字数的最后一位的下一位超过源串长度时
+                    return -1;
+            }
+            else
+            {
+                if(j==tlen-1)//若j为子串末位 匹配成功 返回源串此时匹配首位
+                    return i-j;
+                i++;
+                j++;
+            }
+        }
+        return -1;//当超过源串长度时 
+    }
+};
+
+//BF 二维循环匹配法 时间复杂度为O(M*N) N为源串长度
+class Solution {
+public:
+    int strStr(string haystack, string needle) {
+        if(needle.empty())
+            return 0;
+        
+        int i=0,j=0;
+        while(haystack[i]!='\0'&&needle[j]!='\0')
+        {
+            if(haystack[i]==needle[j])
+            {
+                i++;
+                j++;
+            }
+            else
+            {
+                i=i-j+1;
+                j=0;
+            }
+        }
+        if(needle[j]=='\0')
+            return i-j;
+        
+        return -1;
+    }
+};
+
+//KMP 时间复杂度O(M+N)
+class Solution {
+public:
+    vector<int> getnext(string str)
+        {
+            int len=str.size();
+            vector<int> next;
+            next.push_back(-1);//next数组初值为-1
+            int j=0,k=-1;
+            while(j<len-1)
+            {
+                if(k==-1||str[j]==str[k])//str[j]后缀 str[k]前缀
+                {
+                    j++;
+                    k++;
+                    next.push_back(k);
+                }
+                else
+                {
+                    k=next[k];
+                }
+            }
+            return next;
+        }
+    int strStr(string haystack, string needle) {
+        if(needle.empty())
+            return 0;
+        
+        int i=0;//源串
+        int j=0;//子串
+        int len1=haystack.size();
+        int len2=needle.size();
+        vector<int> next;
+        next=getnext(needle);
+        while((i<len1)&&(j<len2))
+        {
+            if((j==-1)||(haystack[i]==needle[j]))
+            {
+                i++;
+                j++;
+            }
+            else
+            {
+                j=next[j];//获取下一次匹配的位置
+            }
+        }
+        if(j==len2)
+            return i-j;
+        
+        return -1;
+    }
+};
+
+//KMP的next数组可以进行优化  当字符失配时 回到相同字符无意义 应继续递归
+ vector<int> getnext(string str)
+        {
+            int len=str.size();
+            vector<int> next;
+            next.push_back(-1);//next数组初值为-1
+            int j=0,k=-1;
+            while(j<len-1)
+            {
+                if(k==-1||str[j]==str[k])//str[j]后缀 str[k]前缀
+                {
+                    j++;
+                    k++;
+                    if(str[j]!=str[k])
+                        next.push_back(k);
+                    else
+                        next.push_back(next[k]);
+                }
+                else
+                {
+                    k=next[k];
+                }
+            }
+            return next;
+        }
+
+//BM算法 时间复杂度最差和KMP一样 最佳是O(n)
+class Solution {
+public:
+    void get_bmB(string& T,vector<int>& bmB)//坏字符
+    {
+        int tlen=T.size();
+        for(int i=0;i<256;i++)//不匹配直接移动子串
+        {
+            bmB.push_back(tlen);
+        }
+        for(int i=0;i<tlen-1;i++)//靠右原则
+        {
+            bmB[T[i]]=tlen-i-1;
+        }
+    }
+    
+    void get_suff(string& T,vector<int>& suff)
+    {
+        int tlen=T.size();
+        int k;
+        for(int i=tlen-2;i>=0;i--)
+        {
+            k=i;
+            while(k>=0&&T[k]==T[tlen-1-i+k])
+                k--;
+            suff[i]=i-k;
+        }
+    }
+    
+    void get_bmG(string& T,vector<int>& bmG)//好后缀
+    {
+        int i,j;
+        int tlen=T.size();
+        vector<int> suff(tlen+1,0);
+        get_suff(T,suff);//suff存储子串的最长匹配长度
+        //初始化 当没有好后缀也没有公共前缀时
+        for(i=0;i<tlen;i++)
+            bmG[i]=tlen;
+        //没有好后缀 有公共前缀 调用suff 但是要右移一位 类似KMP里的next数组
+        for(i=tlen-1;i>=0;i--)
+            if(suff[i]==i+1)
+                for(j=0;j<tlen-1;j++)
+                    if(bmG[j]==tlen)//保证每个位置不会重复修改
+                        bmG[j]=tlen-1-i;
+        //有好后缀 有公共前缀
+        for(i=0;i<tlen-1;i++)
+            bmG[tlen-1-suff[i]]=tlen-1-i;//移动距离
+    }
+    
+    int strStr(string haystack, string needle) {
+        
+        int i=0;
+        int j=0;
+        int tlen=needle.size();
+        int slen=haystack.size();
+        
+        vector<int> bmG(tlen,0);
+        vector<int> bmB;
+        get_bmB(needle,bmB);
+        get_bmG(needle,bmG);
+        
+        while(i<=slen-tlen)
+        {
+            for(j=tlen-1;j>-1&&haystack[i+j]==needle[j];j--);
+            if(j==(-1))
+                return i;
+            i+=max(bmG[j],bmB[haystack[i+j]]-(tlen-1-j));
+        }
+        return -1;
+    }
+};

@@ -1,0 +1,23 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int DFS(TreeNode* x)
+    {
+        if(!x)
+            return -1;
+        return 1+max(DFS(x->left),DFS(x->right));
+    }
+    bool isBalanced(TreeNode* root) {
+        if(!root)
+            return true;
+        return abs(DFS(root->left)-DFS(root->right))<2&&isBalanced(root->left)&&isBalanced(root->right);
+    }
+};

@@ -1,0 +1,67 @@
+//DFS
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        vector<vector<int>> v;
+        dfs(v,root,0);
+        return v;
+    }
+    void dfs(vector<vector<int>>& v,TreeNode* root,int level)
+    {
+        if(!root)
+            return;
+        if(level>=v.size())
+            v.push_back(vector<int>());
+        if(level%2==1)
+            v[level].insert(v[level].begin(),root->val);
+        else
+            v[level].push_back(root->val);
+        dfs(v,root->left,level+1);
+        dfs(v,root->right,level+1);
+    }
+};
+
+//BFS
+class Solution {
+public:
+    vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+        if(!root)
+            return {};
+        vector<vector<int>> v;
+        deque<TreeNode*> q;
+        q.push_back(root);
+        bool odd=true;//odd lines
+        while(!q.empty())
+        {
+            vector<int> cur;
+            int size=q.size();
+            for(int i=size-1;i>=0;i--)
+            {
+                TreeNode* p;
+                if(odd)//odd lines are in reverse order.read from left to right.insert to the deque in the trail
+                {
+                    p=q.front();
+                    q.pop_front();
+                    cur.push_back(p->val);
+                    if(p->left)
+                        q.push_back(p->left);
+                    if(p->right)
+                        q.push_back(p->right);
+                }
+                else//even lines are in order.read from right to left.insert to the deque in the head
+                {
+                    p=q.back();
+                    q.pop_back();
+                    cur.push_back(p->val);
+                    if(p->right)
+                        q.push_front(p->right);
+                    if(p->left)
+                        q.push_front(p->left);
+                }
+            }
+            odd=!odd;
+            v.push_back(cur);
+        }
+        return v;
+    }
+};

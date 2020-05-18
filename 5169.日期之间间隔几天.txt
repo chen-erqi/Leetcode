@@ -1,0 +1,59 @@
+class Solution {
+public:
+    int noLeap[14]={-1,31,28,31,30,31,30,31,31,30,31,30,31};
+private:
+    void getDate(string &date,int &year,int &mon,int &day)
+    {
+        stringstream ss;
+        while(date.find("-")!=string::npos)
+        {
+            date=date.replace(date.find("-"),1," ");            
+        }
+        ss<<date;
+        ss>>year>>mon>>day;
+    }
+private:
+    bool isLeapYear(int &year)
+    {
+        if((year%4==0&&year%100!=0)||year%400==0)
+            return true;
+        else
+            return false;
+    }
+private:
+    int difDay(int &year,int &mon,int &day)
+    {
+        int sum=0;
+        for(int i=1971;i<year;i++)
+        {
+            if(isLeapYear(i))
+                sum+=366;
+            else
+                sum+=365;
+        }        
+        for(int i=1;i<mon;i++)
+        {
+            if(i==2)
+            {
+                if(isLeapYear(year))
+                    sum+=29;
+                else
+                    sum+=28;
+            }
+            else
+                sum+=noLeap[i];
+        }
+        sum+=day;
+        return sum;
+    }
+public:
+    int daysBetweenDates(string date1, string date2) {
+        int year1=0,mon1=0,day1=0;
+        int year2=0,mon2=0,day2=0;
+        getDate(date1,year1,mon1,day1);
+        getDate(date2,year2,mon2,day2);
+        day1=difDay(year1,mon1,day1);
+        day2=difDay(year2,mon2,day2);
+        return abs(day1-day2);
+    }
+};

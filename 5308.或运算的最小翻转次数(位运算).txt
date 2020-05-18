@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int minFlips(int a, int b, int c) {
+        int res=0;
+        for(int i=0;i<30;i++)
+        {
+            int na=(a>>i)&1;//1È¡µÚiÎ»
+            int nb=(b>>i)&1;
+            int nc=(c>>i)&1;
+
+            if(nc>0)
+            {
+                if(na==0&&nb==0)
+                  res++;
+            }
+            else
+            {
+                res+=na+nb;
+            }
+        }
+        return res;
+    }
+};

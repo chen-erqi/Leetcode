@@ -1,0 +1,100 @@
+哈希表
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        int maj=0,cnt=0;//维护一个最大值 免去最后遍历哈希表
+        unordered_map<int,int> v;
+        for(int x:nums)
+        {
+            v[x]++;
+            if(v[x]>cnt)
+            {
+                maj=x;
+                cnt=v[x];
+            }
+        }
+        return maj;
+    }
+};
+
+//语言sort 空间复杂度 logn 栈空间 
+//在N/2处必定为众数
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        return nums[nums.size()/2];
+    }
+};
+
+//随机法 期望的时间复杂度是线性的 即为O(n) 因为每一次都是1/2
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        while(1+1==2)
+        {
+            int candidate=nums[rand()%nums.size()];
+            int cnt=0;
+            for(int x:nums)
+            {
+                if(x==candidate)
+                    cnt++;
+            }
+            if(cnt>nums.size()/2)
+                return candidate;
+        }
+        return -1;
+    }
+};
+
+//分治法 如果X为数组的众数 则必然为数组的某一部分的众数
+//递归的空间复杂度为logn 时间复杂度为 nlogn
+class Solution {
+public:
+    int cnt_in_range(vector<int> &nums,int target,int lo,int hi)
+    {
+        int cnt=0;
+        for(int i=lo;i<=hi;i++)
+            if(nums[i]==target)
+                cnt++;
+        return cnt;
+    }
+    int maj_ele(vector<int> &nums,int lo,int hi)
+    {
+        if(lo==hi)
+            return nums[lo];
+        int mid=(lo+hi)/2;
+        int left_maj=maj_ele(nums,lo,mid);
+        int right_maj=maj_ele(nums,mid+1,hi);
+        if(cnt_in_range(nums,left_maj,lo,hi)>(hi-lo+1)/2)
+            return left_maj;
+        if(cnt_in_range(nums,right_maj,lo,hi)>(hi-lo+1)/2)
+            return right_maj;
+        return -1;
+    }
+    int majorityElement(vector<int>& nums) {
+        return maj_ele(nums,0,nums.size()-1);
+    }
+};
+
+//摩尔投票法
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        int candidate=-1;
+        int cnt=0;
+        for(int x:nums)
+        {
+            if(x==candidate)
+                cnt++;
+            else if(--cnt<0)
+            {
+                candidate=x;
+                cnt=1;
+            }
+        }
+        return candidate;
+    }
+};
+
+ 

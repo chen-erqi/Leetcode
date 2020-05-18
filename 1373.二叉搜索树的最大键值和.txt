@@ -1,0 +1,40 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int res=0;
+
+    bool isBST(TreeNode* root,int min,int max)//判断是否为BST
+    {
+        if(!root)
+            return true;
+        return root->val>min&&root->val<max&&isBST(root->left,min,root->val)&&isBST(root->right,root->val,max);
+    }
+
+    int sumBST(TreeNode* x)//求BST的和
+    {
+        if(!x)
+            return 0;
+        int sum=x->val+sumBST(x->left)+sumBST(x->right);
+        res=max(sum,res);
+        return sum;
+    }
+
+    int maxSumBST(TreeNode* root) {
+        if(isBST(root,INT_MIN,INT_MAX))
+        {
+            sumBST(root);
+            return res;
+        }
+        int left=maxSumBST(root->left);
+        int right=maxSumBST(root->right);
+        return max(left,right);
+    }
+};

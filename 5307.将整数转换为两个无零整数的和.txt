@@ -1,0 +1,43 @@
+class Solution {
+//ÕûÊýÅÐ¶Ï
+bool is(int n)
+{
+    while(n>0)
+    {
+        if(n%10==0)
+         return false;
+        else
+         n/=10;
+    }
+    return true;
+}
+//×ª»»Îª×Ö·û´®ÅÐ¶Ï
+bool is(int n)
+{
+    char res[10];
+    sprintf(res,"%d",n);
+    int i=0;
+    while(i<10)
+    {
+        if(res[i]=='0')
+          return false;
+        i++;
+    }
+    return true;
+}
+public:
+    vector<int> getNoZeroIntegers(int n) {
+        vector<int> res;
+        for(int i=1;i<n;i++)
+        {
+            int j=n-i;
+            if(is(i)&&is(n-i))
+            {
+                res.push_back(i);
+                res.push_back(n-i);
+                break;
+            }
+        }
+        return res;
+    }
+};

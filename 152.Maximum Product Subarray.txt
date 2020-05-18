@@ -1,0 +1,19 @@
+//dynamic programming
+//Consider the properties of positive and negative in the process.
+//Set up two variables which means the maximum product and the minimum product in the process
+//Set up a varibales to record answer in loop
+
+class Solution {
+public:
+    int maxProduct(vector<int>& nums) {
+        int maxF=nums[0],minF=nums[0],ans=nums[0];
+        for(int i=1;i<nums.size();i++)
+        {
+            int curMax=maxF,curMin=minF;
+            maxF=max(curMax*nums[i],max(curMin*nums[i],nums[i]));
+            minF=min(curMax*nums[i],min(curMin*nums[i],nums[i]));
+            ans=max(maxF,ans);
+        }
+        return ans;
+    }
+};

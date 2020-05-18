@@ -1,0 +1,41 @@
+//二叉树空指针为节点数+1
+class Solution {
+public:
+    bool validateBinaryTreeNodes(int n, vector<int>& l, vector<int>& r){
+        int count=0;
+        int N=l.size();
+        for(int i=0;i<N;i++)
+        {
+            if(l[i]==-1)
+                count++;
+            if(r[i]==-1)
+                count++;
+        }
+        return n+1==count;
+    }
+};
+
+//bfs 记录遍历的结点数与条件是否对应
+class Solution {
+public:
+    bool validateBinaryTreeNodes(int n, vector<int>& l, vector<int>& r){
+        set<int> def;
+        queue<int> q;
+        q.push(0);
+        int step=0;
+        while(!q.empty())
+        {
+            int x=q.front();
+            q.pop();
+            if(def.find(x)!=def.end())
+                return false;
+            def.insert(x);
+            step++;
+            if(l[x]!=-1)
+              q.push(l[x]);
+            if(r[x]!=-1)
+              q.push(r[x]);
+        }
+        return step==n;
+    }
+};

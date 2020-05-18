@@ -1,0 +1,57 @@
+//only cut the upper part or the left part of pizza at a time which means that the lower right
+part of the pizza must be left.In this way,we record the position of the upper left corner to
+indicate the remaining pizza.
+//dp[i][j][k]:i,j is the coordinates of the top left corner of the rest of the pizza and cut this
+part of pizza k times.
+//cnt[i][j]:The number of apples in this part of pizza with (i,j) as the upper left corner.
+
+
+
+constexpr int MOD=1000000007;
+class Solution {
+public:
+    int dp[55][55][15];
+    vector<vector<int>> cnt;
+    int nr,nc;
+    int ways(vector<string>& pizza, int k) {
+        nr=pizza.size();
+        nc=pizza[0].size();
+        cnt.assign(nr+1,vector<int>(nc+1,0));
+        for(int i=nr-1;i>=0;i--)
+            for(int j=nc-1;j>=0;j--)
+            {
+                cnt[i][j]=cnt[i][j+1]+cnt[i+1][j]-cnt[i+1][j+1];
+                if(pizza[i][j]=='A')
+                    cnt[i][j]++;
+            }
+        memset(dp,-1,sizeof(dp));
+        return split(0,0,k-1,cnt[0][0]);
+    }
+
+    int split(int i,int j,int k,int tot)
+    {
+        if(k==0)
+            return 1;
+        int &ans=dp[i][j][k];
+        if(ans!=-1)
+            return ans;
+        ans=0;
+        for(int p=i;p<nr;p++)
+        {
+            if(cnt[p+1][j]>=k&&cnt[p+1][j]<cnt[i][j])
+            {
+                ans+=split(p+1,j,k-1,cnt[p+1][j]);
+                ans%=MOD;
+            }
+        }
+        for(int p=j;p<nc;p++)
+        {
+            if(cnt[i][p+1]>=k&&cnt[i][p+1]<cnt[i][j])
+            {
+                ans+=split(i,p+1,k-1,cnt[i][p+1]);
+                ans%=MOD;
+            }
+        }
+        return ans;
+    }
+};

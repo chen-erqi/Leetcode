@@ -1,0 +1,52 @@
+/**
+ * // This is the MountainArray's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * class MountainArray {
+ *   public:
+ *     int get(int index);
+ *     int length();
+ * };
+ */
+
+//因为山脉数组是左边升序 右边降序 为了统一二分方向 应该在右边查找时取反
+//查找峰值是差分查找 左边单调递增 就是正数 右边单调递减 是负数 所以满足有序性
+//二分查找不断循环 到最后只有一个数 如果这个数不是目标值 则不对
+//所以 一般情况下是l<r 此时退出时 l==r  
+//题目中第二个 l<=r 是为了返回-1方便
+
+class Solution {
+public:
+    int findInMountainArray(int target, MountainArray &mountainArr) {
+        int l=0,r=mountainArr.length()-1,peak;
+        while(l<r)
+        {
+            int mid=l+(r-l)/2;
+            if(mountainArr.get(mid)<mountainArr.get(mid+1))
+                l=mid+1;
+            else
+                r=mid-1;
+        }
+        peak=l;
+        int idx=binary_search(mountainArr,target,0,peak,[](int x)->int{return x;});
+        if(idx!=-1)
+            return idx;
+        return binary_search(mountainArr,target,peak+1,mountainArr.length()-1,[](int x)->int{return -x;});
+    }
+
+    int binary_search(MountainArray& mountainArr,int target,int l,int r,int key(int))
+    {
+        target=key(target);
+        while(l<=r)
+        {
+            int mid=l+(r-l)/2;
+            int cur=key(mountainArr.get(mid));
+            if(cur==target)
+                return mid;
+            if(cur<target)
+                l=mid+1;
+            else
+                r=mid-1;
+        }
+        return -1;
+    }
+};

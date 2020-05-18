@@ -1,0 +1,42 @@
+//DFS 传递参数为父亲结点的信息及当前应走的方向和此时最长交错路径长度
+//当前结点应向左且可以向左，就让向左且len+1
+//当前结点应向左但无法向左，就向右且len重置为1
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int maxAns;
+    void dfs(TreeNode *x,bool dir,int len)
+    {
+        maxAns=max(maxAns,len);
+        if(!dir)//应向左走
+        {
+            if(x->left)
+                dfs(x->left,1,len+1);
+            if(x->right)
+                dfs(x->right,0,1);
+        }
+        else//应向右走
+        {
+            if(x->left)
+                dfs(x->left,1,1);
+            if(x->right)
+                dfs(x->right,0,len+1);
+        }
+    }
+    int longestZigZag(TreeNode* root) {
+        if(!root)
+            return 0;
+        maxAns=0;
+        dfs(root,0,0);//0是应向左走
+        dfs(root,1,0);//1是应向右走
+        return maxAns;
+    }
+};

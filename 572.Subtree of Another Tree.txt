@@ -1,0 +1,101 @@
+//dfs
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool isSubtree(TreeNode* s, TreeNode* t) {
+        return dfs(s,t);
+    }
+    bool dfs(TreeNode *o,TreeNode *t)
+    {
+        if(!o)
+            return false;
+        return check(o,t)||dfs(o->left,t)||dfs(o->right,t);
+    }
+    bool check(TreeNode *o,TreeNode *t)
+    {
+        if(!o&&!t)
+            return true;
+        if((!o&&t)||(o&&!t)||(o->val!=t->val))
+            return false;
+        return check(o->left,t->left)&&check(o->right,t->right);
+    }
+};
+
+//kmp
+//A tree is continuous in preorder traversal (dfs order)
+//then match those order 
+//insert lNULL or rNULL when the left or right child of a node is empty
+
+
+class Solution {
+public:
+    vector<int> sOrder,tOrder;
+    int maxElement,lNull,rNUll;
+    void getMaxElement(TreeNode* x)
+    {
+        if(!x)
+            return;
+        maxElement=max(maxElement,x->val);
+        getMaxElement(x->left);
+        getMaxElement(x->right);
+    }
+    void getDFSorder(TreeNode* x,vector<int>& v)
+    {
+        if(!x)
+            return;
+        v.push_back(x->val);
+        if(x->left)
+            getDFSorder(x->left,v);
+        else
+            v.push_back(lNull);
+        if(x->right)
+            getDFSorder(x->right,v);
+        else
+            v.push_back(rNUll);
+    }
+    bool kmp()
+    {
+        int sLen=sOrder.size(),tLen=tOrder.size();
+        vector<int> fail(tOrder.size(),-1);
+        for(int i=1,j=-1;i<tLen;i++)
+        {
+            while(j!=-1&&tOrder[i]!=tOrder[j+1])
+                j=fail[j];
+            if(tOrder[i]==tOrder[j+1])
+                j++;
+            fail[i]=j;
+        }
+        for(int i=0,j=-1;i<sLen;i++)
+        {
+            while(j!=-1&&sOrder[i]!=tOrder[j+1])
+                j=fail[j];
+            if(sOrder[i]==tOrder[j+1])
+                j++;
+            if(j==tLen-1)
+                return true;
+        }
+        return false;
+    }
+    bool isSubtree(TreeNode* s, TreeNode* t) {
+        maxElement=INT_MIN;
+        getMaxElement(s);
+        getMaxElement(t);
+
+        lNull=maxElement+1;
+        rNUll=maxElement+2;
+
+        getDFSorder(s,sOrder);
+        getDFSorder(t,tOrder);
+
+        return kmp();
+    }
+};

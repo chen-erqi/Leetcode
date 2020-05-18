@@ -1,0 +1,22 @@
+//关键问题在于 nums[L]==nums[mid]==nums[R]
+//所以每次搜索要进行前后去重
+
+class Solution {
+public:
+    bool search(vector<int>& nums, int target) {
+        int L=0,R=nums.size()-1;
+        while(L<=R)
+        {
+            while(L!=R&&nums[L]==nums[R])
+                R--;
+            int mid=L+(R-L)/2;
+            if(nums[mid]==target)
+                return true;
+            if((nums[0]<=target)^(target<=nums[mid])^(nums[mid]<nums[0]))
+                L=mid+1;
+            else
+                R=mid-1;
+        }
+        return false;
+    }
+};

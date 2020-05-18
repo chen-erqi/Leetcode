@@ -1,0 +1,74 @@
+//双指针
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        if(nums.empty())
+            return 0;
+        int i=0,j=0;
+        for(j=0;j<nums.size();j++)
+        {
+            if(nums[j]!=val)
+            {
+                nums[i++]=nums[j];
+            }
+        }
+        return i;
+    }
+};
+
+//元素较少时 元素和最后一个元素替换 并将向量长度减少
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        if(nums.empty())
+            return 0;
+        int len=nums.size();
+        int i=0;
+        while(i<len)
+        {
+            if(nums[i]==val)
+            {
+                nums[i]=nums[len-1];
+                len--;
+            }
+            else
+                i++;
+        }
+        return len;
+    }
+};
+
+//使用迭代器 遍历删除重复元素
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        if(nums.empty())
+            return 0;
+        vector<int>::iterator i;
+        for(i=nums.begin();i!=nums.end();)
+        {
+            if(*i==val)
+                i=nums.erase(i);
+            else
+                i++;
+        }
+        return nums.size();
+    }
+};
+
+//迭代器双指针
+class Solution {
+public:
+    int removeElement(vector<int>& nums, int val) {
+        if(nums.empty())
+            return 0;
+        vector<int>::iterator i;
+        int index=0;
+        for(i=nums.begin();i!=nums.end();i++)
+        {
+            if(*i!=val)
+                nums[index++]=*i;
+        }
+        return index;
+    }
+};

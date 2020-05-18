@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int game(vector<int>& guess, vector<int>& answer) {
+        int res=0;
+        for(int i=0;i<guess.size();i++)
+            if(guess[i]==answer[i])
+                res++;
+        return res;
+    }
+};
+
+//比较相同或不同---异或 相同为0 不同为1 
+//因为个数很少 所以不需要循环
+class Solution {
+public:
+    int game(vector<int>& guess, vector<int>& answer) {
+        return !(guess[0]^answer[0])+!(guess[1]^answer[1])+!(guess[2]^answer[2]);
+    }
+};

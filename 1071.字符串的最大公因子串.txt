@@ -1,0 +1,57 @@
+//枚举比较
+class Solution {
+public:
+    bool check(string X,string str1)
+    {
+        int lenX=str1.size()/X.size();
+        string ans;
+        for(int i=0;i<lenX;i++)
+        {
+            ans+=X;
+        }
+        return ans==str1;
+    }
+    string gcdOfStrings(string str1, string str2) {
+        int len1=str1.size();
+        int len2=str2.size();
+        for(int i=min(len1,len2);i>=1;i--)
+        {
+            if(len1%i==0&&len2%i==0)
+            {
+                string X=str1.substr(0,i);
+                if(check(X,str1)&&check(X,str2))
+                    return X;
+            }
+        }
+        return "";
+    }
+};
+//利用gcd求最大公约数
+class Solution {
+public:
+    bool check(string X,string str1)
+    {
+        int i=str1.size()/X.size();
+        string ans="";
+        for(;i>=1;i--)
+            ans+=X;
+        return ans==str1;
+    }
+    string gcdOfStrings(string str1, string str2) {
+        int len1=str1.size(),len2=str2.size(),lenX=__gcd(len1,len2);//__gcd为c++17的numeric库的求最大公约数的函数
+        string X=str1.substr(0,lenX);
+        if(check(X,str1)&&check(X,str2))
+            return X;
+        return "";
+    }
+};
+
+//数学方法
+class Solution {
+public:
+    string gcdOfStrings(string str1, string str2) {
+        if(str1+str2!=str2+str1)
+            return "";
+        return str1.substr(0,__gcd(str1.size(),str2.size()));
+    }
+};

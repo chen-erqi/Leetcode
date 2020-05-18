@@ -1,0 +1,27 @@
+//利用map存储每个数出现的次数 减去次数即为remove
+class Solution {
+public:
+    bool isNStraightHand(vector<int>& hand, int W) {
+        int n=hand.size();
+        if(n%W!=0)
+          return false;
+        map<int,int> H;
+        for(int x:hand)
+          H[x]++;
+        for(auto &[x,y]:H)
+        {
+            if(y>0)
+            {
+                for(int i=1;i<W;i++)
+                {
+                    if(H.count(x+i)&&H[x+i]>=y)
+                      H[x+i]-=y;
+                    else
+                      return false;
+                }
+            }
+        }
+        return true;
+    }
+};
+//multiset 自动排序 允许重复 遍历该容器 每一次遍历即erase一个数

@@ -1,0 +1,20 @@
+//dp[i][j]为从i到j的石子堆中 Alex可以获得的最大分数 Lee每拿一次 就从Alex扣分 若Alex最后的分数大于0 即Alex获胜
+//注意实际dp数组为dp[i+1][j+1] 因为需要从piles[0]推出去 
+class Solution {
+public:
+    bool stoneGame(vector<int>& piles) {
+        int N=piles.size();
+        int dp[N+2][N+2];
+        memset(dp,0,sizeof(dp));
+        for(int size=1;size<=N;size++)
+            for(int i=0,j=size-1;j<N;i++,j++)
+            {
+                int pairty=(j-i)%2;//j-i+1为石子堆长度 若当前长度为偶数 即Alex拿 
+                if(pairty==1)
+                    dp[i+1][j+1]=max(dp[i+2][j+1]+piles[i],dp[i+1][j]+piles[j]);//Alex拿
+                else
+                    dp[i+1][j+1]=min(dp[i+2][j+1]-piles[i],dp[i+1][j]-piles[j]);//Lee拿 min即Alex的max
+            }
+        return dp[1][N]>0;
+    }
+};

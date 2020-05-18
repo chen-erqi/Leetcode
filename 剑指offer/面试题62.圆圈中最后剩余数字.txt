@@ -1,0 +1,26 @@
+//首先 判断出问题可以通过子问题来求解 知道n-1长度的序列的结果 则可以求出n长度的序列的结果
+//f(n,m)第一个划去的元素下标为(m-1)%n,则第二次要删除的起始下标为((m-1)%n+1)%(n-1) 长度为n-1 此时获得递归关系
+//而f(n-1,m)的结果是从起点开始 所以需要偏移m 所以f(n,m)=(f(n-1,m)+m)%n
+class Solution {
+public:
+    int fun(int n,int m)
+    {
+        if(n==1)
+            return 0;
+        int x=fun(n-1,m);
+        return (x+m)%n; 
+    }
+    int lastRemaining(int n, int m) {
+        return fun(n,m);
+    }
+};
+
+class Solution {
+public:
+    int lastRemaining(int n, int m) {
+        int f=0;
+        for(int i=2;i<=n;i++)
+            f=(m+f)%i;//i控制n的长度
+        return f;
+    }
+};

@@ -1,0 +1,14 @@
+class Solution {
+public:
+    const int MOD=1000000007;
+    int countOrders(int N) {
+        long long P=1;
+        for(int n=2;n<=N;n++)
+        {
+            long long a=2*(n-1)+1;
+            long long b=a*(a-1)/2+a;
+            P=(b*P)%MOD;
+        }
+        return P;
+    }
+};

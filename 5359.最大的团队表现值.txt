@@ -1,0 +1,40 @@
+typedef long long LL;
+class Solution {
+public:
+    struct PairCompare
+    {
+        inline bool operator()(pair<LL,LL>& p1,pair<LL,LL>& p2)
+        {
+            if(p1.first==p2.first)
+                return p1.second>p2.second;
+            else
+                return p1.first>p2.first;
+        }
+    };
+    int maxPerformance(int n, vector<int>& speed, vector<int>& efficiency, int k) {
+        vector<pair<LL,LL>> pr;
+        pr.reserve(n);//reserve 保留空间 不改变size resize保留空间且改变size
+        for(int i=0;i<n;i++)
+            pr.push_back(make_pair((LL)efficiency[i],(LL)speed[i]));
+        sort(pr.begin(),pr.end(),PairCompare());//效率降序排列
+        LL spd_num=0;//最快的速度和
+        multiset<LL> st;//最快速度的集合
+        LL result=0;
+        for(int i=0;i<n;i++)
+        {
+            if(i<k)
+            {
+                spd_num+=pr[i].second;
+                st.insert(pr[i].second);
+            }
+            else if(pr[i].second>*st.begin())
+            {
+                spd_num+=pr[i].second-*st.begin();
+                st.erase(st.begin());
+                st.insert(pr[i].second);
+            }
+            result=max(spd_num*pr[i].first,result);
+        }
+        return result%1000000007;
+    }
+};

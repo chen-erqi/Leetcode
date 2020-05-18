@@ -1,0 +1,28 @@
+class Solution {
+public:
+    string sortString(string s) {
+        int len=s.size();
+        string res;
+        vector<int> v(26,0);
+        for(int i=0;i<len;i++)
+            v[s[i]-'a']++;
+        while(len>0)
+        {
+            for(int i=0;i<26;i++)
+                if(v[i]!=0)
+                {
+                    res+=(i+'a');
+                    v[i]--;
+                    len--;
+                }
+            for(int i=25;i>=0;i--)
+                if(v[i]!=0)
+                {
+                    res+=(i+'a');
+                    v[i]--;
+                    len--;
+                }
+        }
+        return res;
+    }
+};

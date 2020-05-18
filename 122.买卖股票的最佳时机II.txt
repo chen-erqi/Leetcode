@@ -1,0 +1,47 @@
+//滑动窗口 贪心
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int N=prices.size();
+        if(N==0)
+            return 0;
+        int L=0,R=0,sum=0;
+        for(R=1;R<prices.size();R++)
+        {
+            if(prices[R]<prices[L])
+            {
+                L++;
+                continue;
+            }
+            int minP=INT_MAX;
+            int buy=prices[L];
+            int Max=0;
+            for(int i=L;i<=R;i++)
+            {
+                if(prices[i]<minP)
+                    minP=prices[i];
+                Max=max(Max,prices[i]-minP);
+            }
+            sum=max(sum,Max+sum);
+            L=R;
+        }
+        return sum;
+    }
+};
+
+//上升中 峰值减峰谷 
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        int N=prices.size();
+        if(N==0)
+            return 0;
+        int sum=0;
+        for(int i=1;i<N;i++)
+        {
+            if(prices[i]>prices[i-1])
+                sum+=(prices[i]-prices[i-1]);
+        }
+        return sum;
+    }
+};

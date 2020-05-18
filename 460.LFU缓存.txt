@@ -1,0 +1,156 @@
+    struct Node
+    {
+        int cnt,time,key,value;
+        Node(int _cnt,int _time,int _key,int _value):cnt(_cnt),time(_time),key(_key),value(_value){}
+        bool operator < (const Node& rhs) const    //const使得对象没有改变  左边的操作用一个隐含的this指针
+        {
+            return cnt==rhs.cnt?time<rhs.time:cnt<rhs.cnt;
+        }
+    };
+class LFUCache {
+    int capacity,time;
+    unordered_map<int,Node> key_table;//哈希表以键值索引
+    set<Node> S;//set类是红黑树 以cnt使用频率 time 最近使用时间进行排序 平衡二叉树的插入删除都是O(logn)
+public:
+    LFUCache(int _capacity) {
+        capacity=_capacity;
+        time=0;
+        key_table.clear();
+        S.clear();
+    }
+    
+    int get(int key) {
+        if(capacity==0)
+            return -1;
+        auto it=key_table.find(key);
+        if(it==key_table.end())
+            return -1;
+        Node cache=it->second;
+        S.erase(cache);
+        cache.cnt+=1;
+        cache.time=++time;
+        S.insert(cache);
+        it->second=cache;
+        return cache.value;
+    }
+    
+    void put(int key, int value) {
+        if(capacity==0)
+            return;
+        auto it=key_table.find(key);
+        if(it==key_table.end())
+        {
+            if(key_table.size()==capacity)
+            {
+                key_table.erase(S.begin()->key);
+                S.erase(S.begin());//最近最少使用 永远在S开头
+            }
+
+            Node cache=Node(1,++time,key,value);
+            key_table.insert(make_pair(key,cache));
+            S.insert(cache);
+        }
+        else
+        {
+            Node cache=it->second;
+            S.erase(cache);
+            cache.cnt+=1;
+            cache.time=++time;
+            cache.value=value;
+            S.insert(cache);
+            it->second=cache;
+        }
+    }
+};
+
+/**
+ * Your LFUCache object will be instantiated and called as such:
+ * LFUCache* obj = new LFUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */
+
+//freq_table以频率freq索引 每个索引存放一个双向链表 链表里存放所有使用频率为freq的缓存 队头为最近使用 队尾为没使用
+//key_table以键值key索引 每个索引存放对应的双向链表的迭代器 
+//当前最小使用频率minfreq 为删除操作服务
+struct Node
+{
+    int key,val,freq;
+    Node(int _key,int _val,int _freq):key(_key),val(_val),freq(_freq){}
+};
+class LFUCache {
+public:
+    int minfreq,capacity;
+    unordered_map<int,list<Node>::iterator> key_table;
+    unordered_map<int,list<Node>> freq_table;
+    LFUCache(int _capacity) {
+        minfreq=0;
+        capacity=_capacity;
+        key_table.clear();
+        freq_table.clear();
+    }
+    
+    int get(int key) {
+        if(capacity==0)
+            return -1;
+        auto it=key_table.find(key);
+        if(it==key_table.end())
+            return -1;
+        list<Node>::iterator node=it->second;
+        int val=node->val,freq=node->freq;
+        freq_table[freq].erase(node);
+        if(freq_table[freq].size()==0)//如果当前链表为空 需要在哈希表中删除 且更新minfreq
+        {
+            freq_table.erase(freq);
+            if(minfreq==freq)
+                minfreq+=1;//使用了一次 使用频率加一
+        }
+        //插入到freq+1
+        freq_table[freq+1].push_front(Node(key,val,freq+1));//最近使用过的在前
+        key_table[key]=freq_table[freq+1].begin();
+        return val;
+    }
+    
+    void put(int key, int value) {
+        if(capacity==0)
+            return;
+        auto it=key_table.find(key);
+        if(it==key_table.end())
+        {
+            //缓存已满 需要删除
+            if(key_table.size()==capacity)
+            {
+                //通过minfreq定位到freq_table的末尾结点
+                auto it2=freq_table[minfreq].back();
+                key_table.erase(it2.key);
+                freq_table[minfreq].pop_back();
+                if(freq_table[minfreq].size()==0)
+                    freq_table.erase(minfreq);
+            }
+            freq_table[1].push_front(Node(key,value,1));
+            key_table[key]=freq_table[1].begin();
+            minfreq=1;
+        }
+        else
+        {
+            list<Node>::iterator node=it->second;
+            int freq=node->freq;
+            freq_table[freq].erase(node);//先删除 再插回队头 保持使用频率的关系
+            if(freq_table[freq].size()==0)
+            {
+                freq_table.erase(freq);
+                if(minfreq==freq)
+                    minfreq+=1;
+            }
+            freq_table[freq+1].push_front(Node(key,value,freq+1));
+            key_table[key]=freq_table[freq+1].begin();
+        }
+    }
+};
+
+/**
+ * Your LFUCache object will be instantiated and called as such:
+ * LFUCache* obj = new LFUCache(capacity);
+ * int param_1 = obj->get(key);
+ * obj->put(key,value);
+ */

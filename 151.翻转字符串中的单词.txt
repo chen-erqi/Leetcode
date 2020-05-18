@@ -1,0 +1,59 @@
+//一次遍历 不同语言中 函数实现不一样 差别在于有些字符串不可变 如java 有些可变 如c++
+class Solution {
+public:
+    string reverseWords(string s) {
+        reverse(s.begin(),s.end());
+        int N=s.size(),idx=0;
+        for(int start=0;start<N;start++)
+        {
+            if(s[start]!=' ')
+            {
+                if(idx!=0)
+                    s[idx++]=' ';//填一个空白字符
+                int end=start;
+                while(end<N&&s[end]!=' ')
+                    s[idx++]=s[end++];
+                reverse(s.begin()+idx-(end-start),s.begin()+idx);
+                start=end;                            
+            }
+        }
+        s.erase(s.begin()+idx,s.end());
+        return s;
+    }
+};
+
+//双端队列 双端队列支持头部插入 沿字符串一个一个处理 将单词压入队列头部 再将队列转换为字符串
+//move是将左值引用转换为右值引用 将对象的状态 或者所有权从一个对象转移到另一个对象 没有内存的搬迁或者拷贝
+//左值是在内存中 右值可以在寄存器中
+//如push_back(move(a)) move之后a的值为空值
+class Solution {
+public:
+    string reverseWords(string s) {
+        int left=0,right=s.size()-1;
+        while(left<=right&&s[left]==' ')
+            left++;
+        while(left<=right&&s[right]==' ')
+            right--;
+        deque<string> d;
+        string word="";
+        while(left<=right)
+        {
+            char c=s[left];
+            if(word.size()&&c==' ')        
+                d.push_front(move(word));
+            else if(c!=' ')
+                word+=c;
+            left++;
+        }
+        d.push_front(move(word));
+        string ans;
+        while(!d.empty())
+        {
+            ans+=d.front();
+            d.pop_front();
+            if(!d.empty())
+                ans+=' ';
+        }
+        return ans;
+    }
+};

@@ -1,0 +1,44 @@
+//如何计算嵌套深度 
+//使用栈进行匹配
+//当(时 入栈 此时栈的高度即为嵌套深度 当)时 不入栈 此时栈的高度即为嵌套深度  再将匹配的(出栈
+//在遍历过程中进行对半分配 即奇数为A 偶数为B 使得最大嵌套深度值最小 
+//虚拟栈
+class Solution {
+public:
+    vector<int> maxDepthAfterSplit(string seq) {
+        int d=0;
+        vector<int> ans;
+        for(char c:seq)
+        {
+            if(c=='(')
+            {
+                d++;
+                ans.push_back(d%2);
+            }
+            else
+            {
+                ans.push_back(d%2);
+                d--;//注意 先计算再出栈
+            }
+        }
+        return ans;
+    }
+};
+
+//对任意一个左括号 此时下标为x 嵌套深度为y 共有l个左括号 r个右括号 y=l-r+1 x=l+r l+r与l-r奇偶性相同 则x与y奇偶性相反
+//对任意一个右括号 此时下标为x 嵌套深度为y 共有l个左括号 r个右括号 y=l-r x=l+r 所以x和y奇偶性相同 
+//若嵌套深度为偶 则分给B 嵌套深度为奇 则分给A B为0 A为1
+//i&1的结果为1则下标为奇数 则对于左括号来说 此时嵌套深度为偶数 分给B 所以1^1=0
+//i&1的结果为1则下标为奇数 则对于右括号来说 此时嵌套深度为奇数 分给A 所以1^0=1
+//i&1的结果为0则下标为偶数 则对于左括号来说 此时嵌套深度为奇数 分给A 所以0^1=1
+//i&1的结果为0则下标为偶数 则对于右括号来说 此时嵌套深度为偶数 分给B 所以0^0=0
+  
+class Solution {
+public:
+    vector<int> maxDepthAfterSplit(string seq) {
+        vector<int> ans;
+        for(int i=0;i<(int)seq.size();i++)
+            ans.push_back(i&1^(seq[i]=='('));
+        return ans;
+    }
+};

@@ -1,0 +1,81 @@
+//create a stack
+
+
+// stl stack
+class MinStack {
+public:
+    /** initialize your data structure here. */
+    MinStack() {
+        min_s.push(INT_MAX);
+    }
+    
+    void push(int x) {
+        min_s.push(min(x,min_s.top()));
+        s.push(x);
+    }
+    
+    void pop() {
+        s.pop();
+        min_s.pop();
+    }
+    
+    int top() {
+        return s.top();
+    }
+    
+    int getMin() {
+        return min_s.top();
+    }
+private:
+    stack<int> s;
+    stack<int> min_s;
+};
+
+//use one stack
+//difference between current value and minimum
+//notice:subtraction overflows
+
+class MinStack {
+public:
+    stack<long> s;
+    long min;
+    /** initialize your data structure here. */
+    MinStack() {
+
+    }
+    
+    void push(int x) {
+        if(s.empty())
+        {
+            min=x;
+            s.push(x-min);
+        }
+        else
+        {
+            s.push(x-min);
+            if(x<min)
+                min=x;
+        }
+    }
+    
+    void pop() {
+        if(s.top()<0)
+        {
+            min=min-s.top();
+        }
+        s.pop();
+    }
+    
+    int top() {
+        if(s.top()<0)
+        {
+            return (int)min;
+        }
+        else
+            return (int)(min+s.top());
+    }
+    
+    int getMin() {
+        return (int)min;
+    }
+}; 

@@ -1,0 +1,39 @@
+//存结点 升序二分构造
+//二分可以保证二叉树平衡
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> v;
+    void dfs(TreeNode *x)
+    {
+        if(!x)
+            return;
+        v.push_back(x->val);
+        dfs(x->left);
+        dfs(x->right);
+    }
+    TreeNode* go(int L,int R)
+    {
+        if(L>R)
+            return 0;
+        int m=(L+R)/2;
+        TreeNode* it=new TreeNode(v[m]);
+        it->left=go(L,m-1);
+        it->right=go(m+1,R);
+        return it;
+    }
+    TreeNode* balanceBST(TreeNode* root) {
+        v.clear();
+        dfs(root);
+        sort(v.begin(),v.end());
+        return go(0,v.size()-1);
+    }
+};

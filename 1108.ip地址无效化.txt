@@ -1,0 +1,11 @@
+class Solution {
+public:
+    string defangIPaddr(string address) {
+        for(int i=address.size()-1;i>=0;i--)//关键在于逆序 替换之后i刚好指向左括号 而右边的已经替换完成 无需管理
+        {
+            if(address[i]=='.')
+                address.replace(i,1,"[.]");
+        }
+        return address;
+    }
+};

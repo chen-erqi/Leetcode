@@ -1,0 +1,46 @@
+class Solution {
+public:
+    vector<vector<int>> findContinuousSequence(int target) {
+        vector<vector<int>> v;
+        int sum=0,a1=1,n;
+        while(a1<target)
+        {
+            for(n=1;n*a1+n*(n-1)/2<target;n++);
+            if(n*a1+n*(n-1)/2==target)                           
+            {
+                vector<int> tem;
+                int x=a1;
+                for(int k=0;k<n;k++)
+                    tem.push_back(a1+k);
+                v.push_back(tem);
+            }
+            a1++;
+        }
+        return v;
+    }
+};
+
+//Ë«Ö¸Õë
+class Solution {
+public:
+    vector<vector<int>> findContinuousSequence(int target) {
+        vector<vector<int>> v;
+        for(int l=1,r=2;l<r&&r<target;)
+        {
+            int sum=(l+r)*(r-l+1)/2;
+            if(sum<target)
+                r++;
+            if(sum>target)
+                l++;
+            if(sum==target)
+            {
+                vector<int> t;
+                for(int k=l;k<=r;k++)
+                    t.push_back(k);
+                v.push_back(t);
+                l++;
+            }
+        }
+        return v;
+    }
+};

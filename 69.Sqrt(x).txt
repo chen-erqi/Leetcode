@@ -1,0 +1,57 @@
+//Pocket calculator algorithm
+//x^2=e^(0.5*lnx)
+//the original answer is floating.Computer cant lay in the exact value.
+//the log function and exp function will return the floating.
+//In the end,we should figure out between ans and ans+1. 
+class Solution {
+public:
+    int mySqrt(int x) {
+        if(x==0||x==1)
+            return x;
+        int ans=exp(0.5*log(x));
+        return (long long)(ans+1)*(ans+1)>x?ans:ans+1;
+    }
+};
+
+//Binary Search
+//Exclude 0 and 1,then the upper bound is (x+1)/2
+class Solution {
+public:
+    int mySqrt(int x) {
+        if(x==0||x==1)
+            return x;
+        int L=0,R=((long long)x+1)/2,ans=0;//x+1 maybe overflow
+        while(L<=R)
+        {
+            int mid=L+(R-L)/2;
+            if((long long)mid*mid<=x)
+            {
+                ans=mid;
+                L=mid+1;
+            }
+            else
+                R=mid-1;
+        }
+        return ans;
+    }
+};
+
+//Newton's method
+//First,let C be the integer that its square root is to be found.
+//y=x^2-C;
+class Solution {
+public:
+    int mySqrt(int x) {
+        if(x==0||x==1)
+            return x;
+        double C=x,x0=x;
+        while(true)
+        {
+            double xi=0.5*(x0+C/x0);
+            if(fabs(x0-xi)<1e-7)
+                break;
+            x0=xi;
+        }
+        return (int)x0;
+    }
+};

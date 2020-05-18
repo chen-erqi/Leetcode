@@ -1,0 +1,16 @@
+class Solution {
+public:
+    vector<int> closestDivisors(int num) {
+        int num1=num+1;
+        int num2=num+2;
+        int x=sqrt(num2);
+        for(;x>0;x++)
+        {
+            if((num1)%x==0)
+                return {x,(num1)/x};
+            if((num2)%x==0)
+                return {x,(num2)/x};
+        }
+        return {0,0};
+    }
+};

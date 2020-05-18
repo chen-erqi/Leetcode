@@ -1,0 +1,72 @@
+//暴力 生成所有结果 再筛选
+class Solution {
+public:
+    bool valid(const string& str)
+    {
+        int balance=0;
+        for(char c:str)
+        {
+            if(c=='(')
+                balance++;
+            else
+            {
+                balance--;
+                if(balance<0)
+                    return false;
+            }
+        }
+        return balance==0;
+    }
+    void generate_all(string& current,int n,vector<string>& result)
+    {
+        if(n<=current.size())
+        {
+            if(valid(current))
+                result.push_back(current);
+            return;
+        }
+        current+='(';
+        generate_all(current,n,result);
+        current.pop_back();
+        current+=')';
+        generate_all(current,n,result);
+        current.pop_back();
+    }
+    vector<string> generateParenthesis(int n) {
+        string current;
+        vector<string> result;
+        generate_all(current,n*2,result);
+        return result;
+    }
+};
+
+//回溯 通过规定加入左右括号的数量来进行判定加入哪个括号 注意传入参数n
+class Solution {
+public:
+    void generate_all(string& current,int open,int close,int n,vector<string>& result)
+    {
+        if(n*2==current.size())
+        {
+            result.push_back(current);
+            return;
+        }
+        if(open<n)
+        {
+            current+='(';
+            generate_all(current,open+1,close,n,result);
+            current.pop_back();
+        }
+        if(close<open)
+        {
+            current+=')';
+            generate_all(current,open,close+1,n,result);
+            current.pop_back();
+        }
+    }
+    vector<string> generateParenthesis(int n) {
+        string current;
+        vector<string> result;
+        generate_all(current,0,0,n,result);
+        return result;
+    }
+};

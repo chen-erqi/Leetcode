@@ -1,0 +1,37 @@
+//回溯 求一颗二叉树从根到叶子节点的路径总数 有点像哈夫曼
+class Solution {
+public:
+    int backtrack(string &s,int pos)
+    {
+        int n=s.size();
+        if(pos==n)    //成功到达数据尾部 
+            return 1;
+        if(pos==n-1||s[pos]=='0'||s.substr(pos,2)>"25")//为0时选一个和选两个一样（此时包括0本身）
+            return backtrack(s,pos+1);
+        return backtrack(s,pos+1)+backtrack(s,pos+2);//选两个是包括本身的两个
+    }
+    int translateNum(int num) {
+        string s=to_string(num);
+        return backtrack(s,0);
+    }
+};
+//dp
+class Solution {
+public:
+    int translateNum(int num) {
+        string s=to_string(num);
+        vector<int> dp(s.size()+1);
+        dp[0]=1;
+        dp[1]=1;
+        for(int i=1;i<s.size();i++)
+        {
+            if(s[i-1]=='0'||s.substr(i-1,2)>"25")
+                dp[i+1]=dp[i];
+            else
+                dp[i+1]=dp[i]+dp[i-1];
+        }
+        return dp[s.size()];
+    }
+};
+//dp[i]=dp[i-1] nums[i]和num[i-1]不能合成一个字符
+//dp[i]=dp[i-1]+dp[i-2] num[i]和num[i-1]能合成一个字符

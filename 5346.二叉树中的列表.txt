@@ -1,0 +1,66 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    vector<int> v;
+    bool flag;
+    vector<int> to_vector(ListNode* head)
+    {
+        vector<int> ret;
+        for(ListNode* p=head;p!=NULL;p=p->next)
+            ret.push_back(p->val);
+        return ret;
+    }
+    
+    void dfs(TreeNode* x)
+    {
+        if(!x)
+            return;
+        if(flag)
+            return;
+        if(x->val==v[0])
+            go(x,0);
+        dfs(x->left);
+        dfs(x->right);
+    } 
+
+    void go(TreeNode* x,int k)
+    {
+        if(flag)
+            return;
+        if(k+1==v.size())//找到成功的关键
+        {
+            flag=1;
+            return;
+        }
+        if(x->left&&x->left->val==v[k+1])
+            go(x->left,k+1);
+        if(x->right&&x->right->val==v[k+1])
+            go(x->right,k+1); 
+    }
+
+    bool isSubPath(ListNode* head, TreeNode* root) {
+        if(!head)
+            return 1;
+        v=to_vector(head);
+
+        flag=0;
+        dfs(root);
+        return flag;
+    }
+};

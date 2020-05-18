@@ -1,0 +1,92 @@
+//最大值<=10e9的斐波那契序列最多有43项
+class Solution {
+public:
+    int lenLongestFibSubseq(vector<int>& A) {
+        unordered_set<int> s(A.begin(),A.end());
+        int N=A.size();
+        int ans=0;
+        for(int i=0;i<N;i++)
+            for(int j=i+1;j<N;j++)
+            {
+                int x=A[j];
+                int y=A[i]+A[j];
+                int len=2;
+                while(s.count(y))
+                {
+                    int z=x+y;
+                    x=y;
+                    y=z;
+                    ans=max(ans,++len);
+                }
+            }
+        return ans>=3?ans:0;
+    }
+};
+
+//dp
+class Solution {
+public:
+    int lenLongestFibSubseq(vector<int>& A) {
+        int N=A.size();
+        int ans=0;
+        unordered_map<int,int> index;
+        for(int i=0;i<N;i++)
+            index[A[i]]=i;
+        unordered_map<int,int> longset;
+        for(int k=0;k<N;k++)
+            for(int j=0;j<k;j++)
+            {
+                if(A[k]-A[j]<A[j]&&index.count(A[k]-A[j]))
+                {
+                    int i=index[A[k]-A[j]];
+                    longset[j*N+k]=longset[i*N+j]+1;
+                    ans=max(ans,longset[j*N+k]+2);
+                }
+            }
+        return ans>=3?ans:0;
+    }
+};
+
+//构建斐波那契类
+class Solution {
+public:
+    struct Fib
+    {
+        int count;
+        int f0;
+        int fi;
+        int fii;
+        Fib(int _f0,int _f1):count(2),f0(_f0),fi(_f0),fii(_f1){};
+        int next()
+        {return fi+fii;}
+        void step()
+        {
+            ++count;
+            int t=fii;
+            fii=fi+fii;
+            fi=t;
+        }
+    };
+    vector<bool> F;
+    int lenLongestFibSubseq(vector<int>& A) {
+        int N=A.size();
+        if(N<3)
+            return 0;
+        int M=*max_element(A.begin(),A.end());
+        F=vector<bool>(M+1,false);
+        for(int x:A)
+            F[x]=true;
+        int ans=0;
+        for(int i=0;i<N;i++)
+            for(int j=i+1;j<N;j++)
+            {
+                Fib f=Fib(A[i],A[j]);
+                while(f.next()<=M&&F[f.next()])
+                {
+                    f.step();
+                    ans=max(ans,f.count);        
+                }
+            }
+        return ans>=3?ans:0;
+    }
+};
