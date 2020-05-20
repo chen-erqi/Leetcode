@@ -1,0 +1,91 @@
+//Topological Sorting
+//A stack is used to store all the nodes that have been searched.The sequence from top of
+the stack to bottom of stack is the final topological sequence.
+
+
+//DFS
+
+class Solution {
+private:
+    vector<int> result;         //Mark the staus of each nodes.0=unsearch 1=searching 2=searched
+    vector<vector<int>> edges;  //Store directed-graph
+    vector<int> visited;        //Simulating the stack with array.0 is bottom and N-1 is top
+    bool invalid;               //Determine whether there is a ring in the directed-graph
+public:
+    void dfs(int u)
+    {
+        visited[u]=1;
+        for(int v:edges[u])
+        {
+            if(visited[v]==0)
+            {
+                dfs(v);
+                if(invalid)
+                    return;
+            }
+            else if(visited[v]==1) //Two points in search at the same time which means there's a ring
+            {
+                invalid=true;
+                return;
+            }
+        }
+        visited[u]=2;
+        result.emplace_back(u);
+    }
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        edges.resize(numCourses);
+        visited.resize(numCourses);
+        for(const auto& info:prerequisites)
+            edges[info[1]].push_back(info[0]);
+        for(int i=0;i<numCourses&&!invalid;i++)
+            if(!visited[i])
+                dfs(i);
+        if(invalid)
+            return {};
+        reverse(result.begin(),result.end());
+        return result;
+    }
+};
+
+//BFS
+//The first point in the topological sequence whose in-degree must be 0.
+//When a node is added to the array,all its outgoing edges are removed.
+
+class Solution {
+private:
+    vector<vector<int>> edges;
+    vector<int> indeg;
+    vector<int> result;
+public:
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        edges.resize(numCourses);
+        indeg.resize(numCourses);
+
+        for(const auto& info:prerequisites)
+        {
+            edges[info[1]].push_back(info[0]);
+            ++indeg[info[0]];
+        }
+
+        queue<int> q;
+        for(int i=0;i<numCourses;i++)
+            if(indeg[i]==0)
+                q.push(i);
+        
+        while(!q.empty())
+        {
+            int u=q.front();
+            q.pop();
+            result.push_back(u);
+            for(int v:edges[u])
+            {
+                --indeg[v];
+                if(indeg[v]==0)
+                    q.push(v);
+            }
+        }
+        if(result.size()!=numCourses)
+            return {};
+        return result;
+    }
+};

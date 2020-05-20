@@ -1,0 +1,25 @@
+//Double pointer
+//Detect the substring by calling function
+
+class Solution {
+public:
+    bool check(string& s,int low,int high)
+    {
+        int i=low,j=high;
+        for(;i<j;i++,j--)
+        {
+            if(s[i]!=s[j])
+                return false;
+        }
+        return true;
+    }
+    bool validPalindrome(string s) {
+        int i=0,j=s.size()-1;
+        for(;i<j;i++,j--)
+        {
+            if(s[i]!=s[j])
+                return check(s,i+1,j)||check(s,i,j-1);
+        }
+        return true;
+    }
+};

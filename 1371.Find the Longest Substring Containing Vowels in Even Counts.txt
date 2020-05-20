@@ -1,0 +1,40 @@
+//Sum of prefixes.
+//The prefixes-sum have the same Odd-even between front and end.Which means that the difference 
+must be even.
+//Statue compression!!
+//Bitwise used to define the even by 0 and odd by 1. 
+
+class Solution {
+public:
+    int findTheLongestSubstring(string s) {
+        vector<int> pos(1<<5,-1);
+        int status=0,ans=0;
+        pos[0]=0;
+        for(int i=0;i<s.size();i++)
+        {
+            switch(s[i])
+            {
+                case 'a':
+                    status^=1<<0;
+                    break;
+                case 'e':
+                    status^=1<<1;
+                    break;
+                case 'i':
+                    status^=1<<2;
+                    break;
+                case 'o':
+                    status^=1<<3;
+                    break;
+                case 'u':
+                    status^=1<<4;
+                    break;
+            }
+            if(~pos[status])
+                ans=max(ans,i+1-pos[status]);
+            else
+                pos[status]=i+1;
+        }
+        return ans;
+    }
+};
