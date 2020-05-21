@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int maxPower(string s) {
+        int cur=1,ans=1;
+        char x=s[0];
+        for(int i=1;i<s.size();i++)
+        {
+            if(x==s[i])
+            {
+                cur++;
+                if(cur>ans)
+                    ans=cur;
+            }
+            else
+            {x=s[i];cur=1;};
+        }
+        return ans;
+    }
+};

@@ -26,3 +26,27 @@ public:
         return res;
     }
 };
+
+//Farey Series
+class Solution {
+public:
+    vector<string> res;
+    int n;
+    void dfs(int a1,int b1,int a2,int b2)
+    {
+        if(b1+b2>n)
+            return ;
+        dfs(a1,b1,a1+a2,b1+b2);
+        string s;
+        s+=to_string(a1+a2);
+        s+="/";
+        s+=to_string(b1+b2);
+        res.emplace_back(s);
+        dfs(a1+a2,b1+b2,a2,b2);
+    }
+    vector<string> simplifiedFractions(int n) {
+        this->n=n;
+        dfs(0,1,1,1);
+        return res;
+    }
+};

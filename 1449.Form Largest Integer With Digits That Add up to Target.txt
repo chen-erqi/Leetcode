@@ -1,0 +1,30 @@
+//Completely knapsack problem
+
+class Solution {
+public:
+    string largestNumber(vector<int>& cost, int target) {
+        vector<string> dp(target+1,"NAN");
+        dp[0]="";
+
+        auto LargerThan=[](string& s1,string& s2){
+            if(s1.size()>s2.size())
+                return true;
+            else if(s1.size()<s2.size())
+                return false;
+            else    
+                return s1>s2;
+        };
+
+        for(int i=1;i<=cost.size();i++)
+            for(int v=cost[i-1];v<=target;v++)
+            {
+                if(dp[v-cost[i-1]]!="NAN")
+                {
+                    string newVal=to_string(i)+dp[v-cost[i-1]];
+                    if(dp[v]=="NAN"||LargerThan(newVal,dp[v]))
+                        dp[v]=newVal;
+                }
+            }
+        return dp[target]=="NAN"?string("0"):dp[target];
+    }
+};
