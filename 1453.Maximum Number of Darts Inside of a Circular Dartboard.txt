@@ -1,0 +1,64 @@
+class Solution {
+private:
+    struct point{
+        double x,y;
+        point(double i,double j):x(i),y(j){}
+    };
+
+    double dist(double x1,double y1,double x2,double y2)
+    {
+        return sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
+    }
+
+    point f(point& a,point& b,int r)
+    {
+        point mid((a.x+b.x)/2.0,(a.y+b.y)/2.0);
+        double d=dist(a.x,a.y,mid.x,mid.y);
+        double h=sqrt(r*r-d*d);
+        point ba(b.x-a.x,b.y-a.y);
+        point hd(-ba.y,ba.x);
+        double len=sqrt(hd.x*hd.x+hd.y*hd.y);
+        hd.x/=len;
+        hd.y/=len;
+        hd.x*=h;
+        hd.y*=h;
+        return point(hd.x+mid.x,hd.y+mid.y);
+    }
+public:
+    int numPoints(vector<vector<int>>& points, int r) {
+        int n=points.size();
+        int ans=0;
+        for(int i=0;i<n;i++)
+            for(int j=0;j<n;j++)
+            {
+                if(i==j)
+                {
+                    int cnt=0;
+                    for(int k=0;k<n;k++)
+                    {
+                        double tmp=dist(points[i][0],points[i][1],points[k][0],points[k][1]);
+                        if(tmp<=r)
+                            cnt++;
+                    }
+                    ans=max(cnt,ans);
+                }
+                else
+                {
+                    double d=dist(points[i][0],points[i][1],points[j][0],points[j][1]);
+                    if(d/2>r)
+                        continue;
+                    point a(points[i][0],points[i][1]),b(points[j][0],points[j][1]);
+                    point res=f(a,b,r);
+                    int cnt=0;
+                    for(int k=0;k<n;k++)
+                    {
+                        double tmp=dist(res.x,res.y,points[k][0],points[k][1]);
+                        if(tmp<=r)
+                            cnt++;
+                    }
+                    ans=max(ans,cnt);
+                }
+            }
+        return ans;
+    }
+};

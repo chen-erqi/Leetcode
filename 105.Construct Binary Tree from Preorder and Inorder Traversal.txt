@@ -1,0 +1,73 @@
+//Recursion
+//We store the positions of inorder's node in a haspmap.
+//We pass the left and right boundary of subtree in recursion.
+
+class Solution {
+private:
+    unordered_map<int,int> index;
+    TreeNode* myBuildTree(const vector<int>& preorder,const vector<int>& inorder,
+                          int pOrder_left,int pOrder_right,int iOrder_left,int iOrder_right)
+    {
+        if(pOrder_left>pOrder_right)
+            return nullptr;
+        int pOrder_root=pOrder_left;
+        int iOrder_root=index[preorder[pOrder_root]];
+        int size_left_subtree=iOrder_root-iOrder_left;
+        TreeNode* root=new TreeNode(preorder[pOrder_root]);
+        root->left=myBuildTree(preorder,inorder,pOrder_left+1,pOrder_left+size_left_subtree,iOrder_left,iOrder_root-1);
+        root->right=myBuildTree(preorder,inorder,pOrder_left+size_left_subtree+1,pOrder_right,iOrder_root+1,iOrder_right);
+        return root;
+    }                           
+public:
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        for(int i=0;i<preorder.size();i++)
+            index[inorder[i]]=i;
+        return myBuildTree(preorder,inorder,0,preorder.size()-1,0,preorder.size()-1);
+    }
+};
+
+//iteration
+//There are only two possible relationships between two consecutive nodes u and v in preoreder:
+//1.v is the left-son-node of u.
+//2.If u doesnt own a left-son but a right-son-node,v is the right-son-node of u.
+//3.If u doesnt own both left or right-son-node,then we back up untill meet the first 
+ancestor-node with a right-son-node.
+//We store ALL ancestor-nodes of the current-node which doesnt considered its right-son-node.
+//The top node of stack is the current-node.!!!
+//Only the node in stack can connect to a new right-son-node.
+//index is a pointer to indicate a certain position of inorder. 
+
+class Solution {
+public:
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        if(!preorder.size())
+            return nullptr;
+        TreeNode* root=new TreeNode(preorder[0]);
+        stack<TreeNode*> stk;
+        stk.push(root);
+        int inorderIndex=0;
+        
+        for(int i=1;i<preorder.size();i++)
+        {
+            int preorderVal=preorder[i];
+            TreeNode* node=stk.top();
+            if(node->val!=inorder[inorderIndex])
+            {
+                node->left=new TreeNode(preorderVal);
+                stk.push(node->left);
+            }
+            else
+            {
+                while(!stk.empty()&&stk.top()->val==inorder[inorderIndex])
+                {
+                    node=stk.top();
+                    stk.pop();
+                    ++inorderIndex;
+                }
+                node->right=new TreeNode(preorderVal);
+                stk.push(node->right);
+            }
+        }
+        return root;
+    }
+};

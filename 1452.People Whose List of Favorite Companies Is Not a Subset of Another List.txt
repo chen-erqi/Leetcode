@@ -1,0 +1,36 @@
+//stl:includes
+//simulation
+
+class Solution {
+public:
+    vector<int> peopleIndexes(vector<vector<string>>& favoriteCompanies) {
+        for(auto& f:favoriteCompanies)
+            sort(f.begin(),f.end());
+        
+        map<int,vector<int>> mapSizeIndex;
+        for(int i=0;i<favoriteCompanies.size();i++)
+            mapSizeIndex[favoriteCompanies[i].size()].push_back(i);
+        
+        vector<int> ans;
+        for(auto it=mapSizeIndex.rbegin();it!=mapSizeIndex.rend();it++)
+            for(auto& p:it->second)
+            {
+                if(it!=mapSizeIndex.rbegin()&&check(favoriteCompanies,ans,p))
+                    continue;
+                ans.push_back(p);
+            }
+        
+        sort(ans.begin(),ans.end());
+        return ans;
+    }
+
+    bool check(const vector<vector<string>>& fc,const vector<int>& ans,int p)
+    {
+        for(auto i:ans)
+        {
+            if(includes(fc[i].begin(),fc[i].end(),fc[p].begin(),fc[p].end())) //Second parameter is contained by First parameter?
+                return true;
+        }
+        return false;
+    }
+};
