@@ -1,1 +1,1 @@
-try my best to renew notes in English
+Commit in English just for myself.
