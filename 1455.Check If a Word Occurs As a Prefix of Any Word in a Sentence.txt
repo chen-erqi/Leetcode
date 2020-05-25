@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int isPrefixOfWord(string sentence, string searchWord) {
+        int curP=0,ans=INT_MAX,cnt=1;
+        while(curP<sentence.size())
+        {
+            if(sentence[curP]==' ')
+            {curP++,cnt++;continue;}
+            else
+            {
+                int i=0;
+                for(;i<searchWord.size()&&sentence[curP]==searchWord[i];i++,curP++);
+                if(i==searchWord.size())
+                    ans=min(cnt,ans);
+                for(;curP<sentence.size()&&sentence[curP]!=' ';curP++);
+            }
+        }
+        return ans==INT_MAX?-1:ans;
+    }
+};

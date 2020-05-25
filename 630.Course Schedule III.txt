@@ -1,0 +1,36 @@
+//Priority_queue+Greedy-Strategy
+//Whether the current course is optional?
+//If t0+...+tk+t_cur<=d_cur,it's optional!
+//Else replace the course with the longest duration!Create room for later courses.
+
+inline bool myCompare(vector<int>& A,vector<int>& B)
+{
+    return A[1]<B[1];
+}
+class Solution {
+public:
+    int scheduleCourse(vector<vector<int>>& courses) {
+        sort(courses.begin(),courses.end(),myCompare);
+        priority_queue<int,vector<int>,less<int>> myPQ;
+        int day=0;
+        for(int i=0;i<courses.size();i++)
+        {
+            if(day+courses[i][0]<=courses[i][1]||myPQ.empty())
+            {
+                myPQ.push(courses[i][0]);
+                day+=courses[i][0];
+            }
+            else
+            {
+                int Dur=myPQ.top();
+                if(courses[i][0]<Dur)
+                {
+                    myPQ.pop();
+                    myPQ.push(courses[i][0]);
+                    day+=(courses[i][0]-Dur);
+                }
+            }
+        }
+        return myPQ.size();
+    }
+};

@@ -1,0 +1,96 @@
+//Sliding-Window
+
+class Solution {
+private:
+    unordered_map<char,int> need,window;
+    bool check()
+    {
+        for(const auto p:need)
+            if(!window.count(p.first)||window[p.first]<p.second)
+                return false;
+        return true;
+    }
+public:
+    bool checkInclusion(string s1, string s2) {
+        if(s1.size()>s2.size())
+            return false;
+        for(int i=0;i<s1.size();i++)
+        {
+            need[s1[i]]++;
+            window[s2[i]]++;
+        }
+        if(check())
+            return true;
+        int L=0,R=s1.size();
+        while(R<s2.size())
+        {
+            window[s2[R++]]++;
+            window[s2[L++]]--;
+            if(check())
+                return true;
+        }
+        return false;
+    }
+};
+
+//Optimization
+//introducing negative numbers!!!!
+//Postive:This number should appear more times.
+//0:just alright.
+//Negative:This number has appeared several times.
+
+class Solution {
+public:
+    bool checkInclusion(string s1, string s2) {
+        unordered_map<char,int> window;
+        for(const auto& p:s1)
+            window[p]++;
+        int L=0,R=0;
+        while(R<s2.size())
+        {
+            char c=s2[R++];
+            window[c]--;//out
+            while(L<R&&window[c]<0)
+                window[s2[L++]]++;//in
+            if(R-L==s1.size())
+                return true;
+        }
+        return false;
+    }
+};
+
+//Optimization 
+//vector!!!
+//When the first string's permutations is the substring of the second string,the members of
+the vector are all equal 0.We just need to slide the window.
+//Lshift means that the number be inserted into window,so we need to add 1.
+//Rshift means that the number be erased from window,so we need to minus 1.
+//Cuz we add all members of s1 into window in the first, so we can make sure that when 
+the vector equal 0.This is what we need. 
+
+class Solution {
+public:
+    vector<int> ch_count(26,0);
+    bool checkInclusion(string s1, string s2) {
+        int len1=s1.size(),len2=s2.size();
+        if(len1>len2)
+            return false;
+        for(int i=0;i<s1.size();i++)
+        {
+            ++ch_count[s1[i]-'a'];
+            --ch_count[s2[i]-'a'];
+        }
+        for(int i=len1;i<len2;i++)
+        {
+            if(isEqual())
+                return true;
+            ++ch_count[s2[i-len1]-'a'];
+            --ch_count[s2[i]-'a'];
+        }
+        return isEqual();
+    }
+    bool isEqual()
+    {
+        return !any_of(ch_count.begin(),ch_count.end(),[](const int& num){return num;});
+    }
+};

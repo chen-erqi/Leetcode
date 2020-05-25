@@ -1,0 +1,78 @@
+//Sliding-Window
+
+class Solution {
+private:
+    unordered_map<char,int> need,window;
+    bool check()
+    {
+        for(const auto& p:need)
+            if(window[p.first]<p.second)
+                return false;
+        return true;
+    }
+public:
+    vector<int> findAnagrams(string s, string p) {
+        vector<int> res;
+        for(const char& t:p)
+            need[t]++;
+        int L=0,R=-1,len=p.size();
+
+        while(R+1<s.size())
+        {
+            window[s[++R]]++;
+            while(check()&&L<=R)
+            {
+                if(R-L+1==len)
+                    res.push_back(L);
+                window[s[L++]]--;
+            }
+        }
+        return res;
+    }
+};
+
+//hash_map is much slower than vector!!!!!
+//dif means the numeber of different numbers between S and P.
+//We only foucs the L and R of window.Cuz chars between them are all in the window.
+
+class Solution {
+public:
+    vector<int> findAnagrams(string s, string p) {
+        vector<int> ans;
+        int len_s=s.size(),len_p=p.size();
+        if(len_s<len_p)
+            return ans;
+        vector<int> freq_s(26,0),freq_p(26,0);
+        for(int i=0;i<len_p;i++)
+        {
+            freq_p[p[i]-'a']++;
+            freq_s[s[i]-'a']++;
+        }
+        int dif=0;
+        for(int i=0;i<26;i++)
+            if(freq_p[i]!=freq_s[i])
+                dif++;
+        if(dif==0)
+            ans.emplace_back(0);
+        for(int L=0,R=len_p;R<len_s;R++,L++)
+        {
+            freq_s[s[L]-'a']--;
+            freq_s[s[R]-'a']++;
+            if(s[L]!=s[R])         //If Lchar==Rchar,window doesnt change,
+            {
+		//Judgement Statement should made their freq equal.
+		//L and R each has two situation when those freq equal.In different situation,dif should add or minus 1.
+		//Take an example with Lchar,We consider about their freq equal after minus 1 or before minus 1.
+
+
+                if(freq_s[s[L]-'a']==freq_p[s[L]-'a']) dif--;    //After Lchar minus one,both chars have same freq.Lboundary leftshift one digit and erase a negative char,so the dif should minus one.
+                else if(freq_s[s[L]-'a']+1==freq_p[s[L]-'a']) dif++; //Before Lchar minus one,they have same freq.So dif should add 1. 
+                if(freq_s[s[R]-'a']==freq_p[s[R]-'a']) dif--;   //After Rchar add 1,they have same freq.So dif should minus 1.
+                else if(freq_s[s[R]-'a']-1==freq_p[s[R]-'a']) dif++; //Before Rchar add 1,they have same freq.So dif should add 1.
+            }
+            if(dif==0)
+                ans.emplace_back(L+1);
+        }
+        return ans;
+    }
+};

@@ -1,0 +1,46 @@
+// array is faster than map!!!!!
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+private:
+    int cnt=0;
+    int hash_map[10]={0};
+    bool check()
+    {
+        int cnt=0;
+        for(const auto& p:hash_map)
+        {
+            if(p%2==1)
+                cnt++;
+            if(cnt>1)
+                return false;
+        }
+        return true;
+    }
+    void dfs(TreeNode* root)
+    {
+        if(!root)
+            return;
+        hash_map[root->val]++;
+        if(!root->left&&!root->right&&check())
+            cnt++;
+        dfs(root->left);
+        dfs(root->right);
+        hash_map[root->val]--;
+    }
+public:
+    int pseudoPalindromicPaths (TreeNode* root) {
+        dfs(root);
+        return cnt;
+    }
+};
