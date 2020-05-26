@@ -1,3 +1,10 @@
+//在a，b两个有序数组中查找第k小，就是在a中找某个位置i，在b中找某个位置j，i+j=k。
+//且a[i-1]<=b[j],b[j-1]<=a[i] 即二分查找中的判定条件
+//在a中二分查找i，即b中相应位置为k-i。
+//0<=i<=a.size()&&k-b.size()<=i<=k 由此可得le和ri的判断条件，即i的取值范围的上下限。
+//我们默认i，j在分割线右侧！要找的值在分割线左侧
+
+
 double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
         int n=nums1.size()+nums2.size();
         if(n&1)//按位与 n的最后一位与1算术与 若为1则n为奇数 为0则为偶数
@@ -13,11 +20,14 @@ double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
         while(le<ri)
         {
             int m=le+(ri-le)/2;
-            if(nums2[k-m-1]>nums1[m])
+            if(nums2[k-m-1]>nums1[m])//用nums2的左边最大来指示nums1此时的二分查找
               le=m+1;
             else
               ri=m;
         }
+
+	//判断完毕后 le即为所求k 值为max(nums1[le-1],nums2[k-le-1])
+	//但是此时le可能为k或者为0 即边界判定！！
         int nums1LeftMax=le==0?INT_MIN:nums1[le-1];
         int nums2LeftMax=le==k?INT_MIN:nums2[k-le-1];
         return max(nums1LeftMax,nums2LeftMax);

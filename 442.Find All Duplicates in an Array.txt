@@ -1,0 +1,45 @@
+//local-hash_map
+
+class Solution {
+private:
+    void mySwap(vector<int>& nums,int L,int R)
+    {
+        nums[L]^=nums[R];
+        nums[R]^=nums[L];
+        nums[L]^=nums[R];
+    }
+public:
+    vector<int> findDuplicates(vector<int>& nums) {
+        std::vector<int> res;
+        for(int i=0;i<nums.size();i++)
+            while(nums[i]!=i+1)
+            {
+                if(nums[i]!=nums[nums[i]-1])
+                    mySwap(nums,i,nums[i]-1);
+                else
+                    break;
+            }
+        for(int i=0;i<nums.size();i++)
+            if(nums[i]!=i+1)
+                res.emplace_back(nums[i]);
+        return res;
+    }
+};
+
+//Local-Negative-Index-Hash_map
+
+class Solution {
+public:
+    vector<int> findDuplicates(vector<int>& nums) {
+        std::vector<int> res;
+        for(int num:nums)
+        {
+            int tmp=abs(num);
+            if(nums[tmp-1]<0)
+                res.emplace_back(tmp);
+            else
+                nums[tmp-1]=-nums[tmp-1];
+        }
+        return res;
+    }
+};

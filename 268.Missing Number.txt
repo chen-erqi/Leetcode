@@ -1,0 +1,27 @@
+//OR Operation!!!
+//The number of missing number is just one.And the array is taken from 0 to n.
+//The length of array is n.
+
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        int x=0;
+        for(int num:nums)
+            x^=num;
+        for(int i=0;i<=nums.size();i++)
+            x^=i;
+        return x;
+    }
+};
+
+//Count the sum of 1...n.Then subtract the sum of array.
+class Solution {
+public:
+    int missingNumber(vector<int>& nums) {
+        int n=nums.size();
+        int sum=((n+1)*n/2);
+        for(int num:nums)
+            sum-=num;
+        return sum;
+    }
+}; 

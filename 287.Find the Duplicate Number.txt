@@ -1,0 +1,56 @@
+//Slow-Fast-Pointer
+
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        int slow=0,fast=0;
+        while(1+1==2)
+        {
+            slow=nums[slow];
+            fast=nums[nums[fast]];
+            if(slow==fast)
+            {
+                slow=0;
+                while(slow!=fast)
+                {
+                    slow=nums[slow];
+                    fast=nums[fast];
+                }
+                return fast;
+            }
+        }
+        return 0;
+    }
+};
+
+
+
+
+
+//Binary Search
+//With the limitation of the requirements of the question,binary search can be used.
+//Restrictions:[1....n],size=n+1
+//Cnt used to count the number less than or equal MID.And if the CNT less than mid,the 
+duplicate number must between 1...mid,so R=mid.
+//ELSE:L=mid+1. 
+
+class Solution {
+public:
+    int findDuplicate(vector<int>& nums) {
+        int N=nums.size();
+        int L=1,R=N-1;
+        while(L<R)
+        {
+            int mid=L+((R-L)>>1);
+            int cnt=0;
+            for(int num:nums)
+                if(num<=mid)
+                    cnt++;
+            if(cnt>mid)
+                R=mid;
+            else
+                L=mid+1;
+        }
+        return L;
+    }
+};

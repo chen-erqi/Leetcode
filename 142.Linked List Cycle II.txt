@@ -1,0 +1,34 @@
+//Slow-Fast pointer
+//First,use slow-fast pointer to find the intersection.
+//Then use two pointer,one pointer to the head and the other to the instersection node.
+//These pointers forward one node everytime until these two pointers meet.
+
+//Mathematical proof:
+//The distance from head to entrance is F.The distance from entrance to intersection is a.
+//The distance from intersection to entrance.
+//2(F+a)=F+2a+b. F+a = slow-pointer's traveling length. F+2a+b = fast-pointer's traveling length.
+
+class Solution {
+public:
+    ListNode *detectCycle(ListNode *head) {
+        if(!head||!head->next)
+            return nullptr;
+        ListNode *slow=head,*fast=head;//NOTICE!!!
+        while(fast&&fast->next)        //NOTICE!!!
+        {
+            slow=slow->next;
+            fast=fast->next->next;
+            if(slow==fast)
+            {
+                slow=head;
+                while(slow!=fast)
+                {
+                    slow=slow->next;
+                    fast=fast->next;
+                }
+                return slow;
+            }
+        }
+        return nullptr;
+    }
+};

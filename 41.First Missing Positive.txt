@@ -1,0 +1,22 @@
+//Array-Local-Hash_map
+
+class Solution {
+private:
+    void mySwap(vector<int>& nums,int L,int R)
+    {
+        nums[L]^=nums[R];
+        nums[R]^=nums[L];
+        nums[L]^=nums[R];
+    }
+public:
+    int firstMissingPositive(vector<int>& nums) {
+        int N=nums.size();
+        for(int i=0;i<N;i++)
+            while(nums[i]>0&&nums[i]<=N&&nums[nums[i]-1]!=nums[i])
+                mySwap(nums,nums[i]-1,i);
+        for(int i=0;i<N;i++)
+            if(nums[i]!=i+1)
+                return i+1;
+        return N+1;
+    }
+};
