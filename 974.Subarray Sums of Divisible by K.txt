@@ -1,0 +1,41 @@
+//Sum of Prefixes :: Leetcode 560
+//Congruence Theorem 同余定理
+
+
+class Solution {
+public:
+    int subarraysDivByK(vector<int>& A, int K) {
+        unordered_map<int,int> record={{0,1}};  //initialize
+        int ans=0,sum=0;
+        for(int elem:A)
+        {
+            sum+=elem;
+            int modulus=(sum%K+K)%K; //Remainder maybe negative when the sum is negative.
+            if(record.count(modulus))
+                ans+=record[modulus];
+            record[modulus]++;
+        }
+        return ans;
+    }
+};
+
+//Sum of Prefixes + Permutation 
+//When the member of map is not empty,we can figure out by Permutation.
+//Taken up 2 numbers of this member.
+
+class Solution {
+public:
+    int subarraysDivByK(vector<int>& A, int K) {
+        unordered_map<int,int> record={{0,1}};
+        int ans=0,sum=0;
+        for(int elem:A)
+        {
+            sum+=elem;
+            int modulus=(sum%K+K)%K;
+            record[modulus]++;
+        }
+        for(const auto& p:record)
+            ans+=(p.second*(p.second-1)/2);
+        return ans;
+    }
+};

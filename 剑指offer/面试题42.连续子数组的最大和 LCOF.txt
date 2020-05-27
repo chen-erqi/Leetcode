@@ -1,0 +1,16 @@
+//Dynamic Programming
+
+class Solution {
+public:
+    int maxSubArray(vector<int>& nums) {
+        int N=nums.size();
+        vector<int> dp(N,0);
+        int res=nums[0];  dp[0]=nums[0];
+        for(int i=1;i<N;i++)
+        {
+            dp[i]=max(dp[i-1]+nums[i],nums[i]);
+            res=max(dp[i],res);
+        }
+        return res;
+    }
+};

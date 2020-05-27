@@ -1,20 +1,24 @@
-动态规划
+//Dynamic Programming
+
 class Solution {
 public:
     int maxSubArray(vector<int>& nums) {
-        if(nums.size()==0)
-            return NULL;
-        int sum=0;
-        int res=INT_MIN;
-        for(int i=0;i<nums.size();i++)
+        int N=nums.size();
+        vector<int> dp(N,0);
+        int res=nums[0]; dp[0]=nums[0];
+        for(int i=1;i<N;i++)
         {
-            sum=max(sum+nums[i],nums[i]);
-            res=max(res,sum);
+            dp[i]=max(dp[i-1]+nums[i],nums[i]);
+            res=max(dp[i],res);
         }
         return res;
     }
 };
-分治法
+
+
+//Divide and Conquer
+
+
 class Solution {
 public:
     int maxSubArray(vector<int>& nums) {
