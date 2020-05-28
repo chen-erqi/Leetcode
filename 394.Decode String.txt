@@ -1,0 +1,98 @@
+//String + Brackets = Stack!!!!
+//Stack == dynamic vector!!!!
+//Consider two strings juxtaposed in any situation!!!!!
+
+class Solution {
+private:
+    string getDigits(string& s,int &pos)
+    {
+        string res="";
+        while(isdigit(s[pos]))
+            res+=s[pos++];
+        return res;
+    }
+    string getString(vector<string>& v) 
+    {
+        string res="";
+        for(const auto& s:v)
+            res+=s;
+        return res;
+    }
+public:
+    string decodeString(string s) {
+        vector<string> stk;
+        int pos=0;
+        while(pos<s.size())
+        {
+            if(isdigit(s[pos]))
+            {
+                string digits=getDigits(s,pos);
+                stk.emplace_back(digits);
+            }
+            else if(isalpha(s[pos])||s[pos]=='[')
+                stk.emplace_back(string(1,s[pos++]));
+            else
+            {
+                pos++;
+                vector<string> sub;
+                while(stk.back()!="[")
+                {
+                    sub.emplace_back(stk.back());
+                    stk.pop_back();
+                }
+                reverse(sub.begin(),sub.end());
+                stk.pop_back();
+                int K=stoi(stk.back());
+                stk.pop_back();
+                string cur="",O=getString(sub);
+                while(K--)
+                    cur+=O;
+                stk.emplace_back(cur);
+            }
+        }
+        return getString(stk);
+    }
+};
+
+//Recursion
+
+class Solution {
+private:
+    string src;
+    int pos=0;
+
+    int getDigits()
+    {
+        int res=0;
+        while(pos<src.size()&&isdigit(src[pos]))
+            res=res*10+src[pos++]-'0';
+        return res;
+    }
+
+    string getString()
+    {
+        if(pos==src.size()||src[pos]==']')
+            return "";
+        int K=1;
+        string res;
+        char tem=src[pos];
+        
+        if(isdigit(tem))
+        {
+            K=getDigits();
+            pos++;
+            string cur=getString();
+            pos++;
+            while(K--)
+                res+=cur;
+        }
+        else if(isalpha(tem))
+            res=string(1,src[pos++]);
+        return res+getString();
+    }
+public:
+    string decodeString(string s) {
+        this->src=s;
+        return getString();
+    }
+};

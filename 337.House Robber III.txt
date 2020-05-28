@@ -1,0 +1,36 @@
+// dp + Recrusion
+// We can choose to rob or not_rob at every TreeNode.This is the dp func!
+// Given the array which has two members,the first means not_rob,the second means rob!
+// dfs!Recursion it at every TreeNodes!
+
+
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    int rob(TreeNode* root) {
+        vector<int> res=dp(root);
+        return max(res[0],res[1]);
+    }
+
+    vector<int> dp(TreeNode* root)
+    {
+        if(!root)
+            return {0,0};
+        vector<int> left=dp(root->left);
+        vector<int> right=dp(root->right);
+        
+        int rob=root->val+left[0]+right[0];
+        int not_rob=max(left[0],left[1])+max(right[0],right[1]);
+
+        return {not_rob,rob};
+    }
+};

@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        if(!nums.size())
+            return 0;
+        if(nums.size()==1)
+            return nums[0];
+        int dp0=0,dp1=nums[0],res;
+        for(int i=2;i<=nums.size();i++)
+        {
+            res=max(dp0+nums[i-1],dp1);
+            dp0=dp1;
+            dp1=res;
+        }
+        return res;
+    }
+};
