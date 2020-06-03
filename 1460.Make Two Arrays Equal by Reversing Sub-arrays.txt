@@ -1,0 +1,14 @@
+class Solution {
+public:
+    bool canBeEqual(vector<int>& target, vector<int>& arr) {
+        unordered_set<int> hash_map;
+        for(const auto& p:target)
+            hash_map.insert(p);
+        for(const auto& p:arr)
+        {
+            if(!hash_map.count(p))
+                return 0;
+        }
+        return 1;
+    }
+};

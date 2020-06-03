@@ -1,0 +1,45 @@
+//Win or Lose Dp ---> dfs+memo!!!!
+//Condense State!! by bitset!!!
+
+class Solution {
+private:
+    int maxChoosableInteger,desiredTotal;
+    unordered_map<unsigned long long,bool> hash_map;
+
+    bool dfs(int total_sum,bitset<25>& bs)
+    {
+        if(total_sum>=desiredTotal)
+            return true;
+        if(hash_map.find(bs.to_ullong())!=hash_map.end())
+            return hash_map[bs.to_ullong()];
+        bool res=true;
+        for(int i=1;i<=maxChoosableInteger;i++)
+        {
+            if(bs[i])
+                continue;
+            bitset<25> bs_tmp=bs;
+            bs_tmp[i]=1;
+            if(dfs(total_sum+i,bs_tmp))
+            {
+                res=false;
+                break;
+            }
+        }
+        return hash_map[bs.to_ullong()]=res;
+    }
+public:
+    bool canIWin(int maxChoosableInteger, int desiredTotal) {
+        this->maxChoosableInteger=maxChoosableInteger;
+        this->desiredTotal=desiredTotal;
+        if((maxChoosableInteger+1)*maxChoosableInteger*0.5<desiredTotal)
+            return false;
+        for(int i=1;i<maxChoosableInteger;i++)
+        {
+            bitset<25> bs;
+            bs[i]=1;
+            if(dfs(i,bs))
+                return true;
+        }
+        return false;
+    }
+};

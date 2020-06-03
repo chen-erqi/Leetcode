@@ -1,0 +1,25 @@
+//Sliding-Window!!!!
+//travel all the substring to match the possible numbers!!!
+
+
+class Solution {
+public:
+    bool hasAllCodes(string s, int k) {
+        if(k>s.size())
+            return false;
+        int cur=0;
+        for(int i=0;i<k-1;i++)
+            cur=2*cur+(s[i]=='1');
+        vector<bool> used(1<<k,false);
+        for(int i=k-1;i<s.size();i++)
+        {
+            cur=2*cur+(s[i]=='1');  //Insert at the lowest position
+            used[cur]=true;
+            cur&=~(1<<(k-1));       //Discard at the highest position
+        }
+        for(int x:used)
+            if(!x)
+                return false;
+        return true;
+    }
+};

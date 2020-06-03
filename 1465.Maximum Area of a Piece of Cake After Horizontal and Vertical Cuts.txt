@@ -1,0 +1,32 @@
+class Solution {
+public:
+    int maxArea(int h, int w, vector<int>& hor, vector<int>& ver) {
+        int maxH=0,maxV=0;
+        sort(hor.begin(),hor.end());
+        sort(ver.begin(),ver.end());
+        if(hor.size()==1)
+            maxH=max(hor[0],h-hor[0]);
+        if(ver.size()==1)
+            maxV=max(ver[0],w-ver[0]);
+        for(int i=0;i<hor.size()-1;i++)
+        {
+            if(i==0)
+                maxH=max(maxH,hor[i]);
+            int cur=hor[i+1]-hor[i];
+            maxH=max(maxH,cur);
+            if(i+1==hor.size()-1)
+                maxH=max(maxH,h-hor[i+1]);
+        }
+        for(int i=0;i<ver.size()-1;i++)
+        {
+            if(i==0)
+                maxV=max(maxV,ver[i]);
+            int cur=ver[i+1]-ver[i];
+            maxV=max(maxV,cur);
+            if(i+1==ver.size()-1)
+                maxV=max(maxV,w-ver[i+1]);
+        }
+        long long res=(long long)maxV*(long long)maxH%1000000007;
+        return (int)res;
+    }
+};

@@ -1,0 +1,48 @@
+//Travel all nodes of grid.
+//check out the square with side length of cur_len+1.
+//We can check two boundary conditions at the same time!
+//First,check the Up and Left boundary.We travel the next nodes when one 0 char appeared.
+//Second,check the Down and Right boundary.If a 0 char appeared,we check  the square with 
+side length of cur_len+2 at the same node!
+
+
+class Solution {
+public:
+    int largest1BorderedSquare(vector<vector<int>>& grid) {
+        if(grid.empty())
+            return 0;
+        int max_len=0,N=grid.size(),M=grid[0].size();
+        for(int i=0;i<N;i++)
+            for(int j=0;j<M;j++)
+            {
+                if(grid[i][j])
+                {
+                    int cur_len=max_len;
+                    while(i+cur_len<N&&j+cur_len<M)
+                    {
+                        bool flag1=true,flag2=true;
+                        for(int temp_i=i,temp_j=j;temp_i<i+cur_len+1&&temp_j<j+cur_len+1;temp_i++,temp_j++)
+                            if(grid[temp_i][j]*grid[i][temp_j]!=1)
+                            {
+                                flag1=false;
+                                break;
+                            }
+                        if(!flag1)
+                            break;
+                        
+                        for(int temp_i=i+cur_len,_i=temp_i,temp_j=j+cur_len,_j=temp_j;temp_i>i&&temp_j>j;temp_i--,temp_j--)
+                        if(grid[temp_i][_j]*grid[_i][temp_j]!=1)
+                        {
+                            flag2=false;
+                            cur_len++;
+                            break;
+                        }
+                        if(!flag2)
+                            continue;
+                        max_len=++cur_len;
+                    }
+                }
+            }
+        return max_len*max_len;
+    }
+};

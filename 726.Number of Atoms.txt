@@ -1,0 +1,66 @@
+//Recursion
+
+class Solution {
+private:
+    map<string,int> hash_map;
+    void dfs(const string& s,const int& multi)
+    {
+        int N=s.size(),pos=0;
+        while(pos<N)
+        {
+            if(isupper(s[pos]))
+            {
+                string curName="";
+                curName+=s[pos++];
+                while(islower(s[pos]))
+                    curName+=s[pos++];
+                if(isdigit(s[pos]))
+                {
+                    int count=0;
+                    while(isdigit(s[pos]))
+                        count=count*10+s[pos++]-'0';
+                    hash_map[curName]+=count*multi;
+                }
+                else
+                    hash_map[curName]+=multi;
+            }
+            else if(s[pos]=='(')
+            {
+                int count=0;
+                for(int j=pos;j<N;j++)
+                {
+                    if(s[j]=='(') count++;
+                    else if(s[j]==')') count--;
+                    if(!count)
+                    {
+                        string newFormula=s.substr(pos+1,j-pos-1);
+                        j++;
+                        if(isdigit(s[j]))
+                        {
+                            int newMulti=0;
+                            while(j<s.size()&&isdigit(s[j]))
+                                newMulti=newMulti*10+s[j++]-'0';
+                            dfs(newFormula,newMulti*multi);
+                        }
+                        else
+                            dfs(newFormula,multi);
+                        pos=j;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+public:
+    string countOfAtoms(string formula) {
+        dfs(formula,1);
+        string res="";
+        for(const auto& p:hash_map)
+        {
+            res+=p.first;
+            if(p.second>1)
+                res+=to_string(p.second);
+        }
+        return res;
+    }
+};

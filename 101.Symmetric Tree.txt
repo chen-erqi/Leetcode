@@ -1,0 +1,61 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+//Recursion
+
+class Solution {
+private:
+    bool dfs(TreeNode* p,TreeNode* q)
+    {
+        if(!p&&!q)
+            return true;
+        if(!p||!q)
+            return false;
+        return (p->val==q->val&&dfs(p->left,q->right)&&dfs(p->right,q->left));
+    }
+public:
+    bool isSymmetric(TreeNode* root) {
+        return dfs(root,root);
+    }
+};
+
+//Iterator
+//Push root into queue twice.And push their son-node reversely.In this way,we can
+make sure that the value of two consecutive nodes are equal.
+
+class Solution {
+private:
+    bool dfs(TreeNode* x,TreeNode* y)
+    {
+        if(!x&&!y)
+            return true;
+
+        queue<TreeNode*> q;
+        q.push(x);q.push(y);
+        while(!q.empty())
+        {
+            TreeNode* k=q.front();q.pop();
+            TreeNode* l=q.front();q.pop();
+            if(!k&&!l)
+                continue;
+            if((!k||!l)||(k->val!=l->val))
+                return false;
+            q.push(k->left);
+            q.push(l->right);
+            q.push(k->right);
+            q.push(l->left);
+        }
+        return true;
+    }
+public:
+    bool isSymmetric(TreeNode* root) {
+        return dfs(root,root);
+    }
+};

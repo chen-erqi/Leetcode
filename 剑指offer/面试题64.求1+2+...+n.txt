@@ -1,0 +1,13 @@
+//What we can use are biywise operation,logical operation.
+//The cutting-out of logical operation!!
+//As A&&B,when A is false,then B won't work.
+//As A||B,when A is true,then B won't work.
+
+class Solution {
+public:
+    int sumNums(int n) {
+        //n&&(n+=sumNums(n-1));
+        //!n||(n+=sumNums(n-1));
+        return n;
+    }
+};
