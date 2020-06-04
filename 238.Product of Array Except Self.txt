@@ -1,0 +1,22 @@
+// Sum of prefixes and suffixes!!!!
+//Use output array as the Left array and then multiply by R value dynamically.
+
+class Solution {
+public:
+    vector<int> productExceptSelf(vector<int>& nums) {
+        vector<int> ans(nums.size(),1);
+        int L=1;
+        for(int i=0;i<nums.size();i++)
+        {
+            ans[i]=L;
+            L*=nums[i];
+        }
+        int R=1;
+        for(int i=nums.size()-1;i>=0;i--)
+        {
+            ans[i]*=R;
+            R*=nums[i];
+        }
+        return ans;
+    }
+};

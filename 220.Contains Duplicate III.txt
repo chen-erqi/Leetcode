@@ -1,0 +1,59 @@
+//set+Sliding-Window
+//!!!Notice:upper_lound(x) means binary search the smallest value which is bigger than the x。
+//In the same way,as the Left-Close-Right-Open rule,what this func returns is the next iterator
+of this iterator whose value is less and equal x.!!!!!!!
+
+class Solution {
+public:
+    bool containsNearbyAlmostDuplicate(vector<int>& nums, int k, int t) {
+        set<int> s;
+        for(int i=0;i<nums.size();i++)
+        {
+            auto lower=s.lower_bound(nums[i]);
+            if(lower!=s.end()&&(long)*lower<=(long)nums[i]+(long)t)
+                return true;
+
+            auto upper=s.upper_bound(nums[i]);
+            if(upper!=s.begin()&&(long)*--upper>=(long)nums[i]-(long)t)
+                return true;
+            
+            s.insert(nums[i]);
+            if(s.size()>k)
+                s.erase(nums[i-k]);
+        }
+        return false;
+    }
+};
+
+//分桶排序+滑动窗口
+//保证在长度为k的窗口内部进行选择！
+//为负数时，主要考虑len<=nums[i]<0的情况 当nums[i]=len时，应该分在-1组
+但是此时按nums[i]/len-1，会分在-2组。所以应该在(nums[i]+1)/len-1，规避掉这个
+特殊值。
+
+class Solution {
+public:
+    bool containsNearbyAlmostDuplicate(vector<int>& nums, int k, int t) {
+        if(t<0) return false;
+        long len=(long)t+1;
+        unordered_map<long,long> h_map;
+        for(int i=0;i<nums.size();i++)
+        {
+            long index=nums[i]<0?(nums[i]+1)/len-1:nums[i]/len;
+            if(h_map.count(index))
+                return true;
+            else if(h_map.count(index-1)&&nums[i]-h_map[index-1]<len)
+                return true;
+            else if(h_map.count(index+1)&&h_map[index+1]-nums[i]<len)
+                return true;
+            h_map[index]=nums[i];
+            if(i>=k)
+            {
+                long n=nums[i-k]<0?(nums[i-k]+1)/len-1:nums[i-k]/len;
+                h_map.erase(n);
+            }
+        }
+        return false;
+    }
+};
+

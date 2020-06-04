@@ -1,0 +1,40 @@
+//Hash_Map
+
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        bool flag=false;
+        unordered_map<int,int> h_map;
+        for(int i=1;i<=nums.size();i++)
+        {
+            if(!h_map[nums[i-1]])
+                h_map[nums[i-1]]=i;
+            else
+            {
+                if((i-h_map[nums[i-1]])<=k)
+                    flag=true;
+                h_map[nums[i-1]]=i;
+            }
+        }
+        return flag;
+    }
+};
+
+//Set+Sliding-Window
+
+class Solution {
+public:
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        bool flag=true;
+        unordered_set<int> s;
+        for(int i=0;i<nums.size();i++)
+        {
+            if(s.count(nums[i]))
+                return true;
+            s.insert(nums[i]);
+            if(s.size()>k)
+                s.erase(nums[i-k]); // keep the length of Window equal K!!!
+        }
+        return false;
+    }
+};

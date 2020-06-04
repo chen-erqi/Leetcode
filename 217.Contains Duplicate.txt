@@ -1,0 +1,17 @@
+//Insert judge
+
+class Solution {
+public:
+    bool containsDuplicate(vector<int>& nums) {
+        set<int> s;
+        for(const auto& x:nums)
+        {
+            pair<set<int>::iterator,int> temp=s.insert(x);
+            if(!temp.second)
+                return true;
+        }
+        return false;
+    }
+};
+
+//Sort
