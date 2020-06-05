@@ -1,0 +1,23 @@
+//Compress State == make a turn by 90°!!!!!
+
+class Solution {
+public:
+    vector<vector<int>> generateMatrix(int n) {
+        if(!n)
+            return {};
+        vector<vector<int>> res(n,vector<int>(n));
+        int L=0,T=0,R=n-1,B=n-1,index=1;
+        while(true)
+        {
+            for(int i=L;i<=R;i++) res[T][i]=index++;//left->right
+            if(++T>B) break;
+            for(int i=T;i<=B;i++) res[i][R]=index++;//top->bottom
+            if(--R<L) break;
+            for(int i=R;i>=L;i--) res[B][i]=index++;//right->left
+            if(--B<T) break;
+            for(int i=B;i>=T;i--) res[i][L]=index++;//bottom->top
+            if(++L>R) break;
+        }
+        return res;
+    }
+};

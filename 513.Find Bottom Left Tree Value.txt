@@ -1,0 +1,59 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+//DFS
+
+class Solution {
+private:
+    int res,height=0;
+    void dfs(TreeNode* root,int h)
+    {
+        if(!root)
+            return;
+        dfs(root->left,h+1);
+        if(h>height)
+        {
+            height=h;
+            res=root->val;
+        }
+        dfs(root->right,h+1);
+    }
+public:
+    int findBottomLeftValue(TreeNode* root) {
+        dfs(root,1);
+        return res;
+    }
+};
+
+//BFS
+
+class Solution {
+public:
+    int findBottomLeftValue(TreeNode* root) {
+        if(!root)
+            return 0;
+        queue<TreeNode*> q;
+        q.push(root);
+        int res=0;
+        while(!q.empty())
+        {
+            res=q.front()->val;
+            for(int Len=q.size();Len>=1;Len--)
+            {
+                if(q.front()->left)
+                    q.push(q.front()->left);
+                if(q.front()->right)
+                    q.push(q.front()->right);
+                q.pop();
+            }
+        }
+        return res;
+    }
+};

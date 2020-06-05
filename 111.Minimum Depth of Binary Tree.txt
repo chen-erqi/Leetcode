@@ -1,0 +1,26 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+
+//Recursion
+//!root return 0;
+//One son of root is NULL,return the other son's depth.
+//All sons of root is valid,return min(L-Depth,R-Depth);
+
+
+class Solution {
+public:
+    int minDepth(TreeNode* root) {
+        if(!root)
+            return 0;
+        int L=minDepth(root->left);
+        int R=minDepth(root->right);
+        return !root->left||!root->right?L+R+1:min(L,R)+1;
+    }
+};
