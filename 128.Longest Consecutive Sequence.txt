@@ -1,0 +1,26 @@
+//hash-map!
+
+class Solution {
+public:
+    int longestConsecutive(vector<int>& nums) {
+        unordered_set<int> s;
+        for(const int& num:nums)
+            s.insert(num);
+        int maxLength=0;
+        for(const int& num:s)
+        {
+            if(!s.count(num-1))//avoid searching the same prefixes again!
+            {
+                int curNum=num;
+                int curLength=1;
+                while(s.count(curNum+1))
+                {
+                    curNum++;
+                    curLength++;
+                }
+                maxLength=max(maxLength,curLength);
+            }
+        }
+        return maxLength;
+    }
+};

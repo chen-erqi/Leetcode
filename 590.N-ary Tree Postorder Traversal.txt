@@ -1,0 +1,43 @@
+//Recursion
+
+class Solution {
+private:
+    vector<int> res;
+    void dfs(Node* root)
+    {
+        if(!root)
+            return;
+        for(Node* x:root->children)
+            dfs(x);
+        res.emplace_back(root->val);
+    }
+public:
+    vector<int> postorder(Node* root) {
+        dfs(root);
+        return res;
+    }
+};
+
+//Iteration
+//Reverse the order!!!! It's so convenient!!!
+
+class Solution {
+public:
+    vector<int> postorder(Node* root) {
+        if(!root)
+            return {};
+        vector<int> res;
+        vector<Node*> q;
+        q.emplace_back(root);
+
+        while(!q.empty())
+        {
+            Node* tem=q.back(); q.pop_back();
+            for(Node* x:tem->children)
+                q.emplace_back(x);
+            res.emplace_back(tem->val);
+        }
+        reverse(res.begin(),res.end());
+        return res;
+    }
+};

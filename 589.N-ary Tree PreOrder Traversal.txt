@@ -1,0 +1,44 @@
+//Recursion
+
+class Solution {
+private:
+    vector<int> res;
+    void dfs(Node* root)
+    {
+        if(!root)
+            return;
+        res.emplace_back(root->val);
+        for(Node* x:root->children)
+            dfs(x);
+    }
+public:
+    vector<int> preorder(Node* root) {
+        dfs(root);
+        return res;
+    }
+};
+
+//Iteration
+
+class Solution {
+public:
+    vector<int> preorder(Node* root) {
+        if(!root)
+            return {};
+        
+        vector<int> res;
+        vector<Node*> q;
+        q.insert(q.end(),root);
+
+        while(!q.empty())
+        {
+            Node* tem=q.back();
+            q.pop_back();
+            res.emplace_back(tem->val);
+            for(int i=tem->children.size()-1;i>=0;i--)
+                q.emplace_back(tem->children[i]);
+        }
+
+        return res;
+    }
+};
