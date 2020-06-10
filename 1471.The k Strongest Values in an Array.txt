@@ -1,0 +1,36 @@
+//double sort O(2NlogN);
+
+class Solution {
+public:
+    vector<int> getStrongest(vector<int>& arr, int k) {
+        sort(arr.begin(),arr.end());
+        int mid_val=arr[(arr.size()-1)/2];
+        sort(arr.begin(),arr.end(),[=](int a,int b){
+            if(abs(a-mid_val)==abs(b-mid_val))
+                return a>b;
+            else
+                return abs(a-mid_val)>abs(b-mid_val);
+        });
+        return vector<int>(arr.begin(),arr.begin()+k);
+    }
+};
+
+//sort+double poinner O(NlogN+k)
+
+class Solution {
+public:
+    vector<int> getStrongest(vector<int>& arr, int k) {
+        sort(arr.begin(),arr.end());
+        int mid_val=arr[(arr.size()-1)/2];
+        vector<int> ans;
+        int l=0,r=arr.size()-1;
+        while(ans.size()<k)
+        {
+            if(abs(arr[l]-mid_val)>abs(arr[r]-mid_val))
+                ans.emplace_back(arr[l++]);
+            else if(abs(arr[r]-mid_val)>=abs(arr[l]-mid_val))
+                ans.emplace_back(arr[r--]);
+        }
+        return ans;
+    }
+};

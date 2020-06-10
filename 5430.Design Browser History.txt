@@ -1,0 +1,38 @@
+class BrowserHistory {
+private:
+    vector<string> Forward,Back;
+    string CurPage;
+public:
+    //修改网页时 同时对forward和back修改
+    BrowserHistory(string homepage) {
+        CurPage=homepage;
+    }
+    
+    void visit(string url) {
+        Back.push_back(CurPage);
+        CurPage=url;
+        Forward.clear();
+    }
+    
+    string back(int steps) {
+        int len=Back.size()<steps?Back.size():steps;
+        for(int i=0;i<len;i++)
+        {
+            Forward.push_back(CurPage);
+            CurPage=Back.back();
+            Back.pop_back();
+        }
+        return CurPage;
+    }
+    
+    string forward(int steps) {
+        int len=Forward.size()<steps?Forward.size():steps;
+        for(int i=0;i<len;i++)
+        {
+            Back.push_back(CurPage);
+            CurPage=Forward.back();
+            Forward.pop_back();
+        }
+        return CurPage;
+    }
+};
