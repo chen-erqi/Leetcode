@@ -1,0 +1,47 @@
+//本质是找下一个序列
+//若是降序序列 则直接返回
+//所以直接从右到左找到第一个顺序对，在i-1右边找到最合适的交换的位置，j与i-1交换
+//之后为了是最小，把i-1右边的顺序reverse一下。
+//因为i-1右边是降序，所以我们从右到左找到第一个比i-1大的就可以了
+
+
+
+class Solution {
+public:
+    int nextGreaterElement(int n) {
+        if(n<12)
+            return -1;
+        string s=to_string(n);
+        int i;
+        for(i=s.size()-1;i>0;i--)
+        {
+            if(s[i-1]>=s[i])
+                continue;
+            else
+            {
+                int min_pos=0;
+                for(int j=s.size()-1;j>=i;j--)
+                {
+                    if(s[i-1]<s[j])
+                    {
+                        min_pos=j;
+			break;
+                    }
+                }
+                char tem=s[i-1];
+                s[i-1]=s[min_pos];
+                s[min_pos]=tem;
+                for(int h=i,k=s.size()-1;h<k;h++,k--)
+                {
+                    char temp=s[h];
+                    s[h]=s[k];
+                    s[k]=temp;
+                }
+                break;
+            }
+        }
+        if(i==0)
+            return -1;
+        return stol(s)>INT_MAX?-1:stoi(s);
+    }
+};

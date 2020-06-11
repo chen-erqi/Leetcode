@@ -1,0 +1,21 @@
+//单调栈！！！
+//需要存储前后信息的！一般有单调栈，动态规划，前缀和几种。
+
+class Solution {
+public:
+    vector<int> dailyTemperatures(vector<int>& T) {
+        vector<int> res(T.size(),0);
+        stack<int> s;
+        for(int i=0;i<T.size();i++)
+        {
+            while(!s.empty()&&T[s.top()]<T[i])
+            {
+                int k=s.top();
+                s.pop();
+                res[k]=i-k;
+            }
+            s.push(i);
+        }
+        return res;
+    }
+};
