@@ -1,0 +1,18 @@
+//just like Leetcode::1 2Sum
+
+class Solution {
+public:
+    int fourSumCount(vector<int>& A, vector<int>& B, vector<int>& C, vector<int>& D) {
+        int res=0;
+        unordered_map<int,int> h_map;
+        for(int x:A)
+            for(int y:B)
+                h_map[x+y]++;
+        
+        for(int x:C)
+            for(int y:D)
+                res+=h_map[-x-y];
+
+        return res;
+    }
+};
