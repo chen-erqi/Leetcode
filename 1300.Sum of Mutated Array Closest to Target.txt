@@ -1,0 +1,67 @@
+//排序+遍历 O(NlogN+N)
+//i=0代表遍历左边界,若i结果为长度,则直接返回长度。
+
+class Solution {
+public:
+    int findBestValue(vector<int>& arr, int target) {
+        sort(arr.begin(),arr.end());
+        int i,sumL=0,n=arr.size();//sum是前缀和 不包含当前值
+        for(i=0;i<n;i++)
+        {
+            int sum=sumL+arr[i]*(n-i);
+            if(sum>=target)
+            {
+                int ans=(target-sumL)/(n-i);
+                if(abs(sumL+ans*(n-i)-target)<=sumL+(ans+1)*(n-i)-target)
+                    return ans;
+                else
+                    return ans+1;
+            }
+            sumL+=arr[i];
+        }
+        return i==n?arr.back():0;
+    }
+};
+
+//双重二分
+//随着value增大 数组和时严格递增的 所以可以二分查找
+//查找使得数组和最接近target的两个数 可能为target的上界下界
+//因为是严格递增的 我们只要找到一个最小的 再+1就可以了
+
+
+class Solution {
+private:
+    int check(vector<int>& arr,int num)
+    {
+        int sum=0;
+        for(int x:arr)
+            sum+=(x>=num?num:x);
+        return sum;
+    }
+public:
+    int findBestValue(vector<int>& arr, int target) {
+        sort(arr.begin(),arr.end());
+        int n=arr.size();
+        vector<int> prefix(n+1,0);
+        for(int i=1;i<=n;i++)
+            prefix[i]=prefix[i-1]+arr[i-1];
+        
+        int l=0,r=*max_element(arr.begin(),arr.end()),ans=-1;
+        while(l<=r)
+        {
+            int mid=l+(r-l)/2;
+            auto iter=lower_bound(arr.begin(),arr.end(),mid);
+            int cur=prefix[iter-arr.begin()]+(arr.end()-iter)*mid;
+            if(cur<=target)
+            {
+                ans=mid; //alue_lower
+                l=mid+1;
+            }
+            else
+                r=mid-1;
+        }
+        int sum_lower=check(arr,ans);
+        int sum_upper=check(arr,ans+1);
+        return abs(target-sum_lower)<=abs(sum_upper-target)?ans:ans+1;//防止当arr.back()为ans时,ans+1的sum还是小于target
+    }
+};

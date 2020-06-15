@@ -1,24 +1,35 @@
+//找字典序最大和最小的两个字符串进行排序
+
 class Solution {
 public:
     string longestCommonPrefix(vector<string>& strs) {
-        int i,j=0;
-        if(strs.empty())
+        int N=strs.size();
+        if(N==0)
             return "";
-        string result=strs[0];
-        int min=result.length();
-        for(i=1;i<strs.size();i++)
-        {
-            if(min>strs[i].length())
-                min=strs[i].length();
-            for(j=0;j<min;j++)
-            {
-                if(result[j]!=strs[i][j])
-                {
-                    min=j;
-                    break;
-                }
-            }
-        }
-        return result.substr(0,min);
+        sort(strs.begin(),strs.end());
+        for(int i=0;i<min(strs[0].size(),strs[N-1].size());i++)
+            if(strs[0][i]!=strs[N-1][i])
+                return strs[0].substr(0,i);
+        return strs[0];
     }
 };
+
+//遍历+后向比较 
+
+class Solution {
+public:
+    string longestCommonPrefix(vector<string>& strs) {
+        string r = strs.size() ? strs[0] : "";
+        for(auto s: strs){
+            while(s.substr(0, r.size()) != r){
+                r = r.substr(0, r.size() - 1); //后向遍历
+                if(r == "") return r;
+            }
+        }
+        return r;
+    }
+};
+
+//遍历+前向比较
+
+

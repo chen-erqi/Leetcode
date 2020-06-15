@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int minSumOfLengths(vector<int>& arr, int target) {
+        unordered_map<int,int> mp; mp[0]=0;
+        int f[100005];
+        memset(f,0x3f,sizeof(f));
+        int sum=0,ans=0x3f3f3f3f;
+        for(int i=1;i<=arr.size();i++)
+        {
+            sum+=arr[i-1];
+            int gp=sum-target;
+            f[i]=f[i-1];
+            if(mp.count(gp))
+            {
+                int pos=mp[gp];
+                f[i]=min(f[i],i-pos);
+                ans=min(ans,i-pos+f[pos]);
+            }
+            mp[sum]=i;
+        }
+        return ans==0x3f3f3f3f?-1:ans;
+    }
+};
