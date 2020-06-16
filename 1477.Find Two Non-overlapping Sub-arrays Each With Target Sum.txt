@@ -1,0 +1,76 @@
+//滑动窗口
+//两遍遍历 判断重合
+//multimap+剪枝！
+
+class Solution {
+public:
+    int minSumOfLengths(vector<int>& arr, int target) {
+        multimap<int,int> mp;
+        int L=0,R=0,sum=0;
+        while(R<arr.size())
+        {
+            sum+=arr[R++];
+            while(sum>target)//这个顺序要注意 每一次加入扩窗就需要出窗 如果是判断之后再出窗 会丢失情况！
+                sum-=arr[L++];
+            if(sum==target)
+                mp.insert({R-L,L});//R指向的下一个要加入的数 所以是R-L 这样处理也有利于下一步判断！
+        }
+        
+        int ans=INT_MAX;
+        for(multimap<int,int>::iterator it=mp.begin();it!=mp.end();it++)
+        {
+            if(it->first*2>=ans)
+                break; //最小剪枝
+            multimap<int,int>::iterator ip=it;
+            while((++ip)!=mp.end())
+            {
+                if(it->second<ip->second&&it->first+it->second>ip->second)//判断是否重合
+                    continue;
+                if(ip->second<it->second&&ip->first+ip->second>it->second)
+                    continue;
+                ans=min(ans,it->first+ip->first);
+                break;//在map中是降序排列 所以找到的第一个ansd一定是最小的
+            }
+        }
+        return ans==INT_MAX?-1:ans;
+    }
+};
+
+//动态规划 
+//用前缀和能获取当前的符合要求的数组长度 用一个数组记录每个下标的最短数组长度
+//如果有前缀和下标 那么加上该下标的最短数组长度 再用min判断ans即可！
+//并且前缀和下标可以巧妙地避免重叠的问题！
+
+class Solution {
+public:
+    int minSumOfLengths(vector<int>& arr, int target) {
+        unordered_map<int,int> sum_prefix;
+        int curSum_prefix=0;
+        int ans=INT_MAX;
+        vector<int> v;//记录到每个位置 和为target的最短子数组的长度
+        int minLen=0;
+        sum_prefix[0]=-1;//注意base条件是-1，如果需要前缀和为0，必定是第一个数组，便于排除。
+			 //在第一个数组时，当前坐标的数组长度需要+1，和下面的长度计算统一。
+
+        for(int i=0;i<arr.size();i++)
+        {
+            curSum_prefix+=arr[i];
+            sum_prefix[curSum_prefix]=i;
+            if(sum_prefix.count(curSum_prefix-target))
+            {
+                int temp_Index=sum_prefix[curSum_prefix-target];
+                int temp_Len=i-temp_Index;//当前长度 减去前缀和时 是不包含前缀和下标的！是下标的后一位！
+                if(!minLen)
+                    minLen=temp_Len;//防止第一个的-1被赋值
+                else
+                    minLen=min(minLen,temp_Len);
+                v.emplace_back(minLen);
+                if(temp_Index!=-1&&v[temp_Index]!=0)
+                    ans=min(ans,v[temp_Index]+temp_Len);//是前缀和的下标的最短数组 保证n不重合！
+            }
+            else
+                v.emplace_back(minLen);//一定要加入数组 记录当前长度
+        }
+        return ans==INT_MAX?-1:ans;
+    }
+};
