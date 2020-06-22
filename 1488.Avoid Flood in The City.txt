@@ -1,0 +1,31 @@
+//坐标代表日期
+
+class Solution {
+public:
+    vector<int> avoidFlood(vector<int>& rains) {
+        vector<int> res(rains.size(),1);//全部初始为1 方便晴天判断 雨天只需遍历时赋值即可！
+        set<int> sun;
+        unordered_map<int,int> rain;//key是这个湖泊 value是上一次下雨的坐标
+        for(int i=0;i<rains.size();i++)
+        {
+            int r=rains[i];//r是这次下雨的湖泊
+            if(!r)
+            {
+                sun.insert(i);
+                continue;
+            }
+
+            if(rain.count(r))//上一次这个湖泊有下雨 需要抽水
+            {
+                auto it=sun.lower_bound(rain[r]);//用二分查找是否比这个湖泊日期小的晴天
+                if(it==sun.end())
+                    return {};
+                res[*it]=r;//有的话 该晴天的坐标要赋该湖泊
+                sun.erase(it);
+            }
+            rain[r]=i;//更新该湖泊上一次下雨的坐标
+            res[i]=-1;
+        }
+        return res;
+    }
+};

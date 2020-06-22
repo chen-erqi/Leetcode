@@ -1,0 +1,43 @@
+//multimap！！！！
+class Solution {
+public:
+    vector<string> topKFrequent(vector<string>& words, int k) {
+        map<string,int> mp;
+        for(string& x:words)
+            mp[x]++;
+        
+        multimap<int,string,std::greater<int>> mul;
+        for(auto& p:mp)
+            mul.insert(make_pair(p.second,p.first));
+        
+        vector<string> res;
+        for(auto p=mul.begin();p != mul.end()&&k;p++,k--)
+        {
+            res.emplace_back(p->second);
+        }
+        return res;
+    }
+};
+
+//桶排
+//右值引用！！！
+
+class Solution {
+public:
+    vector<string> topKFrequent(vector<string>& words, int k) {
+        int N=words.size();
+        vector<set<string>> buck(N+1);
+        unordered_map<string,int> mp;
+        for(auto && s:words)
+            mp[s]++;
+        for(auto &&[s,cnt]:mp)//注意！！！
+            buck[cnt].emplace(s);
+        vector<string> ans;
+        for(int i=N;i&&ans.size()<k;i--)//逆序 从cnt大的往回插入
+        {
+            if(buck[i].size())
+                ans.insert(end(ans),begin(buck[i]),end(buck[i]));
+        }
+        return {ans.begin(),ans.begin()+k};//可能存在有2的区间 但是k为1
+    }
+};

@@ -1,0 +1,73 @@
+//由题意可知 len_A*cnt_A+len_B*cnt_B=value.size() 
+//len_A与len_B一一对应 所以这是解二元一次方程 枚举
+//固定cnt_A不为0 cnt_B有可能为0
+//在枚举过程中 根据第一次来判断是赋值或者比较！
+
+
+class Solution {
+public:
+    bool patternMatching(string pattern, string value) {
+        int cnt_A=0,cnt_B=0,len_A=0,len_B=0;
+        
+        for(char& ch:pattern)
+            if(ch=='a')
+                cnt_A++;
+            else
+                cnt_B++;
+
+        if(cnt_A<cnt_B)
+        {
+            swap(cnt_A,cnt_B);
+            for(char& ch:pattern)
+                ch=(ch=='a'?'b':'a');
+        }
+
+        string_view value_view(value), pattern_view(pattern);
+        if(pattern_view.empty())
+            return value_view.empty();
+        if(value_view.empty())
+            return cnt_A==0||cnt_B==0;
+        
+        for(int len_A=0;len_A*cnt_A<=value_view.size();len_A++)
+        {
+            int rest=value_view.size()-len_A*cnt_A;
+            if((cnt_B==0&&rest==0)||(cnt_B!=0&&rest%cnt_B==0)) 
+            {
+                int len_B=(cnt_B==0?0:rest/cnt_B);
+                int pos=0;
+                bool flag=true;
+                string_view A_view,B_view;
+                for(const char& ch:pattern_view)
+                {
+                    if(ch=='a')
+                    {
+                        string_view sub=value_view.substr(pos,len_A);
+                        if(A_view.size()==0)
+                            A_view=sub;
+                        else if(A_view!=sub)
+                        {
+                            flag=false;
+                            break;
+                        }
+                        pos+=len_A;
+                    }
+                    else
+                    {
+                        string_view sub=value_view.substr(pos,len_B);
+                        if(B_view.size()==0)
+                            B_view=sub;
+                        else if(B_view!=sub)
+                        {
+                            flag=false;
+                            break;
+                        }
+                        pos+=len_B;
+                    }
+                }
+                if(flag&&A_view!=B_view)
+                    return true;
+            }
+        }
+        return false;
+    }
+};

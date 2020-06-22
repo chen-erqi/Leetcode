@@ -51,4 +51,41 @@ public:
     }
 };
 
-//
+//动态规划
+//f[i][j]表示s的前i个能否和p的前j个匹配
+//f[i][j]= if(p[j]!='*') f[i-1][j-1] matches(s[i],p[j])
+		false    otherwise
+//f[i][j]= if(p[j]='*') f[i-1][j](上一次匹配)/f[i][j-2]//匹配0次 macthes(s[i],p[j-1])
+			 f[i][j-2]                                  otherwise!
+
+
+class Solution {
+public:
+    bool isMatch(string s, string p) {
+        int m=s.size();
+        int n=p.size();
+        auto matches=[&](int i,int j){
+            if(i==0) //i==0代表前0个字符 肯定为false
+                return false;
+            if(p[j-1]=='.')
+                return true;
+            return s[i-1]==p[j-1];
+        };
+        vector<vector<int>> f(m+1,vector<int>(n+1,0));
+        f[0][0]=true;
+        for(int i=0;i<=m;i++)  //i要从0开始 是为了p开头可以为a* 然后匹配0次 要跳过这些
+            for(int j=1;j<=n;j++)
+            {
+                if(p[j-1]=='*')
+                {
+                    f[i][j]|=f[i][j-2];
+                    if(matches(i,j-1))
+                        f[i][j]|=f[i-1][j];
+                }
+                else
+                    if(matches(i,j))
+                        f[i][j]|=f[i-1][j-1];
+            }
+        return f[m][n];
+    }
+};

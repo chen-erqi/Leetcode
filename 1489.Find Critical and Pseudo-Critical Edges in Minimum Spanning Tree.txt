@@ -1,0 +1,78 @@
+class Solution {
+private:
+    int p[105];
+    int find(int a)//本质是判断p[a]是不是a的根节点
+    {
+        if(a!=p[a])//当P[a]=a时 代表找到根节点 若不是 则必须继续找
+            p[a]=find(p[a]);// 此时p[a]不是a的根节点 那么就得向上继续找 find(p[a])!
+        return p[a];//返回a的根节点p[a]
+    }
+
+    //mode代表该次的模式 0为正常 1为去除第k边 2为加上第k边
+    int my_kruskal(int n,vector<vector<int>>& edges,int k,int mode)
+    {
+        for(int i=0;i<n;i++)
+            p[i]=i;//初始化 此时i的根节点都指向自身 
+        int cost=0,cnt=0;//cnt代表该路径是否已经遍历完所有节点
+        if(mode==2)
+        {
+            for(auto& e:edges)
+            {
+                if(e[3]==k)
+                {
+                    cost+=e[0];
+                    cnt++;
+                    p[e[1]]=e[2];
+                    break;
+                }
+            }
+        }
+        for(auto& e:edges)
+        {
+            if(e[3]==k&&mode==1)
+                continue;
+            int f1=find(e[1]),f2=find(e[2]);
+            if(f1!=f2)//防止重复计算
+            {
+                cost+=e[0];
+                cnt++;
+                if(cnt==n-1)
+                    break;
+                p[f1]=f2;
+            }
+        }
+        if(cnt==n-1)
+            return cost;
+        else
+            return INT_MAX;
+    }
+public:
+    vector<vector<int>> findCriticalAndPseudoCriticalEdges(int n, vector<vector<int>>& edges) {
+        int m=edges.size();
+        for(int i=0;i<m;i++)
+        {
+            auto& e=edges[i];
+            swap(e[0],e[2]);//把权值移动到edges[i][0] 方便排序
+            e.emplace_back(i);//把边序号加入
+        }
+        sort(edges.begin(),edges.end());
+        int min_cost=my_kruskal(n,edges,-1,0);//0代表正常kruskal
+        vector<vector<int>> res(2);
+        for(int i=0;i<m;i++)
+        {
+            if(my_kruskal(n,edges,i,1)>min_cost)//1代表关键边判断 
+                res[0].emplace_back(i);
+            else if(my_kruskal(n,edges,i,2)==min_cost)//2代表伪关键边判断
+                res[1].emplace_back(i);
+        }
+        return res;
+    }
+};
+
+
+
+
+
+
+
+

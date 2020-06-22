@@ -1,0 +1,40 @@
+//二分！！
+//这题二分的难点在于矩阵 
+//以左上角为L 右下角为R 开始二分
+//在每次二分中，从左下角开始。如果当前数比mid小或等于，那么说明该列上这个数上所有的数都比当前数
+小于或等于。所以加上i+1，然后j++，右移一位，比较下一列上的数
+//如果当前数大于mid 那么上移一行 继续比较！
+
+
+class Solution {
+private:
+    int fun(vector<vector<int>>& matrix,int mid)
+    {
+        int i=matrix.size()-1,j=0,cnt=0;
+        while(i>=0&&j<matrix[0].size())
+        {
+            if(matrix[i][j]<=mid)
+            {
+                cnt+=(i+1);//加上这一列上面所有比它大的数的个数
+                j++;//右移 继续寻找
+            }
+            else
+                i--;
+        }
+        return cnt;
+    }
+public:
+    int kthSmallest(vector<vector<int>>& matrix, int k) {
+        int L=matrix[0][0],R=matrix.back().back();
+        while(L<R)
+        {
+            int mid=L+(R-L)/2;
+            int cnt=fun(matrix,mid);
+            if(cnt<k)
+                L=mid+1;
+            else
+                R=mid;//注意！！别跳过mid
+        }
+        return L;
+    }
+};

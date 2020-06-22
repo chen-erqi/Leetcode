@@ -1,0 +1,26 @@
+class Solution {
+public:
+        vector<string> getFolderNames(vector<string>& names) {
+        unordered_map<string, int> dic;
+
+        for (auto& name : names) {
+            if (dic.count(name) == 0) {
+                dic.insert({ name, 0 });
+                continue;
+            }
+           
+            int idx = dic[name];
+            while (true) {
+                idx++;
+                string temp = name + "(" + to_string(idx) + ")";
+                if (dic.count(temp) != 0) continue;
+                dic[name] = idx;//超时原因所在！！！应该直接改变当前的原始串的值
+                name = temp;
+                dic[name] = 0;
+                break;
+            }
+        }
+
+        return names;
+    }
+};

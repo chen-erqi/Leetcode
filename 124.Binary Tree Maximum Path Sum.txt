@@ -1,0 +1,28 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+int sumMax=INT_MIN;
+private:
+    int maxGain(TreeNode* node)
+    {
+        if(!node)
+            return 0;
+        int left=max(maxGain(node->left),0);//舍弃负值 保证最大
+        int right=max(maxGain(node->right),0);
+        int priceNewPath=left+right+node->val;//有可能以当前节点为根节点
+        sumMax=max(sumMax,priceNewPath); //单独做一个判断！
+        return node->val+max(left,right);//返回的是当前节点与其子节点形成的一条最大路径！ 
+    }
+public:
+    int maxPathSum(TreeNode* root) {
+        maxGain(root);
+        return sumMax;
+    }
+};

@@ -1,0 +1,16 @@
+//得分公式可以拆成两部分：A[i]+i和A[j]-j
+//A[j]-j在锚定j进行遍历时是不变的 所以只需求当前的最大A[i]+i即可
+//最大A[i]+i只需从前往后枚举j的时候维护
+
+class Solution {
+public:
+    int maxScoreSightseeingPair(vector<int>& A) {
+        int ans=INT_MIN,pre=A[0];
+        for(int i=1;i<A.size();i++)
+        {
+            ans=max(ans,pre+A[i]-i);
+            pre=max(pre,A[i]+i);
+        }       
+        return ans;
+    }
+};
