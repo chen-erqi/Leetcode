@@ -1,0 +1,52 @@
+//递归
+
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if(!head||!head->next)
+            return head;
+        ListNode* ret=reverseList(head->next);
+        head->next->next=head;
+        head->next=nullptr;
+        return ret;
+    }
+};
+
+//双指针
+
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if(!head)
+            return nullptr;
+        ListNode* pre=head;
+        ListNode* cur=nullptr;
+        while(pre)
+        {
+            ListNode* t=pre->next;
+            pre->next=cur;
+            cur=pre;
+            pre=t;
+        }
+        return cur;
+    }
+};
+
+//双指针
+
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if(!head||!head->next)
+            return head;
+        ListNode* cur=head;
+        while(head->next)
+        {
+            ListNode* t=head->next->next;
+            head->next->next=cur;
+            cur=head->next;
+            head->next=t;
+        }
+        return cur;
+    }
+};

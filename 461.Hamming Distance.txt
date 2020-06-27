@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int hammingDistance(int x, int y) {
+        bitset<32> a1(x);
+        bitset<32> b1(y);
+        a1^=b1;
+        return a1.count();
+    }
+};
+
+// x&(x-1) 原数字x的最右等于1的bit会被移除
+//通过检测当前数字是否有1 有1的话移除最右边的
+
+class Solution {
+public:
+    int hammingDistance(int x, int y) {
+        x^=y;
+        int dis=0;
+        while(x!=0)
+        {
+            dis++;
+            x&=(x-1);
+        }
+        return dis;
+    }
+};

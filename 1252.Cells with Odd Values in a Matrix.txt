@@ -1,0 +1,25 @@
+//在位置(x,y)的数为奇数
+//则在row[x]和col[y]中必有一个为奇数
+
+//我们需要得出row和col中的奇数次加一的行/列数，然后将奇偶相乘即可！
+
+class Solution {
+public:
+    int oddCells(int r, int c, vector<vector<int>>& indices) {
+        vector<int> row(r,0);
+        vector<int> col(c,0);
+        for(int i=0;i<indices.size();i++)
+        {
+            row[indices[i][0]]+=1;
+            col[indices[i][1]]+=1;
+        }
+        int count_odd_row=0,count_odd_col=0;
+        for(int x:row)
+            if(x%2==1)
+                count_odd_row+=1;
+        for(int y:col)
+            if(y%2==1)
+                count_odd_col+=1;
+        return count_odd_row*(c-count_odd_col)+(r-count_odd_row)*count_odd_col;
+    }
+};

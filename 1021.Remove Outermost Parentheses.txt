@@ -1,0 +1,27 @@
+//先跳过第一个(
+//统计个数 相同就更新统计
+
+class Solution {
+public:
+    string removeOuterParentheses(string S) {
+        int L=1, R=0;
+        string res;
+        for(int i=1;i<S.size();i++)
+        {
+            if(S[i]=='(')
+                L++;
+            else
+                R++;
+            
+            if(L!=R)
+                res+=S[i];
+            else
+            {
+                L=1;
+                R=0;
+                i++;
+            }
+        }
+        return res;
+    }
+};

@@ -1,0 +1,46 @@
+//二分+Rabin-Karp算法 
+/Leetcode 187
+
+class Solution {
+private:
+    int search(int L,int a,long modulus,int n,vector<int>& nums)
+    {
+        long h=0;
+        for(int i=0;i<L;i++)
+            h=(h*a+nums[i])%modulus;
+        set<long> seen;
+        seen.insert(h);
+        long aL=1;
+        for(int i=1;i<=L;i++)
+            aL=(aL*a)%modulus;
+        for(int start=1;start<n-L+1;start++)
+        {
+            h=((h*a-nums[start-1]*aL%modulus+modulus)%modulus+nums[start+L-1])%modulus;//防止负数取余
+            if(seen.count(h))
+                return start;
+            seen.insert(h);
+        }
+        return -1;
+    }
+public:
+    string longestDupSubstring(string s) {
+        int n=s.size();
+        vector<int> nums(n);
+        for(int i=0;i<n;i++)
+            nums[i]=s[i]-'a';
+        int a=26;
+        long modulus=(long)pow(2,32);//模数有一定疑问?
+        int left=1,right=n;
+        int L;//表示长度！
+        while(left!=right)
+        {
+            L=left+(right-left)/2;
+            if(search(L,a,modulus,n,nums)!=-1)
+                left=L+1;
+            else
+                right=L;
+        }
+        int start=search(left-1,a,modulus,n,nums);
+        return start!=-1?s.substr(start,left-1):"";
+    }
+};

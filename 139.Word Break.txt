@@ -1,0 +1,86 @@
+//记忆化+回溯
+
+class Solution {
+public:
+    bool dfs(string_view& str, unordered_set<string>st, int start, vector<int>& memo)
+    {
+        if(start>=str.size())
+            return true;
+        if(memo[start]!=-1)
+            return memo[start];
+        for(int end=start; end<str.size(); end++)
+        {
+            string tem=(string)str.substr(start,end-start+1);
+            if(st.count(tem) && dfs(str,st,end+1,memo))
+            {
+                memo[start]=true;
+                return true;
+            }
+        }
+        memo[start]=false;
+        return false;
+    }
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        unordered_set<string> st(wordDict.begin(),wordDict.end());
+        vector<int> memo(s.size(),-1);
+        string_view str(s);
+        return dfs(str,st,0,memo);
+    }
+};
+
+//BFS
+
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        unordered_set<string> st(wordDict.begin(),wordDict.end());
+        vector<int> visited(s.size()+1,0);
+        queue<int> q;
+        q.push(0);
+        while(!q.empty())
+        {
+            int start=q.front();
+            q.pop();
+            if(visited[start])
+                continue;
+            visited[start]=true;
+            for(int end=start;end<s.size();end++)
+            {
+                string tem=s.substr(start,end-start+1);
+                if(st.count(tem))
+                {
+                    if(end>s.size())
+                        return true;
+                    q.push(end+1);
+                }
+            }
+        }
+        return false;
+    }
+};
+
+//DP
+//Dp func：dp[i]代表s前i个字符的匹配情况 不包含第i个字符
+//每一次dp 都是在0-i这个区间内 通过j来分配区间 查看两个区间的情况
+
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        unordered_set<string> st(wordDict.begin(),wordDict.end());
+        vector<int> dp(s.size()+1);
+        dp[0]=true;//空字符为true
+        for(int i=1;i<=s.size();i++)
+            for(int j=0;j<i;j++)
+            {
+                if(dp[j]&&st.count(s.substr(j,i-j)))
+                {
+                    dp[i]=true;
+                    break;
+                }
+            }
+        return dp[s.size()];
+    }
+};
+
+

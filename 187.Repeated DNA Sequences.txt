@@ -1,0 +1,76 @@
+//Rabin-Karp:使用旋转hash实现常数时间的窗口切片 
+//常用于多模式搜索
+//对字符串进行切片并在滑动窗口中计算序列的哈希值
+
+class Solution {
+public:
+    vector<string> findRepeatedDnaSequences(string s) {
+        int L=10, n=s.size(), a=4;
+        int aL=pow(a,L);
+        if(n<=L)
+            return {};
+        unordered_map<char,int> mp{{'A',0},{'C',1},{'G',2},{'T',3}};
+        vector<int> nums(n);
+        set<string> res;
+        vector<string> ans;
+        for(int i=0;i<n;i++)
+            nums[i]=mp[s[i]];
+        int h=0;
+        set<int> seen;
+        for(int start=0;start<n-L+1;start++)
+        {
+            if(start!=0)
+                h=h*a-nums[start-1]*aL+nums[start+L-1];
+            else
+                for(int i=0;i<L;i++)
+                    h=h*a+nums[i];
+            if(seen.count(h))
+                res.insert(s.substr(start,L));
+            seen.insert(h);
+        }
+        return vector<string>(res.begin(),res.end());
+    }
+};
+
+//位运算
+//bitmask &= ~(1<<n) 重置第n位的值
+//1<<n 设置第n位为1
+//~(1<<n) 将第n位设为0 其余低位设为1
+//bitmask &= ~(1<<n) 将bitmask第n位设为0
+
+//bitmask &= ~(3<<2*L) 3是11 一次性操作两位！
+
+
+class Solution {
+public:
+    vector<string> findRepeatedDnaSequences(string s) {
+        int L=10, n=s.size();
+        int bitmask=0;
+        unordered_map<char,int> mp{{'A',0}, {'C',1}, {'G',2}, {'T',3}};
+        vector<int> nums(n);
+        for(int i=0;i<n;i++)
+            nums[i]=mp[s[i]];
+        set<string> res;
+        set<int> seen;
+
+        for(int start=0;start<n-L+1;start++)
+        {
+            if(start!=0)
+            {
+                bitmask<<=2;
+                bitmask|=nums[start+L-1];
+                bitmask&= ~(3<<2*L);
+            }
+            else 
+                for(int i=0;i<L;i++)
+                {
+                    bitmask<<=2;
+                    bitmask|=nums[i];
+                }
+            if(seen.count(bitmask))
+                res.insert(s.substr(start,L));
+            seen.insert(bitmask);
+        }
+        return vector<string>(res.begin(),res.end());
+    }
+};

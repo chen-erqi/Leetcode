@@ -1,0 +1,24 @@
+//位运算+hash桶排
+
+class Solution {
+public:
+    int maxProduct(vector<string>& words) {
+        unordered_map<int,int> bithash;
+        int bitmask=0,res=0;
+        for(string& str:words)
+        {
+            bitmask=0;
+            for(char& x:str)
+                bitmask |= 1<<(x-'a');
+            bithash[bitmask]=max(bithash[bitmask],(int)str.size());
+        }
+
+        for(auto it=bithash.begin();it!=bithash.end();it++) //map里双重遍历auto&会变成pair
+        {
+            for(auto iter=it;iter!=bithash.end();iter++)
+                if(!(it->first & iter->first)&&(iter!=it))
+                    res= max(res,it->second*iter->second);
+        }
+        return res;
+    }
+};

@@ -1,0 +1,10 @@
+class Solution {
+public:
+    vector<int> printNumbers(int n) {
+        int Max=pow(10,n)-1;
+        vector<int> res;
+        for(int i=1;i<=Max;i++)
+            res.emplace_back(i);
+        return res;
+    }
+};

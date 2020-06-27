@@ -1,0 +1,48 @@
+//原地翻转三次 小心k>nums.size()!
+
+class Solution {
+public:
+    void rotate(vector<int>& nums, int k) {
+        int l=nums.size();
+        reverse(nums.begin(),nums.end());
+        reverse(nums.begin(),nums.begin()+k%l);
+        reverse(nums.begin()+k%l,nums.end());
+    }
+};
+
+//std::rotate
+
+//环状分组
+
+//环状数组
+//循环次数是最大公约数
+//要非常注意 长度溢出的问题
+
+class Solution {
+private:
+    inline int gcd(int a,int b){
+        return b==0?a:gcd(b,a%b);
+    }
+public:
+    void rotate(vector<int>& nums, int k) {
+        int N=nums.size();
+        k%=N;//防止k初始比数组长度长
+        if((k==0)||(N<2))
+            return;
+        int gcd_N_k=gcd(k,N);
+        for(int i=0;i<gcd_N_k;i++)
+        {
+            int temp=nums[i];
+            int j=i+k;
+            while(j%N!=i)
+            {
+                int temp1=nums[j%N];
+                nums[j%N]=temp;
+                temp=temp1;
+                j+=k;
+            }
+            nums[i]=temp;
+        }
+    }
+};
+
