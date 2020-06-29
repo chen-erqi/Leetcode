@@ -1,0 +1,68 @@
+// 快速选择
+
+class Solution {
+private:
+    int quickSelect(vector<int>& nums,int l,int r,int index)
+    {
+        int q=ranomPartition(nums,l,r);
+        if(q==index)
+            return nums[q];
+        else
+            return q<index? quickSelect(nums,q+1,r,index):quickSelect(nums,l,q-1,index);
+    }
+    inline int ranomPartition(vector<int>& nums,int l,int r)
+    {
+        int i=rand()%(r-l+1)+l;
+        swap(nums[i],nums[r]);
+        return partition(nums,l,r);
+    }
+    inline int partition(vector<int>& nums,int l,int r)
+    {
+        int x=nums[r], i=l-1;
+        for(int j=l;j<r;j++)
+            if(nums[j]<=x)
+                swap(nums[++i],nums[j]);
+        swap(nums[i+1],nums[r]);
+        return i+1;
+    }
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        srand(time(0));
+        return quickSelect(nums,0,nums.size()-1,nums.size()-k);
+    }
+};
+
+// 堆
+class Solution {
+private:
+    void buildMaxHeap(vector<int>& nums,int heapSize)
+    {
+        for(int i=heapSize/2;i>=0;i--)
+            maxHeapify(nums,i,heapSize);
+    }
+    void maxHeapify(vector<int>& nums,int i,int heapSize)
+    {
+        int l=i*2+1, r=i*2+2, largest=i;
+        if(l<heapSize&&nums[l]>nums[largest])
+            largest=l;
+        if(r<heapSize&&nums[r]>nums[largest])
+            largest=r;
+        if(largest!=i)
+        {
+            swap(nums[i],nums[largest]);
+            maxHeapify(nums,largest,heapSize);
+        }
+    }
+public:
+    int findKthLargest(vector<int>& nums, int k) {
+        int heapSize=nums.size();
+        buildMaxHeap(nums, heapSize);
+        for(int i=nums.size()-1;i>=nums.size()-k+1;i--)
+        {
+            swap(nums[0],nums[i]);
+            heapSize--;
+            maxHeapify(nums,0,heapSize);
+        }
+        return nums[0];
+    }
+};

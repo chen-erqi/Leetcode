@@ -1,0 +1,22 @@
+//双指针
+
+class Solution {
+public:
+    int longestOnes(vector<int>& A, int K) {
+        int L=0,R=0,maxLen=0;
+        for(;R<A.size();R++)
+        {
+            if(A[R]==0)
+            {
+                if(K)
+                    K--;
+                else
+                {
+                    maxLen=max(maxLen,R-L);
+                    while(A[L++]); //L和R要同步 R是指的下一位 所以L也应多进一位
+                }
+            }
+        }
+        return max(maxLen,R-L);//不要漏判K在循环结束后还是大于0的情况
+    }
+};

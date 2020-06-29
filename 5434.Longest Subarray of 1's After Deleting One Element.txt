@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int longestSubarray(vector<int>& nums) {
+        int res=0, a=0, b=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            if(nums[i]==1)
+            {
+                a++;
+                b++;
+                res=max(res,a);//把判断放在这里防止最后一个1...的序列没有计入
+            }
+            else
+            {
+                a=b;
+                b=0;
+            }
+        }
+        return res==nums.size()?res-1:res;
+    }
+};

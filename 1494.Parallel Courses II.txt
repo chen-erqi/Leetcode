@@ -1,0 +1,38 @@
+//并行计算 
+//只能用dp+状态压缩 不能用贪心
+
+class Solution {
+public:
+    int minNumberOfSemesters(int n, vector<vector<int>>& dependencies, int k) {
+        vector<int> preq(n);
+        for(const auto& dep:dependencies)
+            preq[dep[1]-1] |= (1<<(dep[0]-1));//每个课程的预科 用二进制压缩状态
+        vector<int> set_preq(1<<n);//该状态下的预选科目
+        vector<int> valid(1<<n);//该状态是否有效
+        for(int mask=0;mask<(1<<n);mask++)//遍历所有一个学期能选课的状态
+        {
+            if(__builtin_popcount(mask)<=k)//一个学期选课应该小于k节
+            {
+                for(int i=0;i<n;i++)//遍历选的课
+                {
+                    if(mask&(1<<i))
+                        set_preq[mask] |= preq[i];//加上预选科目的状态
+                }
+                valid[mask]= ((set_preq[mask] & mask)==0);//此时的选课和此时的预选科目不能相同
+            }
+        }
+
+        vector<int> dp(1<<n,INT_MAX/2);
+        dp[0]=0;
+        for(int mask=0;mask<(1<<n);mask++)
+        {
+            for(int subset=mask;subset;subset=(subset-1)&mask)//遍历此时mask的选课子情况 
+            {
+                if(valid[subset]&&((mask & set_preq[subset])==set_preq[subset]))//这个子情况可以选择 并且这个子情况的预选和总的情况相同
+                dp[mask] = min(dp[mask],dp[mask^subset]+1);//此时即找到这个总选课情况的上一个选课情况
+                                                           //此时就要转移状态 继承或者是上一个不选这几门课的状态+1个学期
+            }
+        }
+        return dp[(1<<n)-1];
+    }
+};
