@@ -1,0 +1,30 @@
+class Solution {
+public:
+    bool isOneBitCharacter(vector<int>& bits) {
+        int i=0;
+        while(i<bits.size()-1)//bits.size()-1是不考虑最后一个字符 若最后一个可以被划分 那么i必然等于bits.size()-1 若i不可以被划分 此时也已经out 若是加入最后一个字符 则判断永远不成功
+            i+=bits[i]+1;
+        return i==bits.size()-1;
+    }
+};
+
+
+//贪心
+
+class Solution {
+//因为0必为所有字符的结尾 所以只需判断最末尾的0的左边有多少个1
+//若是偶数个 true
+//若是奇数个 false
+public:
+    bool isOneBitCharacter(vector<int>& bits) {
+        int cnt=0;
+        for(int i=bits.size()-2;i>=0;i--)
+        {
+            if(bits[i]==1)
+                cnt++;
+            else
+                break;
+        }
+        return !(cnt%2);
+    }
+};

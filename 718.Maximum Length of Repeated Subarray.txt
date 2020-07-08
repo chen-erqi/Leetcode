@@ -1,0 +1,55 @@
+//dp
+//看数组的最后一项 如果不相同 则答案一定不包括这一对
+
+class Solution {
+public:
+    int findLength(vector<int>& A, vector<int>& B) {
+        int n=A.size(), m=B.size();
+        int ans=0;
+        vector<vector<int>> dp(n+1,vector<int>(m+1,0));
+        for(int i=n-1;i>=0;i--)
+            for(int j=m-1;j>=0;j--)
+            {
+                dp[i][j]=(A[i]==B[j]?dp[i+1][j+1]+1:0);
+                ans=max(ans,dp[i][j]);
+            }
+        return ans;
+    }
+};
+
+//滑动窗口
+//问题关键是在于两次滑动 定位好起点 各自遍历A,B数组
+
+class Solution {
+private:
+    int maxLength(vector<int>& A,vector<int>& B,int addA,int addB,int len)
+    {
+        int res=0, k=0;
+        for(int i=0;i<len;i++)
+        {
+            if(A[addA+i]==B[addB+i])
+                k++;
+            else
+                k=0;
+            res=max(k,res);
+        }
+        return res;
+    }
+public:
+    int findLength(vector<int>& A, vector<int>& B) {
+        int n=A.size(), m=B.size(), res=0;
+        for(int i=0;i<n;i++)
+        {
+            int len=min(m,n-i);
+            int maxLen=maxLength(A,B,i,0,len);
+            res=max(res,maxLen);
+        }
+        for(int i=0;i<m;i++)
+        {
+            int len=min(n,m-i);
+            int maxLen=maxLength(A,B,0,i,len);
+            res=max(res,maxLen);
+        }
+        return res;
+    }
+};

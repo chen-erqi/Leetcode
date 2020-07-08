@@ -1,0 +1,53 @@
+//利用单调栈的思想 
+//存储差值
+
+class MinStack {
+private:
+    stack<long> st;
+    long minV=0;
+public:
+    /** initialize your data structure here. */
+    MinStack() {
+
+    }
+    
+    void push(int x) {
+        if(st.empty())
+        {
+            minV=x;
+            st.push(x-minV);
+        }
+        else
+        {
+            st.push(x-minV);
+            if(x<minV)
+                minV=x;
+        }
+    }
+    
+    void pop() {
+        if(st.top()<0)
+            minV=minV-st.top();
+        st.pop();
+    }
+    
+    int top() {
+        if(st.top()<0)
+            return (int)minV;
+        else
+            return (int)(minV+st.top());
+    }
+    
+    int min() {
+        return (int)minV;
+    }
+};
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack* obj = new MinStack();
+ * obj->push(x);
+ * obj->pop();
+ * int param_3 = obj->top();
+ * int param_4 = obj->min();
+ */

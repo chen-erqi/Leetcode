@@ -1,0 +1,19 @@
+//x+y能被k整除 当且仅当x,y的对k取模之和能被k整除
+//进行配对 
+//需要注意 0和t=k/2
+//0对应的值需要为偶数
+//当0对应的值为偶数 除了k/2所有的值对应的值都为偶数 n为偶数 所以k/2对应的值也为偶数
+
+
+class Solution {
+public:
+    bool canArrange(vector<int>& arr, int k) {
+        vector<int> mod(k);
+        for(int x:arr)
+            ++mod[(x%k+k)%k];
+        for(int i=1;i<k/2;i++)
+            if(mod[i]!=mod[k-i])
+                return false;
+        return mod[0]%2==0;
+    }
+};

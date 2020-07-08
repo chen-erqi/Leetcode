@@ -61,17 +61,17 @@ public:
     void pop() {
         if(s.top()<0)
         {
-            min=min-s.top();
+            min=min-s.top();//回退到上一个min
         }
         s.pop();
     }
     
-    int top() {
-        if(s.top()<0)
+    int top() {//top是取此时栈的最上面的值 入栈是x-min
+        if(s.top()<0)//若是小于0 则本身就是小于上一个min 所以直接返回min
         {
             return (int)min;
         }
-        else
+        else//若是大于0 则本身是大于上一个min的 所以应该还原
             return (int)(min+s.top());
     }
     

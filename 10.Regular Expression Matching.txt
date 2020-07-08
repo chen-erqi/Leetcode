@@ -78,7 +78,7 @@ public:
             {
                 if(p[j-1]=='*')
                 {
-                    f[i][j]|=f[i][j-2];
+                    f[i][j]|=f[i][j-2];//*∆•≈‰0¥Œ
                     if(matches(i,j-1))
                         f[i][j]|=f[i-1][j];
                 }

@@ -1,0 +1,13 @@
+class Solution {
+public:
+    vector<int> divingBoard(int shorter, int longer, int k) {
+        vector<int> res(k+1);
+        if(k==0)
+            return {};
+        if(longer==shorter)
+            return vector<int>(1,k*longer);
+        for(int i=0;i<=k;i++)
+            res[i]=(k-i)*shorter+i*longer;
+        return res;
+    }
+};

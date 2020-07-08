@@ -1,0 +1,30 @@
+//Leetcode 10.
+//回溯
+
+class Solution {
+private:
+    bool domatch(const string& s,int sindex,const string& p,int pindex,vector<vector<int>>& mem)
+    {
+        if(mem[sindex][pindex]!=-1)
+            return mem[sindex][pindex];
+        bool res;
+        if(pindex>=p.size())
+            res=(sindex>=s.size());
+        else
+        {
+            bool currentMatch=(sindex<s.size()&&(s[sindex]==p[pindex]||p[pindex]=='.'));
+            if(pindex+1<p.size()&&p[pindex+1]=='*')
+                res= domatch(s,sindex,p,pindex+2,mem)||(currentMatch&&domatch(s,sindex+1,p,pindex,mem));
+		//第一个是不匹配 跳过当前* 第二个是继续匹配
+            else    
+                res= currentMatch&&domatch(s,sindex+1,p,pindex+1,mem);
+        }
+        mem[sindex][pindex]=res;
+        return res;
+    }
+public:
+    bool isMatch(string s, string p) {
+        vector<vector<int>> mem(s.size()+1,vector<int>(p.size()+1,-1));
+        return domatch(s,0,p,0,mem);
+    }
+};

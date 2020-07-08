@@ -13,7 +13,9 @@ public:
     {
         if(L>R)
             return nullptr;
-        int mid=(L+R+1)/2;
+        int mid=(L+R+1)/2;//以右边为根节点
+	int mid=(L+R)/2;//以左边为根节点
+	int mid=(L+R+rand()%2)/2;//随机左右
         TreeNode* it=new TreeNode(nums[mid]);
         it->left=go(nums,L,mid-1);
         it->right=go(nums,mid+1,R);

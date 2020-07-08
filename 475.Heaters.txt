@@ -1,0 +1,45 @@
+//滑动查找
+//
+
+class Solution {
+public:
+    int findRadius(vector<int>& houses, vector<int>& heaters) {
+        sort(houses.begin(),houses.end());
+        sort(heaters.begin(),heaters.end());
+        int ans=0;
+        int k=0;
+        for(int i=0;i<houses.size();i++)
+        {
+            int rad=INT_MAX;
+            for(int j=k;j<heaters.size();j++)
+            {
+                k= (houses[i]>=heaters[j])?j:k;
+                rad=min(rad,abs(houses[i]-heaters[j]));
+                if(houses[i]<heaters[j])
+                    break;
+            }
+            ans=max(ans,rad);
+        }   
+        return ans;
+    }
+};
+
+//简化
+//核心思想是对每一个house而言 找到最大的半径 及左边的半径要大于右边的半径
+//house-heaters[i]>=heaters[i+1]-house
+
+class Solution {
+public:
+    int findRadius(vector<int>& houses, vector<int>& heaters) {
+        sort(houses.begin(), houses.end());
+        sort(heaters.begin(), heaters.end());
+        int i = 0, res = 0;
+        for(int house : houses) {
+            while(i < heaters.size() - 1 && heaters[i] + heaters[i + 1] <= house * 2) {
+                i++;
+            }
+            res = max(res, abs(heaters[i] - house));
+        }
+        return res;
+    }
+};

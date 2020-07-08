@@ -1,0 +1,51 @@
+//O(n*n*m) 压缩状态！
+
+class Solution {
+public:
+    int numSubmat(vector<vector<int>>& mat) {
+        int row=mat.size(), col=mat[0].size(), cnt=0;
+        for(int i=0;i<row;i++)
+        {
+            //每次都要统计每一行有多少个1xn的矩阵
+            for(int j=i;j<row;j++)
+            {
+                int cur=0;
+                for(int k=0;k<col;k++)
+                {
+                    if(mat[j][k]==0)
+                        cur=0;
+                    else
+                        cur+=1;
+                    cnt+=cur;
+                }
+            }
+            //压缩:把2xn的矩阵压缩成1xn 并在下一次统计中被计算进cnt
+            for(int j=row-1;j>i;j--)
+                for(int k=0;k<col;k++)
+                    mat[j][k]&=mat[j-1][k];
+        }
+        return cnt;
+    }
+};
+
+//dp
+
+class Solution {
+public:
+    int numSubmat(vector<vector<int>>& mat) {
+        int m=mat.size(), n=mat[0].size(), cnt=0;
+        for(int i=0;i<m;i++)
+            for(int j=0;j<n;j++)
+            {
+                if(j>0&&mat[i][j])
+                    mat[i][j]=mat[i][j-1]+1;
+                //minV=0时break!
+                for(int minV=INT_MAX,k=i;k>=0&&minV!=0;k--)
+                {
+                    minV=min(minV,mat[k][j]);
+                    cnt+=minV;
+                }
+            }
+        return cnt;
+    }
+};

@@ -1,0 +1,86 @@
+//栈
+
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        stack<int> st;
+        st.push(-1);
+        int maxV=0;
+        for(int i=0;i<s.size();i++)
+        {
+            if(s[i]=='(')
+                st.push(i);
+            else
+            {
+                st.pop();
+                if(st.empty())
+                    st.push(i);
+                else
+                    maxV=max(maxV,i-st.top());
+            }
+        }
+        return maxV;
+    }
+};
+
+//dp
+//dp[i]表示以下标为i结尾的最长有效括号的长度
+//s[i]==')'且s[i-1]=='(' dp[i]=dp[i-2]+2
+//s[i]==')'且s[i-1]==')' 
+//若此时s[i-dp[i-1]-1]=='(' dp[i]=dp[i-1]+dp[i-dp[i-1]-2]+2
+//注意不要越界！
+
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        int n=s.size(), maxV=0;
+        vector<int> dp(n,0);
+        for(int i=1;i<n;i++)
+        {
+            if(s[i]==')')
+            {
+                if(s[i-1]=='(')
+                    dp[i]=(i>=2?dp[i-2]:0)+2;
+                else if(i-dp[i-1]>0&&s[i-dp[i-1]-1]=='(')
+                    dp[i]=dp[i-1]+((i-dp[i-1])>=2?dp[i-dp[i-1]-2]:0)+2;
+                maxV=max(maxV,dp[i]);
+            }
+        }
+        return maxV;
+    }
+};
+
+//不要用额外空间
+//从左至右 会忽略左括号比右括号多的情况
+//从右至左
+
+class Solution {
+public:
+    int longestValidParentheses(string s) {
+        int L=0, R=0, maxV=0;
+        for(int i=0;i<(int)s.size();i++)
+        {
+            if(s[i]=='(')
+                L++;
+            else 
+                R++;
+            if(L==R)
+                maxV=max(maxV,2*R);
+            else if(R>L)
+                L=R=0;
+        }
+        L=R=0;
+        for(int i=(int)s.size()-1;i>=0;i--)
+        {
+            if(s[i]=='(')
+                L++;
+            else    
+                R++;
+            if(L==R)
+                maxV=max(maxV,2*L);
+            else if(L>R)
+                L=R=0;
+        }
+        return maxV;
+    }
+};

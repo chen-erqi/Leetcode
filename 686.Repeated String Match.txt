@@ -1,0 +1,26 @@
+//关键在于结束条件！
+//B.size+A.size*2 < tem.size
+//当符合题意时
+//1.若A刚好重复n次与B相同
+//2.若A重复n次后与B某一部分相同 
+//2.1 此时不同部分为B的头部或尾部时 则需要再循环一次
+//2.2 此时不同部分为B的头部和尾部时 则需要再循环两次
+//所以 判定条件成立！
+
+class Solution {
+public:
+    int repeatedStringMatch(string A, string B) {
+        if(A.empty()||B.empty())
+            return -1;
+        int ans=1;
+        string tem=A;
+        while(tem.find(B)==string::npos)
+        {
+            if(tem.size()>A.size()*2+B.size())
+                return -1;
+            ans++;
+            tem+=A;
+        }
+        return ans;
+    }
+};

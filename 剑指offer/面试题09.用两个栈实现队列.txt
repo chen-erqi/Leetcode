@@ -1,0 +1,36 @@
+class CQueue {
+private:
+    stack<int> st_in;
+    stack<int> st_out;
+public:
+    CQueue() {
+
+    }
+    
+    void appendTail(int value) {
+        st_in.push(value);
+    }
+    
+    int deleteHead() {
+        if(!st_out.empty())
+        {
+            int x=st_out.top();
+            st_out.pop();
+            return x;
+        }
+        else
+        {
+            if(st_in.empty())
+                return -1;
+            else
+                while(!st_in.empty())
+                {
+                    st_out.push(st_in.top());
+                    st_in.pop();
+                }
+            int x=st_out.top();
+            st_out.pop();
+            return x;
+        }
+    }
+};

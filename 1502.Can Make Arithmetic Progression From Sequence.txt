@@ -1,0 +1,25 @@
+//set.size()-1可能为0
+
+class Solution {
+public:
+    bool canMakeArithmeticProgression(vector<int>& arr) {
+        int minV=INT_MAX, maxV=INT_MIN, dif=0;
+        unordered_set<int> st;
+        for(int x:arr)
+        {
+            minV=min(minV,x);
+            maxV=max(maxV,x);
+            st.insert(x);
+        }
+        if((maxV-minV)%(arr.size()-1)==0)
+            dif=(maxV-minV)/(arr.size()-1);
+        else
+            return false;
+        for(int i=1;i<arr.size()-1;i++)
+        {
+            if(st.count(dif*i+minV)==0)
+                return false;
+        }
+        return true;
+    }
+};

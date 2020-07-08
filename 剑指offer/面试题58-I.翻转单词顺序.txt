@@ -1,0 +1,29 @@
+class Solution {
+public:
+    string reverseWords(string s) {
+        vector<string> st;
+        for(int i=0;i<s.size();i++)
+        {
+            while(i<s.size()&&s[i]==' ')
+                i++;
+            string tem="";
+            while(i<s.size()&&s[i]!=' ')
+            {
+                tem+=s[i];
+                i++;
+            }
+            if(!tem.empty())
+                st.emplace_back(tem);
+        }
+        string res="";
+        if(st.empty())
+            return "";
+        for(int i=st.size()-1;i>=1;i--)
+        {
+            res+=st[i];
+            res+=" ";
+        }
+        res+=st[0];
+        return res;
+    }
+};

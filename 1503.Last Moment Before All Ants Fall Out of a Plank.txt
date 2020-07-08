@@ -1,0 +1,15 @@
+//脑筋急转弯
+//在蚂蚁碰撞时 无论是否变换方向 肯定会走完剩下的路
+//不需要跟踪每一只蚂蚁！
+
+class Solution {
+public:
+    int getLastMoment(int n, vector<int>& left, vector<int>& right) {
+        int maxL=0;
+        for(int x:left)
+            maxL=max(maxL,x);
+        for(int x:right)
+            maxL=max(maxL,n-x);
+        return maxL;
+    }
+};
