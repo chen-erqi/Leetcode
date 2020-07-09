@@ -1,0 +1,54 @@
+//字典树+dp
+//字典树用于解决有无公共前缀 能在O(w)的时间内进行查找 W为字符串的长度
+//dp[i]表示前i个字符最少的未识别的字符数
+//字典树中逆序 
+//若前sentence[j-1,i-1]能找到 dp[i]=min(dp[i],dp[j-1])
+//若找不到 dp[i]=dp[i-1]+1;
+
+class Solution {
+private:
+    class Trie{
+    public:
+        Trie* next[26]={nullptr};//next是后缀数组 假设有26个字符的后续数组 
+        bool isEnd;
+
+        Trie(){
+            isEnd=false;
+        }
+
+        void insert(string s){
+            Trie* curPos=this;
+            for(int i=s.size()-1;i>=0;i--){
+                int t=s[i]-'a';
+                if(curPos->next[t]==nullptr)
+                    curPos->next[t]=new Trie();
+                curPos=curPos->next[t];
+            }
+            curPos->isEnd=true;
+        }
+    };
+public:
+    int respace(vector<string>& dictionary, string sentence) {
+        int n=sentence.size(), inf=0x3f;
+        Trie* root=new Trie();
+        for(auto& word:dictionary)
+            root->insert(word);
+        vector<int> dp(n+1,inf);
+        dp[0]=0;
+        for(int i=1;i<=n;i++){
+            dp[i]=dp[i-1]+1;
+            Trie* curPos=root;
+            for(int j=i;j>=1;j--){
+                int t=sentence[j-1]-'a';
+                if(curPos->next[t]==nullptr)
+                    break;
+                else if(curPos->next[t]->isEnd)
+                    dp[i]=min(dp[i],dp[j-1]);
+                if(!dp[i])//若dp[i]为0 则前i个字符串没有未识别的字符串 所以break
+                    break;
+                curPos=curPos->next[t];
+            }
+        }
+        return dp[n];
+    }
+};

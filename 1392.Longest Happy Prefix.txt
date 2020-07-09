@@ -1,0 +1,40 @@
+//字符串哈希
+//base和mod应该选择质数 
+//mod可以选择多个尽可能大的
+/suffix的后缀和 应该是后缀+当前字符*base^(i-1)
+
+class Solution {
+public:
+    string longestPrefix(string s) {
+        int n=s.size();
+        int prefix=0, suffix=0;
+        int base=31, mod=int(1e9+7), mul=1;
+        int happy=0;
+        for(int i=1;i<n;i++){
+            prefix=((long long)prefix*base+(s[i-1]-97))%mod;
+            suffix=(suffix+(long long)(s[n-i]-97)*mul)%mod;
+            if(prefix==suffix)
+                happy=i;
+            mul=(long long)mul*base%mod;
+        }
+        return s.substr(0,happy);
+    }
+};
+
+//KMP的next数组
+
+class Solution {
+public:
+    string longestPrefix(string s) {
+        int n=s.size();
+        vector<int> next(n+1,-1);
+        for(int i=1;i<n;i++){
+            int j=next[i-1];
+            while(j!=-1&&s[j+1]!=s[i])
+                j=next[j];
+            if(s[j+1]==s[i])
+                next[i]=j+1;
+        }
+        return s.substr(0,next[n-1]+1);
+    }
+};
