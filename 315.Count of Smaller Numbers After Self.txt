@@ -1,0 +1,63 @@
+//离散化+树状数组
+//离散化就是用一个数组存储去重排序后的下标 即相对关系
+//树状数组动态维护前缀和
+
+class Solution {
+private:
+    vector<int> a;//存放去重排序数组
+    vector<int> c;//存放数组下标
+
+    void Init(int len){
+        c.resize(len,0);
+    }
+
+    //取最低位的1,下标二进制的最低位后面有几个0 代表了所在层数
+    int Lowbit(int x){
+        return x&(-x);
+    }
+
+    void update(int pos)
+    {
+        while(pos<c.size())
+        {
+            c[pos]+=1;
+            pos+=Lowbit(pos);//找自己父节点
+        }
+    }
+
+    int Query(int pos)
+    {
+        int res=0;
+        while(pos>0)
+        {
+            res+=c[pos];
+            pos-=Lowbit(pos);//找自己子节点
+        }
+        return res;
+    }
+
+    void Discretization(vector<int>& nums)
+    {
+        a.assign(nums.begin(),nums.end());
+        sort(a.begin(),a.end());
+        a.erase(unique(a.begin(),a.end()),a.end());
+    }
+
+    int getId(int x){
+        return lower_bound(a.begin(),a.end(),x)-a.begin()+1;
+    }
+public:
+    vector<int> countSmaller(vector<int>& nums) {
+        vector<int> resList;
+        Discretization(nums);
+        Init(nums.size()+5);
+        for(int i=(int)nums.size()-1;i>=0;i--)
+        {
+            int id=getId(nums[i]);
+            resList.emplace_back(Query(id-1));//找前缀和
+            update(id);
+        }
+        reverse(resList.begin(),resList.end());
+        return resList;
+    }
+};

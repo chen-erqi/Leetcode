@@ -1,0 +1,51 @@
+//记忆化+dfs
+//直觉想法 关键在于不考虑bob 只考虑Alice胜负的情况
+
+class Solution {
+private:
+    unordered_map<int,bool> mp;
+    bool dfs(int n)
+    {
+        if(n==0)
+            return false;
+        if(n==1)
+            return true;
+        if(mp.count(n))
+            return mp[n];
+        int i=1;
+        while(i*i<=n)
+        {
+            if(dfs(n-i*i)==false)
+            {
+                mp[n]=true;
+                return true;
+            }
+            i++;
+        }
+        mp[n]=false;
+        return false;
+    }
+public:
+    bool winnerSquareGame(int n) {
+        return dfs(n);
+    }
+};
+
+//dfs优化为dp！
+
+class Solution {
+public:
+    bool winnerSquareGame(int n) {
+        vector<int> dp(n+1);
+        dp[0]=0;
+        dp[1]=1;
+        for(int i=2;i<=n;i++)
+            for(int j=1;i-j*j>=0;j++)
+            {
+                dp[i]=!dp[i-j*j];
+                if(dp[i])
+                    break;
+            }
+        return dp[n];
+    }
+};

@@ -1,0 +1,37 @@
+//排序+求和
+
+class Solution {
+public:
+    int numIdenticalPairs(vector<int>& nums) {
+        sort(nums.begin(),nums.end());
+        int i=1, res=0;
+        while(i<nums.size())
+        {
+            int cnt=0;
+            while(i<nums.size()&&nums[i]==nums[i-1])
+            {
+                cnt++;
+                i++;
+            }
+            res+=(cnt?(cnt*(cnt+1))/2:0);
+            i++;
+        }
+        return res;
+    }
+};
+
+//哈希+O(n)
+
+class Solution {
+public:
+    int numIdenticalPairs(vector<int>& nums) {
+        unordered_map<int,int> mp;
+        int res=0;
+        for(int x:nums)
+        {
+            mp[x]++;
+            res+=(mp[x]-1);
+        }
+        return res;
+    }
+};

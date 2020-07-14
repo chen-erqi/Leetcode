@@ -1,0 +1,52 @@
+//大数一定要注意溢出问题！！
+//用数组预处理 可以平摊时间复杂度
+
+class Solution {
+public:
+    int numSub(string s) {
+        //防止数据过大 进行处理好高斯公式求和！
+        vector<int> pre(s.size()+1,0);
+        for(int i=1;i<=s.size();i++)
+            pre[i]+=(pre[i-1]+i)%1000000007;
+        int res=0;
+        for(int low=0,high=0;low<s.size();)
+        {
+            if(s[low]=='1')
+            {
+                high=low+1;
+                while(high<s.size()&&s[low]==s[high])
+                    high++;
+                res+=pre[high-low]%1000000007;//high-low是这一串的个数 找这个个数的高斯求和结果
+                low=high-1;
+            }
+            low++;
+        }
+        return res;
+    }
+};
+
+//
+
+class Solution {
+public:
+    int numSub(string s) {
+        int res=0;
+        long long cnt=0;
+        for(int i=0;i<s.size();i++)
+        {
+            if(s[i]=='1')
+            {
+                cnt=0;
+                while(i<s.size()&&s[i]=='1')
+                {
+                    cnt++;
+                    i++;
+                }
+                res=(res+(cnt*(cnt+1)/2))%1000000007;
+            }
+        }
+        return res;
+    }
+};
+
+//也可以在遍历时直接累加！

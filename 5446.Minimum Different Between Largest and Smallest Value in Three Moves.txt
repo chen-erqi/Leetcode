@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int minDifference(vector<int>& nums) {
+        if(nums.size()<=4)
+            return 0;
+        sort(nums.begin(),nums.end());
+        //前面换3个
+        int res1=nums[nums.size()-1]-nums[3];
+        //前面换2个
+        int res2=nums[nums.size()-2]-nums[2];
+        //前面换1个
+        int res3=nums[nums.size()-3]-nums[1];
+        //前面换0个
+        int res4=nums[nums.size()-4]-nums[0];
+        return min(min(res1,res2),min(res3,res4));
+    }
+};
