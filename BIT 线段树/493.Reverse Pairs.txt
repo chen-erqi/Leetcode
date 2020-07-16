@@ -1,0 +1,60 @@
+//树状数组 查询区间和 查询数右边的区间和 所以是向下更新 向上查询
+
+class Solution {
+private:
+    vector<int> BIT;
+    vector<int> v;
+
+    void Init(int len){
+        BIT.resize(len+1);
+    }   
+
+    int Lowbit(int x){
+        return x&(-x);
+    }
+
+    void Update(int pos)
+    {
+        while(pos>0)
+        {
+            BIT[pos]+=1;
+            pos-=Lowbit(pos);
+        }
+    }
+
+    int Query(int pos)
+    {
+        int sum=0;
+        while(pos<BIT.size())
+        {   
+            sum+=BIT[pos];
+            pos+=Lowbit(pos);
+        }
+        return sum;
+    }
+
+    void Discretization(vector<int>& nums)
+    {
+        v.assign(nums.begin(),nums.end());
+        v.erase(unique(v.begin(),v.end()),v.end());
+        sort(v.begin(),v.end());
+    }
+
+    int getId(long long x){
+        return lower_bound(v.begin(),v.end(),x)-v.begin()+1;
+    }
+
+public:
+    int reversePairs(vector<int>& nums) {
+        Init(nums.size());
+        Discretization(nums);
+        int cnt=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            long long cur=2LL*nums[i];
+            cnt+=Query(upper_bound(v.begin(),v.end(),cur)-v.begin()+1);
+            Update(getId(nums[i]));
+        }
+        return cnt;
+    }
+};

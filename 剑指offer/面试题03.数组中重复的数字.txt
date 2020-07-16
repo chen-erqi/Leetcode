@@ -1,0 +1,36 @@
+//哈希表
+
+class Solution {
+public:
+    int findRepeatNumber(vector<int>& nums) {
+        unordered_set<int> st;
+        st.insert(nums[0]);
+        for(int i=1;i<nums.size();i++)
+        {
+            if(st.count(nums[i]))
+                return nums[i];
+            else
+                st.insert(nums[i]);
+        }
+        return -1;
+    }
+};
+
+//原地哈希
+//原地置换
+//注意题目条件 在0-n-1范围内 刚好可以进行原地哈希
+
+class Solution {
+public:
+    int findRepeatNumber(vector<int>& nums) {
+        for(int i=0;i<nums.size();i++)
+        {
+            while(nums[i]!=i)
+                if(nums[i]==nums[nums[i]])
+                    return nums[i];
+                else 
+                    swap(nums[i],nums[nums[i]]);
+        }
+        return -1;
+    }
+};

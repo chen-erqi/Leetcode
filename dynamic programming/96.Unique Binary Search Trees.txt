@@ -16,6 +16,8 @@ public:
 //F[i,n]:The number of different BST whose root is i.
 //G[n]=F[1,n]+...+F[n,n]
 //F[i,n]=G[i-1]*G[n-i]
+//G[i-1] is the number of left son array.
+//G[n-i] is the number of right son array. 
 //G[n]=∑i=1~n G[i-1]*G[n-i].
 
 class Solution {
