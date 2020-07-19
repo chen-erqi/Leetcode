@@ -1,0 +1,48 @@
+//动态规划
+//注意长度！ s1.size()+s2.size()==s3.size()
+//dp[i][j]表示s1的前i个元素和s2的前j个元素是否交错组成s3的前i+j个元素
+//若s1的前i个元素和s3的第i+j个元素相等,取决于s1的前i-1个元素和s2的前j个能否组成i+j-1个元素
+
+class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        vector<vector<int>> dp(s1.size()+1,vector<int>(s2.size()+1,false));
+        int n=s1.size(), m=s2.size(), t=s3.size();
+        if(n+m!=t)
+            return false;
+        dp[0][0]=true;
+        for(int i=0;i<=n;i++)
+            for(int j=0;j<=m;j++)
+            {
+                int p=i+j-1;
+                if(i>0)
+                    dp[i][j]|=(dp[i-1][j]&&s1[i-1]==s3[p]);
+                if(j>0)
+                    dp[i][j]|=(dp[i][j-1]&&s2[j-1]==s3[p]);
+            }
+        return dp[n][m];
+    }
+};
+
+//滚动数组
+
+class Solution {
+public:
+    bool isInterleave(string s1, string s2, string s3) {
+        vector<int> dp(s2.size()+1,false);
+        int n=s1.size(), m=s2.size(), t=s3.size();
+        if(n+m!=t)
+            return false;
+        dp[0]=true;
+        for(int i=0;i<=n;i++)
+            for(int j=0;j<=m;j++)
+            {
+                int p=i+j-1;
+                if(i>0)
+                    dp[j]&=(s1[i-1]==s3[p]);//由于是同一行 可以直接修改状态
+                if(j>0)
+                    dp[j]|=(dp[j-1]&&s2[j-1]==s3[p]);//两个状态可以进行叠加
+            }
+        return dp[m];
+    }
+};

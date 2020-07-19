@@ -1,0 +1,64 @@
+//查找->>二分！！
+//不要再用暴力了！
+
+//nums[pos]<target<=nums[pos]+1
+//找第一个大于等于的数
+//lower_bound(nums.begin(),nums.end(),target)
+
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int L=0, R=nums.size()-1;
+        while(L<=R)
+        {
+            int mid=L+((R-L)>>1);
+            if(nums[mid]<target)
+                L=mid+1;
+            else if(nums[mid]>target)
+                R=mid-1;
+            else    
+                return mid;
+        }
+        return L;
+    }
+};
+
+//插值查找
+//对二分法的优化 使得中值求解更有自适应性 在表长较大且分布均匀的有序表具有较好的表现
+//基于题目本身需要返回插入的位置 所以加了判断条件 单纯的插值查找将mid的求解公式替换即可
+//对偏向于表头和表尾的数查找良好
+class Solution {
+public:
+    int searchInsert(vector<int>& nums, int target) {
+        int low=0;
+        int high=nums.size()-1;
+        int mid;
+        while(low<high)
+        {
+            mid=(target-nums[low])/(nums[high]-nums[low])*(high-low)+low;
+            if(nums[mid]==target)
+                return mid;
+            int a=mid+1;
+            if(mid<nums.size()-1&&nums[mid]<target&&nums[a]>target)
+                return a;
+            if(nums[mid]<target)
+            {
+                if(mid+1<nums.size()-1)
+                    low=mid+1;
+                else
+                    low=high;
+            }
+            if(nums[mid]>target)
+            {
+                if(mid-1>=0)
+                    high=mid-1;
+                else
+                    high=low;
+            }
+        }
+        if(nums[low]<target)
+            return low+1;
+        return low;
+    }
+};
+

@@ -1,0 +1,39 @@
+//对每个点统计子树结点某个值的和的问题 
+//只需在DFS过程中累加值 
+//每个点的值为离开的值减去进来的的值！
+
+//时间复杂度O(n)
+//空间复杂度O(n)
+
+class Solution {
+private:
+    vector<int> ans;
+    vector<int> tmp;
+    vector<bool> vis;
+    vector<vector<int>> tree;
+    void dfs(int cur,string& labels)
+    {
+        if(vis[cur])
+            return;
+        vis[cur]=true;
+        int pre=tmp[labels[cur]-'a'];
+        tmp[labels[cur]-'a']++;
+        for(auto& out:tree[cur])
+            dfs(out,labels);
+        ans[cur]=(tmp[labels[cur]-'a']-pre);
+    }
+public:
+    vector<int> countSubTrees(int n, vector<vector<int>>& edges, string labels) {
+        tree.resize(labels.size());
+        vis.resize(labels.size(),false);
+        ans.resize(labels.size());
+        tmp.resize(26,0);
+        for(auto& e:edges)
+        {
+            tree[e[0]].emplace_back(e[1]);
+            tree[e[1]].emplace_back(e[0]);
+        }
+        dfs(0,labels);
+        return ans;
+    }
+};
