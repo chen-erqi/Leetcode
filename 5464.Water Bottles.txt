@@ -1,0 +1,10 @@
+//酒的价值=numExchange-1
+//-1是因为numExchange个空瓶换一瓶酒 喝完至少会多一个空瓶
+//一个空瓶的价值为1 总价值是numBottles*numExchange-1 代表有这么多个空瓶可用
+
+class Solution {
+public:
+    int numWaterBottles(int numBottles, int numExchange) {
+        return (numBottles*numExchange-1)/(numExchange-1);
+    }
+};

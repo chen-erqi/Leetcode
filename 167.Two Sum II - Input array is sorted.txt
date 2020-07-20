@@ -1,27 +1,31 @@
-夹逼法
+//
+
 class Solution {
 public:
     vector<int> twoSum(vector<int>& numbers, int target) {
-        int i=0;
-        int j=numbers.size()-1;
-        vector<int> values;
+        int N=numbers.size();
+        int i=0, j=N-1;
+        vector<int> res(2);
         while(i<j)
         {
-            if(numbers[i]+numbers[j]==target)
+            int cur=numbers[i]+numbers[j];
+            if(cur>target)
+                j--;
+            else if(cur<target)
+                i++;
+            else 
             {
-                values.push_back(++i);
-                values.push_back(++j);
+                res[0]=i+1;
+                res[1]=j+1;
                 break;
             }
-            else if(numbers[i]+numbers[j]>target)
-              j--;
-            else
-              i++;
         }
-        return values;
+        return res;
     }
 };
-map
+
+//哈希针对无序数组 所有要全部压入哈希
+
 class Solution {
 public:
     vector<int> twoSum(vector<int>& numbers, int target) {
@@ -33,7 +37,7 @@ public:
         {
             if(map.count(target-numbers[i])&&map[target-numbers[i]]!=i)
             {
-                values.emplace_back(i+1);//要注意i++改变i本身的值影响下一语句
+                values.emplace_back(i+1);
                 values.emplace_back(map[target-numbers[i]]+1);
                 break;
             }

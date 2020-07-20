@@ -1,0 +1,61 @@
+class Solution {
+private:
+    //动态扩张数组 当数组内部含有某个字符时 将该字符所在的字符段扩张进来
+    //满足贪心
+    vector<int> getFullSub(vector<vector<int>>& subs,string& s,int left,int right)
+    {
+        for(int j=left+1;j<right;j++)
+        {
+            int n=s[j]-'a';
+            if(left<=subs[n][1]&&right>=subs[n][2])
+                continue;
+            left=min(left,subs[n][1]);
+            right=max(right,subs[n][2]);
+            j=left;
+        }
+        return {right-left+1,left,right};
+    }
+public:
+    vector<string> maxNumOfSubstrings(string s) {
+        vector<vector<int>> subs(26);
+        for(int i=0;i<subs.size();i++)
+        {
+            subs[i].emplace_back(INT_MAX);
+            char cur='a'+i;
+            if(s.find(cur)==string::npos)
+                continue;
+            subs[i].emplace_back(s.find_first_of(cur));
+            subs[i].emplace_back(s.find_last_of(cur));
+            subs[i][0]=subs[i][1]-subs[i][0]+1;
+        }
+
+        //进行扩张
+        for(int i=0;i<subs.size();i++)
+        {
+            if(subs[i].size()==1)
+                continue;
+            subs[i]=getFullSub(subs,s,subs[i][1],subs[i][2]);
+        }
+
+        sort(subs.begin(),subs.end());
+
+        vector<string> ans;
+
+        //判断全部数组之间有没有重复字符 利用visit
+        vector<bool> visit(s.size(),false);
+        for(auto sub:subs)
+        {
+            if(sub.size()==1)
+                break;
+            bool check=true;
+            for(int j=sub[1];j<=sub[2]&&check;j++)
+                check=(!visit[j]);
+            if(!check)
+                continue;
+            for(int j=sub[1];j<=sub[2];j++)
+                visit[j]=true;
+            ans.emplace_back(s.substr(sub[1],sub[0]));
+        }
+        return ans;
+    }
+};

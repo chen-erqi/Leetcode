@@ -1,0 +1,13 @@
+//用left指示数组奇数位置！
+//遇到奇数就转换 因为left永远指示的是奇数的位置！
+
+class Solution {
+public:
+    vector<int> exchange(vector<int>& nums) {
+        int left=-1;
+        for(int i=0;i<nums.size();i++)
+            if(nums[i]%2!=0)
+                swap(nums[i],nums[++left]);
+        return nums;
+    }
+};
