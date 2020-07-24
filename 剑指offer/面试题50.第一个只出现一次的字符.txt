@@ -1,0 +1,16 @@
+class Solution {
+public:
+    char firstUniqChar(string s) {
+        char res=' ';
+        vector<int> v(256,0);
+        for(char x:s)
+            v[x]++;
+        for(char x:s)
+            if(v[x]==1)
+            {
+                res=x;
+                break;
+            }     
+        return res;
+    } 
+};

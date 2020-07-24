@@ -1,0 +1,49 @@
+//二分
+//若是顺序 则必有nums[0]<nums[nums.size()-1]
+//旋转点为最小点
+//nums[mid]>nums[mid+1] 或者 nums[mid-1]>nums[mid]
+
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int L=0, R=nums.size()-1;
+        if(nums.size()==1||nums[0]<nums[R])
+            return nums[0];
+        while(L<=R)
+        {
+            int mid=L+((R-L)>>1);
+            if(nums[mid]>nums[mid+1])
+                return nums[mid+1];
+            if(nums[mid-1]>nums[mid])
+                return nums[mid];
+            if(nums[mid]>=nums[0])
+                L=mid+1;
+            else
+                R=mid-1;
+        }
+        return -1;
+    }
+};
+
+
+//优化
+//nums[mid]>nums[R] 说明此时mid左边有序
+//nums[mid]<nums[R] 说明此时mid,R区间有序 此时mid可能为最小 要保留
+
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int L=0, R=nums.size()-1;
+        
+        while(L<R)
+        {
+            int mid=L+((R-L)>>1);
+            
+            if(nums[mid]>nums[R])
+                L=mid+1;
+            else
+                R=mid;//需要保留 这里很重要
+        }
+        return nums[L];
+    }
+};

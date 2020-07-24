@@ -1,0 +1,23 @@
+//二分
+//左闭右开原则
+
+//当数组完全重复时 一直执行R-- 时间最坏复杂度为O(n)
+
+class Solution {
+public:
+    int findMin(vector<int>& nums) {
+        int L=0, R=nums.size()-1;
+        while(L<R)
+        {
+            int mid=L+((R-L)>>1);
+	    //nums[mid]>nums[R] 此时mid必然不是最小值
+            if(nums[mid]>nums[R])
+                L=mid+1;
+            else if(nums[mid]<nums[R])
+                R=mid;
+            else
+                R--;
+        }
+        return nums[L];
+    }
+};

@@ -1,0 +1,58 @@
+//Alice win == Bob false
+
+//DFS+mem
+
+class Solution {
+private:
+    bool dfs(int x,vector<int>& v)
+    {
+        if(x==0||x==1)
+            return false;
+        if(x==2)
+            return true;
+        if(v[x]!=-1)
+            return v[x];
+        bool cur;
+        for(int i=1;i<sqrt(x);i++)
+            if(x%i==0&&dfs(x-i,v)==false)
+            {
+                v[x]=true;
+                return true;
+            }
+        v[x]=false;
+        return false;
+    }
+public:
+    bool divisorGame(int N) {
+        vector<int> v(N+1,-1);
+        return dfs(N,v);
+    }
+};
+
+//dp
+
+class Solution {
+public:
+    bool divisorGame(int N) {
+        vector<bool> dp(N+1,false);
+        dp[2]=true;
+        for(int i=3;i<=N;i++)
+        {
+            for(int j=1;j<sqrt(i);j++)
+                if(dp[i-j]==false&&i%j==0)
+                    dp[i]=true;
+        }
+        return dp[N];
+    }
+};
+
+
+//偶数先手必胜!
+//数学归纳法
+//N=1 N=2时结论成立
+//N>2时 设N<=k结论成立
+//当N=k+1
+//若k为偶数 则k+1为奇数 x是k+1的因数 只能是奇数 而奇数减去奇数为偶数 
+//k+1-x <= k   所以轮到bob的都是偶数 N<=k偶数先手必胜 所以无论Alice拿走什么 Bob必胜
+//若k为奇数 k+1为偶数 x可以是偶数也可以是奇数 若Alice减去一个奇数 k+1-x是一个<=k的奇数
+//此时bob占有一个奇数 处于必败态 

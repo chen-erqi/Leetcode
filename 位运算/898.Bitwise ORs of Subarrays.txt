@@ -1,0 +1,23 @@
+//a|b=c c>=a且c>=b
+
+
+class Solution {
+public:
+    int subarrayBitwiseORs(vector<int>& A) {
+        unordered_set<int> st;
+        for(int i=0;i<A.size();i++)
+        {
+            st.insert(A[i]);
+            for(int j=i-1;j>=0;j--)
+            {
+		//当A[j]|A[i] == A[j]时 此时A[j]所代表的前缀和已经不小于A[i]
+		//而A[j]前面的前缀和必不小于A[j] 所以要break!
+                if((A[j]|A[i])==A[j])
+                    break;
+                A[j]|=A[i];
+                st.insert(A[j]);
+            }
+        }
+        return st.size();
+    }
+};

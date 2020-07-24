@@ -1,0 +1,73 @@
+//BST！
+//要注意二叉搜索树的区间问题 将区间划分出来 其他交给递归
+//对每一次递归来说 都有一个矩阵存储所有子树 
+//所以在上一层进行遍历 任取子树！
+
+class Solution {
+private:
+    vector<TreeNode*> dfs(int start,int end)
+    {
+        if(start>end)
+            return {nullptr};
+        vector<TreeNode*> allTrees;
+        for(int i=start;i<=end;i++)
+        {
+            vector<TreeNode*> left=dfs(start,i-1);
+            vector<TreeNode*> right=dfs(i+1,end);
+            TreeNode* cur=new TreeNode(i);
+            for(auto x:left)
+                for(auto y:right)
+                {
+                    TreeNode* cur=new TreeNode(i);
+                    cur->left=x;
+                    cur->right=y;
+                    allTrees.emplace_back(cur);
+                }
+        }
+        return allTrees;
+    }
+public:
+    vector<TreeNode*> generateTrees(int n) {
+        if(!n)
+            return {};
+        return dfs(1,n);
+    }
+};
+
+//记忆化
+
+class Solution {
+private:
+    vector<vector<vector<TreeNode*>>> mem;
+    vector<TreeNode*> dfs(int start,int end)
+    {
+        if(start>end)
+            return {nullptr};
+        if(!mem[start][end].empty())
+            return mem[start][end];
+        vector<TreeNode*> allTrees;
+        for(int i=start;i<=end;i++)
+        {
+            vector<TreeNode*> left=dfs(start,i-1);
+            vector<TreeNode*> right=dfs(i+1,end);
+            
+            for(TreeNode* x:left)
+                for(TreeNode* y:right)
+                {
+                    TreeNode* cur=new TreeNode(i);
+                    cur->left=x;
+                    cur->right=y;
+                    allTrees.emplace_back(cur);
+                }
+        }
+        mem[start][end]=allTrees;
+        return allTrees;
+    }
+public:
+    vector<TreeNode*> generateTrees(int n) {
+        if(!n)
+            return {};
+        mem.resize(n+1,vector<vector<TreeNode*>>(n+1));
+        return dfs(1,n);
+    }
+};

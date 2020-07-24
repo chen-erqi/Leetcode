@@ -1,0 +1,50 @@
+//BFS
+
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        if(!root)
+            return {};
+        vector<vector<int>> res;
+        queue<TreeNode*> q;
+        q.push(root);
+        while(!q.empty())
+        {
+            int len=q.size();
+            res.emplace_back(vector<int>());
+            while(len--)
+            {
+                TreeNode* k=q.front();
+                q.pop();
+                res.back().emplace_back(k->val);
+                if(k->left)
+                    q.push(k->left);
+                if(k->right)
+                    q.push(k->right);
+            }
+        }
+        return res;
+    }
+};
+
+//DFS
+
+class Solution {
+private:
+    void dfs(vector<vector<int>>& res,TreeNode* root, int level)
+    {
+        if(!root)
+            return;
+        if(level>=res.size())
+            res.emplace_back(vector<int>());
+        res[level].emplace_back(root->val);
+        dfs(res,root->left,level+1);
+        dfs(res,root->right,level+1);
+    }
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int>> res;
+        dfs(res,root,0);
+        return res;
+    }
+};

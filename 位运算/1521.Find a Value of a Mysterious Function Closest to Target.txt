@@ -1,0 +1,30 @@
+//按位运算性质
+//在一个区间上求按位与之和
+//固定右端点r 从大到小在[0,r]枚举l
+//按位与之和是递减的 所以有序 可以直接使用unique
+//因为结合律 c=a&b c<=a且c<=b
+//所以 func(arr,l,r)<=func(arr,l+1,r) 从右向左
+//且这个和最多只有20种
+//arr[i]<=10^6<2^20
+//每做一次按位与 1可以变成0 0不可变成1 
+//所以 对于固定的r func(arr,l,r)的值最多有20种
+
+class Solution {
+public:
+    int closestToTarget(vector<int>& arr, int target) {
+        int ans=abs(arr[0]-target);
+        vector<int> valid={arr[0]};
+        for(int num:arr)
+        {
+            ans=min(ans,abs(num-target));
+            for(int& pre:valid)
+            {
+                ans=min(ans,abs((pre&num)-target));
+                pre&=num;
+            }
+            valid.emplace_back(num);
+            valid.erase(unique(valid.begin(),valid.end()),valid.end());
+        }
+        return ans;
+    }
+};
