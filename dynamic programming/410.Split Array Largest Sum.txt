@@ -1,0 +1,79 @@
+//将数组分割成m段 求... 是典型dp问题
+//dp[i][j]表示将前i个数分割成j段
+//状态转移中 枚举前k个数分割成j-1段所能求得的最大数组和的最小值
+//而k+1...i为第j段 
+//dp[i][j]=min(k=0...i-1){max(dp[k][j-1].sub[i]-sub[k])}
+//由于不能划分空子数组 所以i>=j
+//对于i<j的状态 因为目标求最小 所以将这些非法状态设置成一个很大的数
+//对外层min不会产生影响
+//dp[0][0]=0
+//时间O(n^2*m)
+//空间O(n*m)
+
+
+class Solution {
+public:
+    int splitArray(vector<int>& nums, int m) {
+        int N=nums.size();
+        vector<vector<long long>> dp(N+1,vector<long long>(m+1,LLONG_MAX));
+        vector<long long> sub(N+1,0);
+        for(int i=0;i<N;i++)
+            sub[i+1]=sub[i]+nums[i];
+        dp[0][0]=0;
+        for(int i=1;i<=N;i++)
+            for(int j=1;j<=min(i,m);j++)
+                for(int k=0;k<i;k++)
+                    dp[i][j]=min(dp[i][j],max(dp[k][j-1],sub[i]-sub[k]));
+        return (int)dp[N][m];
+    }
+};
+
+//使...最大值尽可能小 是二分搜索常见题型
+//选定一个值x 可以线性对其验证 满足最大分割子数组的和不超过x
+//贪心模拟分割过程
+//sum表示当前子数组之和
+//cnt表示当前已经分割的子数组的数量 (包括当前子数组)
+//每当sum+nums[i]>x 把nums[i]作为新的子数组的开头 cnt++
+//二分上界为nums之和 下界为所有元素的最大值
+//时间O(n*log(sum-max))
+//空间O(1)
+
+class Solution {
+private:
+    bool check(vector<int>& nums,int x,int m)
+    {
+        long long sum=0;
+        int cnt=1;
+        for(int i=0;i<nums.size();i++)
+        {
+            if(sum+nums[i]>x)
+            {
+                cnt++;
+                sum=nums[i];
+            }
+            else    
+                sum+=nums[i];
+        }
+	//cnt<m不代表没有划分 可以在前面选任意非最大子数组的数组进行划分 并不会对结果造成影响
+        return cnt<=m;
+    }
+public:
+    int splitArray(vector<int>& nums, int m) {
+        long long L=0, R=0;
+        for(int i=0;i<nums.size();i++)
+        {
+            R+=nums[i];
+            if(L<nums[i])
+                L=nums[i];
+        }
+        while(L<R)
+        {
+            long long mid=L+((R-L)>>1);
+            if(check(nums,mid,m))
+                R=mid;
+            else
+                L=mid+1;
+        }
+        return L;
+    }
+};
