@@ -1,0 +1,118 @@
+//k个列表 找最小区间 使每个列表至少有一个数在区间中
+//k个列表各取一个数 使k个数中最大值和最小值差最小
+
+//对每个列表维护一个指针 通过指针得到表的元素
+//指针右移之后的元素一定大于或等于之前的元素
+
+//使用最小堆维护k个指针指向的元素的最小值
+//同时维护最小值
+
+class Solution {
+public:
+    vector<int> smallestRange(vector<vector<int>>& nums) {
+        int rangeL=0, rangeR=INT_MAX;
+        int size=nums.size();
+        vector<int> next(size);
+
+	//最小堆！是greater 也就是> 
+	//默认是最大堆 也就是less
+        auto cmp=[&](const int& u,const int& v){
+            return nums[u][next[u]]>nums[v][next[v]];
+        };
+
+        priority_queue<int,vector<int>,decltype(cmp)> pq(cmp);
+        int minV=0, maxV=INT_MIN;
+        
+        for(int i=0;i<size;i++)
+        {
+            pq.emplace(i);
+            maxV=max(maxV,nums[i][0]);
+        }
+
+        while(true)
+        {
+            int row=pq.top();
+            pq.pop();
+            minV=nums[row][next[row]];
+            if(maxV-minV<rangeR-rangeL)
+            {
+                rangeL=minV;
+                rangeR=maxV;
+            }
+            if(next[row]==nums[row].size()-1)
+                break;
+            ++next[row];
+            maxV=max(maxV,nums[row][next[row]]);
+            pq.emplace(row);
+        }
+
+        return {rangeL,rangeR};
+    }
+};
+
+
+//用一个哈希映射
+//key代表列表中的某个值
+//Value代表当前值出现在哪些列表里
+
+//在哈希映射上用双指针维护一个滑动窗口
+//再用一个哈希表维护当前窗口中的元素 记录频率 遍历哈希
+
+//当哈希表满了的时候左边界右移==当前窗口包含所有A的列表
+
+class Solution {
+public:
+    vector<int> smallestRange(vector<vector<int>>& nums) {
+        int N=nums.size();
+        unordered_map<int,vector<int>> indices;
+        int minV=INT_MAX, maxV=INT_MIN;
+        for(int i=0;i<N;i++)
+            for(const int& x:nums[i])
+            {
+                indices[x].emplace_back(i);
+                minV=min(minV,x);
+                maxV=max(maxV,x);
+            }
+        vector<int> freq(N);
+        //窗口内元素的个数
+        int inside=0;
+        //minV有可能等于maxV
+        int L=minV, R=minV-1;
+        int rangeL=minV, rangeR=maxV;
+
+        while(R<maxV)
+        {
+            R++;
+            if(indices.count(R))
+            {
+                for(const int& x:indices[R])
+                {
+                    //加入窗口 并且计算窗口中各队列的频率
+                    ++freq[x];
+                    if(freq[x]==1)
+                        ++inside;
+                }
+                //窗口满了 左边要右移
+                while(inside==N)
+                {
+                    if(R-L<rangeR-rangeL)
+                    {
+                        rangeL=L;
+                        rangeR=R;
+                    }
+                    if(indices.count(L))
+                    {
+                        for(const int& x:indices[L])
+                        {
+                            --freq[x];
+                            if(freq[x]==0)
+                                --inside;
+                        }
+                    }
+                    L++;
+                }
+            }
+        }
+        return {rangeL,rangeR};
+    }
+};

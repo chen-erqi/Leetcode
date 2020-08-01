@@ -7,6 +7,10 @@
  *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
  * };
  */
+
+//前序遍历
+//会有大量重复计算
+
 class Solution {
 public:
     int DFS(TreeNode* x)
@@ -19,5 +23,28 @@ public:
         if(!root)
             return true;
         return abs(DFS(root->left)-DFS(root->right))<2&&isBalanced(root->left)&&isBalanced(root->right);
+    }
+};
+
+//后序遍历+剪枝
+
+class Solution {
+private:
+    int dfs(TreeNode* root)
+    {
+        if(!root)
+            return 0;
+        int L=dfs(root->left);
+        //剪枝
+        if(L==-1)
+            return -1;
+        int R=dfs(root->right);
+        if(R==-1)
+            return -1;
+        return abs(L-R)<2?max(L,R)+1:-1;
+    }
+public:
+    bool isBalanced(TreeNode* root) {
+        return dfs(root)!=-1;
     }
 };

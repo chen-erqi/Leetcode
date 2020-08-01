@@ -1,0 +1,109 @@
+//矩阵中任意起点 应将其转换为无向图中的最长路径问题
+//若相邻不等 则有从较小到较大的一条边
+
+//DFS
+//时间O(mn) 
+//空间O(mn)
+
+class Solution {
+private:
+    static constexpr int dir[4][2]={{-1,0},{1,0},{0,-1},{0,1}};
+    int rows,cols;
+    int dfs(vector<vector<int>>& matrix,int R,int C,vector<vector<int>>& mem)
+    {
+        if(mem[R][C]!=0)
+            return mem[R][C];
+        mem[R][C]++;//包含当前节点
+        for(int i=0;i<4;i++)
+        {
+            int newR=R+dir[i][0];
+            int newC=C+dir[i][1];
+            if(newR>=0&&newR<rows&&newC>=0&&newC<cols&&matrix[newR][newC]>matrix[R][C])
+                mem[R][C]=max(mem[R][C],dfs(matrix,newR,newC,mem)+1);//+1也是为了包含当前节点
+        }
+        return mem[R][C];
+    }
+public:
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+        if(matrix.size()==0||matrix[0].size()==0)
+            return 0;
+        rows=matrix.size();
+        cols=matrix[0].size();
+        vector<vector<int>> mem(rows,vector<int>(cols,0));
+        int res=0;
+        for(int i=0;i<rows;i++)
+            for(int j=0;j<cols;j++)
+                res=max(res,dfs(matrix,i,j,mem));
+        return res;
+    }
+};
+
+//BFS
+//拓扑排序
+//时间O(mn) 
+//空间O(mn)
+
+//当一个格子的值比它所有相邻的格的值都大 
+//这个单元格的最大增长路径是1
+
+//由出度的概念
+//从所有出度为0的单元格开始BFS 
+//每一轮遍历当前层所有单元格 更新其他单元格的出度 并将出度变为0的单元格加入
+//搜索的总层数就是矩阵的中的最长路径
+
+//要注意出度入度与大小的关系
+
+class Solution {
+private:
+    static constexpr int dir[4][2]={{-1,0},{1,0},{0,-1},{0,1}};
+    int rows,cols;
+public:
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+        if(matrix.size()==0||matrix[0].size()==0)
+            return 0;
+        rows=matrix.size();
+        cols=matrix[0].size();
+        vector<vector<int>> outdeg(rows,vector<int>(cols));
+        for(int i=0;i<rows;i++)
+            for(int j=0;j<cols;j++)
+                for(int k=0;k<4;k++)
+                {
+                    int newR=i+dir[k][0];
+                    int newC=j+dir[k][1];
+                    if(newR>=0&&newR<rows&&newC>=0&&newC<cols&&matrix[newR][newC]>matrix[i][j])
+                        outdeg[i][j]++;
+                }
+        queue<pair<int,int>> q;
+	//获取所有出度为0的节点
+        for(int i=0;i<rows;i++)
+            for(int j=0;j<cols;j++)
+                if(outdeg[i][j]==0)
+                    q.push({i,j});
+        int res=0;
+        while(!q.empty())
+        {
+            res++;
+            int size=q.size();
+            for(int i=0;i<size;i++)
+            {
+                auto cell=q.front();
+                q.pop();
+                int R=cell.first;
+                int C=cell.second;
+                for(int k=0;k<4;k++)
+                {
+                    int newR=R+dir[k][0];
+                    int newC=C+dir[k][1];
+		    //注意这里是从大指向小
+                    if(newR>=0&&newR<rows&&newC>=0&&newC<cols&&matrix[newR][newC]<matrix[R][C])
+                    {
+                        --outdeg[newR][newC];
+                        if(outdeg[newR][newC]==0)
+                            q.push({newR,newC});
+                    }
+                }
+            }
+        }
+        return res;
+    }
+};

@@ -1,0 +1,33 @@
+//不是严格递增！！！有重复 一定要进行分析
+//1.数组中只有一个满足条件的答案为i
+//此时[0...i-1]的值均小于自身坐标 [i+1...n]均大于自身坐标
+//让每个元素减去自身 那么可以获得[负数,0,正数] 
+//0的位置即为答案！
+
+//2.数组中有多个满足条件的答案！
+//此时将每个元素减去自身下标 寻找第一个0的位置 
+//但是由于其他0的位置未知 所以无法进行二分
+
+//但是可以利用递归进行剪枝
+//每次选择中间元素 若当前元素满足条件 则查找左边有没有满足条件的答案 右边不再考虑
+//若不满足条件 则左右都要进行查找
+
+class Solution {
+private:
+    int getAns(int L,int R, vector<int>& nums)
+    {
+        if(L>R)
+            return -1;
+        int mid=L+((R-L)>>1);
+        int L_ans=getAns(L,mid-1,nums);
+        if(L_ans!=-1)
+            return L_ans;
+        else if(nums[mid]==mid)
+            return mid;
+        return getAns(mid+1,R,nums);
+    }
+public:
+    int findMagicIndex(vector<int>& nums) {
+        return getAns(0,(int)nums.size()-1,nums);
+    }
+};

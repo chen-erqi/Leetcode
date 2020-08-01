@@ -24,3 +24,16 @@ public:
         return res;
     }
 };
+
+
+
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if(!root)
+            return 0;
+        int L=maxDepth(root->left);
+        int R=maxDepth(root->right);
+        return L>R?L+1:R+1;
+    }
+};

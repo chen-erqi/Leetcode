@@ -1,0 +1,24 @@
+//令f(x)=x^(n/x) 将n分成n/x个x的乘积 
+//对f(x)求驻点 可得e f(3)/f(2)>1 
+//所以f(3)为最大值
+//所以考虑3的快速幂
+
+//n%3==0 3^(n/3)
+//n%3==1 3^(n/3-1)*4
+//n%3==2 3^(n/3)*2
+
+class Solution {
+public:
+    int integerBreak(int n) {
+        int res=1;
+	// 题目条件是n>=2
+        if(n<=3)
+            return n-1;
+        while(n>4)
+        {
+            res*=3;
+            n-=3;
+        }
+        return res*n;
+    }
+};
