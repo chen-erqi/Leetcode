@@ -1,0 +1,29 @@
+//消除长度差 
+//两个指针一起走 其中一个到达末端 另一个与末端的距离即为长度差
+
+//pA是较长链表头
+//pB是较短链表头
+//pA在A表遍历到尾部时 指向B表
+//pB在B表遍历到尾部时 指向A表
+
+//第一次必然是pB先到尾部 那么pA此时与pB的差为较短链表的长度 pA与A末端的距离为A-B长度差
+//此时pA再遍历到尾部时 消除长度差 跳转至pB 此时必然在同一起跑线
+
+//也可以按A-B或者B-A方式拼接起来 
+//A-B  aaaaaaabbb
+//B-A  bbbaaaaaaa 
+//当B走完 再走完长度差 必然在同一起跑线
+
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode* pA=headA;
+        ListNode* pB=headB;
+        while(pA!=pB)
+        {
+            pA= pA==NULL?headB:pA->next;
+            pB= pB==NULL?headA:pB->next;
+        }
+        return pA;
+    }
+};

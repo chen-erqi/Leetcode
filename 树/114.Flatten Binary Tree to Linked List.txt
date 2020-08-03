@@ -1,0 +1,76 @@
+//在原地改动
+//使用stack！树不要纠结于dfs 灵活使用queue stack
+//前驱节点一开始是根节点 在第一次循环赋值
+
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+        if(!root)
+            return;
+        stack<TreeNode*> stk;
+        stk.push(root);
+        TreeNode* pre=nullptr;
+        while(!stk.empty())
+        {
+            TreeNode* cur=stk.top();
+            stk.pop();
+            if(pre)
+            {
+                pre->left=nullptr;
+                pre->right=cur;
+            }
+            if(cur->right)
+                stk.push(cur->right);
+            if(cur->left)
+                stk.push(cur->left);
+            pre=cur;
+        }
+    }
+};
+
+//若一个节点的左指针为空 则不需要展开
+//找左子树的最右边节点 为右子树的前驱节点
+//将前驱节点和右子树链接
+//将左子树移动到右边!
+
+class Solution {
+public:
+    void flatten(TreeNode* root) {
+        TreeNode* cur=root;
+        while(cur)
+        {
+            if(cur->left)
+            {
+                TreeNode* next=cur->left;
+                TreeNode* pre=next;
+                while(pre->right)
+                    pre=pre->right;
+                pre->right=cur->right;
+                cur->left=nullptr;
+                cur->right=next;
+            }
+            cur=cur->right;
+        }
+    }
+};
+
+
+//递归
+
+class Solution {
+private:
+    //记录上一个节点
+    //需要方向先序遍历
+    TreeNode* last=nullptr;
+public:
+    void flatten(TreeNode* root) {
+        if(!root)
+            return;
+        //先递归到最后一个节点
+        flatten(root->right);
+        flatten(root->left);
+        root->right=last;
+        root->left=nullptr;
+        last=root;
+    }
+};
