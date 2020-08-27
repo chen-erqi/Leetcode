@@ -1,0 +1,56 @@
+//图的深拷贝
+
+//hashmap 存储所有已被访问和克隆的节点
+//key 原始节点
+//value 克隆节点
+
+//dfs
+
+class Solution {
+private:
+    unordered_map<Node*,Node*> visited;
+public:
+    Node* cloneGraph(Node* node) {
+        if(!node)
+            return node;
+        if(visited.count(node))
+            return visited[node];
+        Node* cloneNode=new Node(node->val);
+        visited[node]=cloneNode;
+        for(auto& neig:node->neighbors)
+            cloneNode->neighbors.emplace_back(cloneGraph(neig));
+        return cloneNode;
+    }
+};
+
+//bfs
+
+class Solution {
+private:
+    unordered_map<Node*,Node*> visited;
+public:
+    Node* cloneGraph(Node* node) {
+        if(!node)
+            return node;
+        queue<Node*> q;
+        q.push(node);
+        visited[node]=new Node(node->val);
+
+        while(!q.empty())
+        {
+            Node* n=q.front();
+            q.pop();
+            for(auto& neig:n->neighbors)
+            {
+                if(!visited.count(neig))
+                {
+                    visited[neig]=new Node(neig->val);
+                    q.emplace(neig);
+                }
+                //更新新的节点的邻居
+                visited[n]->neighbors.emplace_back(visited[neig]);
+            }
+        }
+        return visited[node];
+    }
+};

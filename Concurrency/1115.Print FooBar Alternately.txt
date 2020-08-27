@@ -1,0 +1,41 @@
+#include<semaphore.h>
+
+//信号量
+
+class FooBar {
+private:
+    int n;
+
+protected:
+    sem_t FooDone;
+    sem_t BarDone;
+
+public:
+    FooBar(int n) {
+        this->n = n;
+        sem_init(&FooDone,0,0);
+        sem_init(&BarDone,0,1);
+    }
+
+    void foo(function<void()> printFoo) {
+        
+        for (int i = 0; i < n; i++) {
+            
+        	// printFoo() outputs "foo". Do not change or remove this line.
+            sem_wait(&BarDone);
+        	printFoo();
+            sem_post(&FooDone);
+        }
+    }
+
+    void bar(function<void()> printBar) {
+        
+        for (int i = 0; i < n; i++) {
+            
+        	// printBar() outputs "bar". Do not change or remove this line.
+            sem_wait(&FooDone);
+        	printBar();
+            sem_post(&BarDone);
+        }
+    }
+};

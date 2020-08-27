@@ -1,0 +1,64 @@
+//终极模拟题
+//一共有9216种可能 所以全部模拟为O(1)
+
+//注意除法是浮点数 有精度差
+//注意除数不可以为0
+
+
+class Solution {
+private:
+    static constexpr int TARGET=24;
+    static constexpr double EPSILON=1e-6;
+    static constexpr int ADD=0, MULTIPLY=1, SUBTRACT=2, DIVIDE=3;
+    bool dfs(vector<double>& v)
+    {
+        if(!v.size())
+            return false;
+        if(v.size()==1)
+            return fabs(v[0]-TARGET)<EPSILON;
+        int N=v.size();
+        for(int i=0;i<N;i++)
+        {
+            for(int j=0;j<N;j++)
+            {
+                if(i!=j)
+                {
+                    vector<double> nv;
+                    for(int k=0;k<N;k++)
+                        if(k!=i&&k!=j)
+                            nv.emplace_back(v[k]);
+                    for(int k=0;k<4;k++)
+                    {
+                        //加法乘法有交换律 不需要重复计算
+                        if(k<2&&i>j)
+                            continue;
+                        if(k==ADD)
+                            nv.emplace_back(v[i]+v[j]);
+                        else if(k==MULTIPLY)
+                            nv.emplace_back(v[i]*v[j]);
+                        else if(k==SUBTRACT)
+                            nv.emplace_back(v[i]-v[j]);
+                        else if(k==DIVIDE)
+                        {
+                            if(fabs(v[j])<EPSILON)
+                                continue;
+                            nv.emplace_back(v[i]/v[j]);
+                        }
+                        if(dfs(nv))
+                            return true;
+                        //弹出当前循环的操作的数
+                        nv.pop_back();
+                    }
+                }
+            }
+        }
+        return false;
+    }
+public:
+    bool judgePoint24(vector<int>& nums) {
+        vector<double> v;
+        for(const int& x:nums)
+            v.emplace_back(static_cast<double>(x));
+        return dfs(v);
+    }
+};

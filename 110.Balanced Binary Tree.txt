@@ -41,6 +41,7 @@ private:
         int R=dfs(root->right);
         if(R==-1)
             return -1;
+	//后序遍历 在左右根
         return abs(L-R)<2?max(L,R)+1:-1;
     }
 public:

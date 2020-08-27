@@ -1,0 +1,61 @@
+//DFS
+
+class Solution {
+private:
+    const int dx[4]={-1,1,0,0};
+    const int dy[4]={0,0,1,-1};
+    void dfs(vector<vector<int>>& image,int sr,int sc,int newColor)
+    {
+        int curColor=image[sr][sc];
+        image[sr][sc]=newColor;
+        for(int k=0;k<4;k++)
+        {
+            int newR=sr+dx[k];
+            int newC=sc+dy[k];
+            if(newR>=0 && newR<image.size() && newC>=0 && newC<image[0].size() && curColor==image[newR][newC])
+                dfs(image,newR,newC,newColor);
+        }
+    }
+public:
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+        if(image.empty())
+            return image;
+        int curColor=image[sr][sc];
+        if(curColor!=newColor)
+            dfs(image,sr,sc,newColor);
+        return image;
+    }
+};
+
+//BFS
+
+class Solution {
+private:
+    int dx[4]={-1,1,0,0};
+    int dy[4]={0,0,1,-1};
+public:
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+        if(image.empty())
+            return image;
+        if(image[sr][sc]==newColor)
+            return image;
+        
+        int curColor=image[sr][sc];
+        queue<pair<int,int>> q;
+        q.push({sr,sc});
+        while(!q.empty())
+        {
+            auto [x,y]=q.front();
+            q.pop();
+            image[x][y]=newColor;
+            for(int k=0;k<4;k++)
+            {
+                int mx=x+dx[k];
+                int my=y+dy[k];
+                if(mx>=0 && mx<image.size() && my>=0 && my<image[0].size() && curColor==image[mx][my])
+                    q.push({mx,my});
+            }
+        }
+        return image;
+    }
+};

@@ -1,0 +1,69 @@
+//分治
+//快慢指针找出中间节点
+
+class Solution {
+private:
+    ListNode* getMid(ListNode* left,ListNode* right)
+    {
+        ListNode* fast=left;
+        ListNode* slow=left;
+        while(fast!=right&&fast->next!=right)
+        {
+            fast=fast->next->next;
+            slow=slow->next;
+        }
+        return slow;
+    }
+    TreeNode* build(ListNode* left,ListNode* right)
+    {
+        //左闭右开 所以退出条件如下
+        if(left==right)
+            return nullptr;
+        ListNode* mid=getMid(left,right);
+        TreeNode* MID=new TreeNode(mid->val);
+        MID->left=build(left,mid);
+        MID->right=build(mid->next,right);
+        return MID;
+    }
+public:
+    TreeNode* sortedListToBST(ListNode* head) {
+        return build(head,nullptr);
+    }
+};
+
+//分治+中序遍历
+//O(n)遍历链表
+
+class Solution {
+private:
+    int getLen(ListNode* head)
+    {
+        int len=0;
+        while(head!=nullptr)
+        {
+            head=head->next;
+            len++;
+        }
+        return len;
+    }
+
+    //注意引用head 遍历链表
+    TreeNode* build(ListNode*& head,int left,int right)
+    {
+        if(left>right)
+            return nullptr;
+        int mid=(left+right)/2;
+        TreeNode* root=new TreeNode();
+        //中序遍历
+        root->left=build(head,left,mid-1);
+        root->val=head->val;
+        head=head->next;
+        root->right=build(head,mid+1,right);
+        return root;
+    }
+public:
+    TreeNode* sortedListToBST(ListNode* head) {
+        int len=getLen(head);
+        return build(head,0,len-1);
+    }
+};

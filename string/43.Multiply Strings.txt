@@ -1,0 +1,103 @@
+//模拟竖式乘法
+//累加
+
+class Solution {
+private:
+    string addString(string& num1, string& num2)
+    {
+        int i=num1.size()-1;
+        int j=num2.size()-1;
+        int add=0;
+        string res="";
+        while(i>=0||j>=0||add!=0)
+        {
+            int x=i>=0?num1[i]-'0':0;
+            int y=j>=0?num2[j]-'0':0;
+            int cur=x+y+add;
+            res+=to_string(cur%10);
+            add=cur/10;
+            i--;
+            j--;
+        }
+        reverse(res.begin(),res.end());
+        return res;
+    }
+public:
+    string multiply(string num1, string num2) {
+        if(num1=="0"||num2=="0")
+            return "0";
+        int m=num1.size();
+        int n=num2.size();
+        string res="";
+        for(int i=n-1;i>=0;i--)
+        {
+            string cur="";
+            int add=0;
+            // 补位
+            for(int j=n-1;j>i;j--)
+                cur+="0";
+            int y=num2[i]-'0';
+            for(int j=m-1;j>=0;j--)
+            {
+                int x=num1[j]-'0';
+                int pro=x*y+add;
+                cur+=to_string(pro%10);
+                add=pro/10;
+            }
+            // 注意进位
+            while(add!=0)
+            {
+                cur+=to_string(add%10);
+                add/=10;
+            }
+            reverse(cur.begin(),cur.end());
+            // 累加
+            res=addString(res,cur);
+        }
+        return res;
+    }
+};
+
+
+//直接乘法
+//乘积长度为m+n
+
+//字符长度为x
+//当该字符取最大时 10^x-1
+//但该字符取最小时 10^(x-1)
+//分别取最大和最小的情况进行相乘 即可得到长度
+
+class Solution {
+public:
+    string multiply(string num1, string num2) {
+        if(num1=="0"||num2=="0")
+            return "0";
+        int m=num1.size();
+        int n=num2.size();
+        vector<int> resArr(m+n);
+        for(int i=m-1;i>=0;i--)
+        {
+            int x=num1[i]-'0';
+            for(int j=n-1;j>=0;j--)
+            {
+                int y=num2[j]-'0';
+                // num1[i]*num2[j]存在resArr[i+j+1]
+                // 第一位留给进位
+                resArr[i+j+1]+=x*y;
+            }
+        }
+        for(int i=m+n-1;i>0;i--)
+        {
+            resArr[i-1]+=(resArr[i]/10);
+            resArr[i]%=10;
+        }
+        int index=resArr[0]==0?1:0;
+        string res="";
+        while(index<m+n)
+        {
+            res+=to_string(resArr[index]);
+            index++;
+        }
+        return res;
+    }
+};

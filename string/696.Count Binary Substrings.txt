@@ -1,0 +1,24 @@
+//计算分段长度
+//数量相等的字段 min(last,cnt)
+
+class Solution {
+public:
+    int countBinarySubstrings(string s) {
+        int i=0, res=0, last=0;
+        while(i<s.size())
+        {
+            char cur=s[i];
+            int ptr=i;
+            int cnt=0;
+            while(ptr<s.size()&&s[i]==s[ptr])
+            {
+                cnt++;
+                ptr++;
+            }
+            i=ptr;
+            res+=min(last,cnt);
+            last=cnt;
+        }
+        return res;
+    }
+};

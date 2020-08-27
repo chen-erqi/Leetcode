@@ -1,0 +1,152 @@
+//二叉搜索树的中序遍历是递增的
+
+//显示中序遍历
+//把中序遍历存在数组中 查找交换的点
+//要注意交换的点是 ai+1<ai aj+1<aj i<j
+//交换ai aj+1
+
+class Solution {
+private:
+    void inorder(TreeNode* root,vector<int>& nums)
+    {
+        if(!root)
+            return;
+        inorder(root->left,nums);
+        nums.emplace_back(root->val);
+        inorder(root->right,nums);
+    }
+
+    pair<int,int> findTwoSwapped(vector<int>& nums)
+    {
+        int N=nums.size();
+        int x=-1, y=-1;
+        for(int i=0;i<N-1;i++)
+        {
+            if(nums[i+1]<nums[i])
+            {
+                y=nums[i+1];
+                if(x==-1)
+                    x=nums[i];
+                else
+                    break;
+            }
+        }
+        return {x,y};
+    }
+
+    void recover(TreeNode* r,int cnt,int x,int y)
+    {
+        if(!r)
+            return;
+        if(r->val==x||r->val==y)
+        {
+            r->val= r->val==x?y:x;
+            if(--cnt==0)
+                return;
+        }
+        recover(r->left,cnt,x,y);
+        recover(r->right,cnt,x,y);
+    }
+public:
+    void recoverTree(TreeNode* root) {
+        vector<int> nums;
+        inorder(root,nums);
+        pair<int,int> swapped=findTwoSwapped(nums);
+        recover(root,2,swapped.first,swapped.second);
+    }
+};
+
+//隐式中序遍历
+
+class Solution {
+public:
+    void recoverTree(TreeNode* root) {
+        stack<TreeNode*> stk;
+        TreeNode* x=nullptr;
+        TreeNode* y=nullptr;
+        TreeNode* pre=nullptr;
+
+        while(!stk.empty()||root)
+        {
+            while(root)
+            {
+                stk.emplace(root);
+                root=root->left;
+            }
+            root=stk.top();
+            stk.pop();
+            if(pre&&root->val<pre->val)
+            {
+                y=root;
+                if(!x)
+                    x=pre;
+                else
+                    break;
+            }
+            pre=root;
+            root=root->right;
+        }
+        swap(x->val,y->val);
+    }
+};
+
+//Morris遍历
+//将非递归的中序遍历空间复杂度降为O(1)
+//若Cur无左孩子 则Cur=Cur->right
+//若Cur有左孩子 则cur左子树上最右的节点 记为pre
+//若pre右孩子为空    cur=pre->right cur=cur->left
+//若pre右孩子不为空  此时已遍历完cur的左子树 将pre右孩子置空 cur=cur->right
+
+class Solution {
+public:
+    void recoverTree(TreeNode* root) {
+        TreeNode* x=nullptr;
+        TreeNode* y=nullptr;
+        TreeNode* pre=nullptr;
+        TreeNode* predecessor=nullptr;
+
+        while(root)
+        {
+            //当前有左子树
+            if(root->left)
+            {
+                //进入左子树
+                predecessor=root->left;
+                //找到左子树的最右
+                while(predecessor->right&&predecessor->right!=root)
+                    predecessor=predecessor->right;
+                //没有指向过
+                if(!predecessor->right)
+                {
+                    predecessor->right=root;
+                    root=root->left;
+                }
+                else
+                {
+                    if(pre&&root->val<pre->val)
+                    {
+                        y=root;
+                        if(!x)
+                            x=pre;
+                    }
+                    pre=root;
+                    root=root->right;
+                    predecessor->right=nullptr;
+                }
+            }
+            //当前没有左子树
+            else
+            {
+                if(pre&&root->val<pre->val)
+                {
+                    y=root;
+                    if(!x)
+                        x=pre;
+                }
+                pre=root;
+                root=root->right;
+            }
+        }
+        swap(x->val,y->val);
+    }
+};

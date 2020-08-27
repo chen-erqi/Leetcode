@@ -1,0 +1,82 @@
+//dfs 使用占位符 和划分的区域有正反两种
+class Solution {
+public:
+    int dx[4]={-1,0,1,0},dy[4]={0,1,0,-1};
+    void dfs(vector<vector<char>>& board,int r,int c)
+    {
+        int nr=board.size();
+        int nc=board[0].size();
+        board[r][c]='#';
+        for(int k=0;k<4;k++)
+        {
+            int x=r+dx[k];
+            int y=c+dy[k];
+            if(x>=0&&x<nr&&y>=0&&y<nc&&board[x][y]=='O')
+                dfs(board,x,y);
+        }
+    }
+    void solve(vector<vector<char>>& board) {
+        if(board.empty())
+            return;
+        int nr=board.size();
+        int nc=board[0].size();
+        for(int i=0;i<nr;i++)
+            for(int j=0;j<nc;j++)
+            {
+                if((i==0||i==nr-1||j==0||j==nc-1)&&board[i][j]=='O')
+                    dfs(board,i,j);
+            }
+        for(int i=0;i<nr;i++)
+            for(int j=0;j<nc;j++)
+            {
+                if(board[i][j]=='O')
+                    board[i][j]='X';
+                if(board[i][j]=='#')
+                    board[i][j]='O';
+            }        
+    }
+};
+
+
+//bfs
+
+class Solution {
+private:
+    int dx[4]={-1,1,0,0};
+    int dy[4]={0,0,-1,1};
+public:
+    void solve(vector<vector<char>>& board) {
+        if(board.empty())
+            return;
+        int R=board.size();
+        int C=board[0].size();
+        queue<pair<int,int>> q;
+        for(int i=0;i<R;i++)
+            for(int j=0;j<C;j++)
+            {
+                if((i==0||j==0||i==R-1||j==C-1)&&(board[i][j]=='O'))
+                    q.emplace(i,j);
+            }
+        while(!q.empty())
+        {
+            auto [a,b]=q.front();
+            q.pop();
+            board[a][b]='#';
+            for(int i=0;i<4;i++)
+            {
+                int newR=a+dx[i];
+                int newC=b+dy[i];
+                if(newR>=0&&newR<R&&newC>=0&&newC<C&&board[newR][newC]=='O')
+                    q.emplace(newR,newC);
+            }
+        }
+        for(int i=0;i<R;i++)
+            for(int j=0;j<C;j++)
+            {
+                if(board[i][j]=='O')
+                    board[i][j]='X';
+                if(board[i][j]=='#')
+                    board[i][j]='O';
+            }
+    }
+};

@@ -1,0 +1,32 @@
+//本质是求范围两端的二进制字符串的公共前缀
+
+//位移
+//O(logn)
+
+class Solution {
+public:
+    int rangeBitwiseAnd(int m, int n) {
+        int shift=0;
+        while(m<n)
+        {
+            m>>=1;
+            n>>=1;
+            shift++;
+        }
+        return m<<shift;
+    }
+};
+
+//Brian Kernighan算法
+//清楚二进制最右端的1
+//n&(n-1)
+//O(logn)
+
+class Solution {
+public:
+    int rangeBitwiseAnd(int m, int n) {
+        while(m<n)
+            n&=(n-1);
+        return n;
+    }
+};

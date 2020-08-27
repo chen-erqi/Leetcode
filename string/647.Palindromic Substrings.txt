@@ -1,0 +1,32 @@
+//可以枚举所有子串并进行判断 O(n^3)
+//或者枚举所有回文中心并进行扩展 O(n^2)
+
+//中心扩展
+//以一个长度为4的字符串为例 找出所有奇数和偶数中心节点
+//并寻找规律:
+//节点个数 
+//左右节点与编号的关系！
+
+class Solution {
+public:
+    int countSubstrings(string s) {
+        int n=s.size();
+        int cnt=2*n-1;
+        int res=0;
+        for(int i=0;i<cnt;i++)
+        {
+            int l=i/2;
+            int r=l+i%2;
+            while(l>=0&&r<n&&s[l]==s[r])
+            {
+                //中心扩展
+                l--;
+                r++;
+                res++;
+            }
+        }
+        return res;
+    }
+};
+
+

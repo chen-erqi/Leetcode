@@ -1,0 +1,41 @@
+//欧拉回路/欧拉通路
+//n点m边 从指定点出发 经所有边恰好一次
+//每次贪心选择当前字典序中最小
+//用优先队列
+//删除走过的节点
+
+//每个节点最多有一个'死胡同'
+//入度和出度之差为1是'死胡同'
+
+//Hierholzer算法
+//用于在连通图中寻找欧拉算法
+
+//逆序入栈
+//遍历一个节点所连接的所有节点之后 将该节点入栈
+
+//'死胡同'会先于'非死胡同'入栈
+
+
+class Solution {
+private:
+    unordered_map<string,priority_queue<string,vector<string>,std::greater<string>>> v;
+    vector<string> stk;
+    void dfs(const string& cur)
+    {
+        while(v.count(cur)&&v[cur].size())
+        {
+            string temp=v[cur].top();
+            v[cur].pop();
+            dfs(move(temp));
+        }
+        stk.emplace_back(cur);
+    }
+public:
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        for(auto& it:tickets)
+            v[it[0]].emplace(it[1]);
+        dfs("JFK");
+        reverse(stk.begin(),stk.end());
+        return stk;
+    }
+};

@@ -1,0 +1,33 @@
+//回溯
+//注意去重
+
+class Solution {
+private:
+    vector<int> tem;
+    vector<vector<int>> res;
+    void dfs(int cur,int last,vector<int>& nums)
+    {
+        if(cur==nums.size())
+        {
+            if(tem.size()>=2)
+                res.emplace_back(tem);
+            return;
+        }
+        if(nums[cur]>=last)
+        {
+            tem.emplace_back(nums[cur]);
+            dfs(cur+1,nums[cur],nums);
+            tem.pop_back();
+        }
+	//去重
+        if(nums[cur]!=last)
+            dfs(cur+1,last,nums);
+    }
+public:
+    vector<vector<int>> findSubsequences(vector<int>& nums) {
+        dfs(0,INT_MIN,nums);
+        return res;
+    }
+};
+
+//二进制枚举+哈希去重

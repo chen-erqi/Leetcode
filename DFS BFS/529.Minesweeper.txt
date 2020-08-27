@@ -1,0 +1,94 @@
+//dfs
+
+class Solution {
+private:
+    int dx[8]={0,1,0,-1,1,1,-1,-1};
+    int dy[8]={1,0,-1,0,1,-1,1,-1};
+    void dfs(vector<vector<char>>& board,int x,int y)
+    {
+        int cnt=0;
+        for(int i=0;i<8;i++)
+        {
+            int tx=x+dx[i];
+            int ty=y+dy[i];
+            if(tx>=0&&tx<board.size()&&ty>=0&&ty<board[0].size()&&board[tx][ty]=='M')
+                cnt++;
+        }
+        if(cnt>0)
+            board[x][y]=cnt+'0';
+        else
+        {
+            board[x][y]='B';
+            for(int i=0;i<8;i++)
+            {
+                int tx=x+dx[i];
+                int ty=y+dy[i];
+                if(tx>=0&&tx<board.size()&&ty>=0&&ty<board[0].size()&&board[tx][ty]!='B')
+                    dfs(board,tx,ty);
+            }
+        }
+    }
+public:
+    vector<vector<char>> updateBoard(vector<vector<char>>& board, vector<int>& click) {
+        int x=click[0];
+        int y=click[1];
+        if(board[x][y]=='M')
+            board[x][y]='X';
+        else
+            dfs(board,x,y);
+        return board;
+    }
+};
+
+//bfs
+//记得加上记忆化数组
+
+class Solution {
+private:
+    int dx[8]={0,1,0,-1,1,1,-1,-1};
+    int dy[8]={1,0,-1,0,1,-1,1,-1};
+public:
+    vector<vector<char>> updateBoard(vector<vector<char>>& board, vector<int>& click) {
+        int x=click[0];
+        int y=click[1];
+        if(board[x][y]=='M')
+        {
+            board[x][y]='X';
+            return board;
+        }
+        vector<vector<bool>> visited(board.size(),vector<bool>(board[0].size(),0));
+        queue<pair<int,int>> q;
+        q.emplace(make_pair(x,y));
+        visited[x][y]=true;
+        while(!q.empty())
+        {
+            auto [a,b]=q.front();
+            q.pop();
+            int cnt=0;
+            for(int i=0;i<8;i++)
+            {
+                int ta=a+dx[i];
+                int tb=b+dy[i];
+                if(ta>=0&&ta<board.size()&&tb>=0&&tb<board[0].size()&&board[ta][tb]=='M')
+                    cnt++;
+            }
+            if(cnt>0)
+                board[a][b]=cnt+'0';
+            else
+            {
+                board[a][b]='B';
+                for(int i=0;i<8;i++)
+                {
+                    int ta=a+dx[i];
+                    int tb=b+dy[i];
+                    if(ta>=0&&ta<board.size()&&tb>=0&&tb<board[0].size()&&board[ta][tb]!='B'&&!visited[ta][tb])
+                    {
+                        q.emplace(make_pair(ta,tb));
+                        visited[ta][tb]=true;
+                    }
+                }
+            }
+        }
+        return board;
+    }
+};

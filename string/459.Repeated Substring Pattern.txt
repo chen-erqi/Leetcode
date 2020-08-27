@@ -1,0 +1,41 @@
+//暴力枚举
+//先尝试每一个能被整除的字符串 
+//然后以相差一个长度的距离进行比较
+
+class Solution {
+public:
+    bool repeatedSubstringPattern(string s) {
+        int N=s.size();
+        for(int i=1;i*2<=N;i++)
+        {
+            if(N%i==0)
+            {
+                int flag=true;
+                for(int j=i;j<N;j++)
+                {
+                    if(s[j]!=s[j-i])
+                    {
+                        flag=false;
+                        break;
+                    }
+                }
+                if(flag)
+                    return true;
+            }
+        }
+        return false;
+    }
+};
+
+//字符串匹配
+//find函数
+//利用同余定理
+
+class Solution {
+public:
+    bool repeatedSubstringPattern(string s) {
+        return (s+s).find(s,1)!=s.size();
+    }
+};
+
+//KMP
