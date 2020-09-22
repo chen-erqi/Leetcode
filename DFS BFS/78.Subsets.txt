@@ -1,0 +1,47 @@
+//回溯
+
+class Solution {
+private:
+    vector<int> temp;
+    vector<vector<int>> Sol;
+    void dfs(vector<int>& nums,int k){
+        if(k>=nums.size()){
+            Sol.emplace_back(temp);
+            return;
+        }
+        //skip
+        dfs(nums,k+1);
+        //choose
+        temp.emplace_back(nums[k]);
+        dfs(nums,k+1);
+        temp.pop_back();
+    }
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        dfs(nums,0);
+        return Sol;
+    }
+};
+
+//迭代
+//将选择看作二进制 
+//刚好可以对应所有的情况
+
+class Solution {
+private:
+    vector<int> temp;
+    vector<vector<int>> Sol;
+public:
+    vector<vector<int>> subsets(vector<int>& nums) {
+        int N=nums.size();
+        for(int mask=0;mask<(1<<N);mask++){
+            temp.clear();
+            for(int i=0;i<N;i++){
+                if(mask&(1<<i))
+                    temp.emplace_back(nums[i]);
+            }
+            Sol.emplace_back(temp);
+        }
+        return Sol;
+    }
+};

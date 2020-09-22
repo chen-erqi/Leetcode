@@ -1,0 +1,50 @@
+//转换成有向图
+//从特定点开始 能否遍历图
+
+
+class Solution {
+private:
+    int num;
+    vector<int> vis;
+    void dfs(vector<vector<int>>& rooms,int cur)
+    {
+        vis[cur]=true;
+        num++;
+        for(int& x:rooms[cur])
+        {
+            if(!vis[x])
+                dfs(rooms,x);
+        }
+    }
+public:
+    bool canVisitAllRooms(vector<vector<int>>& rooms) {
+        num=0;
+        vis.resize(rooms.size());
+        dfs(rooms,0);
+        return num==rooms.size();
+    }
+};
+
+class Solution {
+public:
+    bool canVisitAllRooms(vector<vector<int>>& rooms) {
+        int num=0;
+        vector<bool> vis(rooms.size(),0);
+        queue<int> q;
+        q.push(0);
+        vis[0]=true;
+        while(!q.empty())
+        {
+            int cur=q.front();
+            q.pop();
+            num++;
+            for(int& x:rooms[cur])
+                if(!vis[x])
+                {
+                    vis[x]=true;
+                    q.push(x);
+                }
+        }
+        return num==rooms.size();
+    }
+};

@@ -1,0 +1,124 @@
+//皇后可以走横线,直线,斜线
+//每一行,每一列都仅有一个皇后,且不能在同一斜线
+//第一行有N-1个选择 第二行有N-2 依次类推 所有可能情况不会超过N！
+
+//用三个集合来表示独一性
+//斜线的坐标关系为行列坐标之和或之差
+
+class Solution {
+private:
+    vector<string> generateBoard(vector<int>& queens,int n)
+    {
+        auto board=vector<string>();
+        for(int i=0;i<n;i++)
+        {
+            string row=string(n,'.');
+            // queens[i]是第i行Q的位置 
+            row[queens[i]]='Q';
+            board.emplace_back(row);
+        }
+        return board;
+    }
+    void backtrack(vector<vector<string>>& Sol,vector<int>& queens,int n,int row,unordered_set<int>& col,unordered_set<int>& diag1,unordered_set<int>& diag2)
+    {
+        if(row==n)
+        {
+            vector<string> board=generateBoard(queens,n);
+            Sol.emplace_back(board);
+        }
+        else
+        {
+            // 遍历搜索当前行可能的列
+            for(int i=0;i<n;i++)
+            {
+                if(col.find(i)!=col.end())
+                    continue;
+                int d1=row+i;
+                int d2=row-i;
+                if(diag1.find(d1)!=diag1.end())
+                    continue;
+                if(diag2.find(d2)!=diag2.end())
+                    continue;
+                // 找到空余列
+                queens[row]=i;
+                col.emplace(i);
+                diag1.emplace(d1);
+                diag2.emplace(d2);
+                backtrack(Sol,queens,n,row+1,col,diag1,diag2);
+                col.erase(i);
+                diag1.erase(d1);
+                diag2.erase(d2);
+            }
+        }
+    }
+public:
+    vector<vector<string>> solveNQueens(int n) {
+        auto Sol=vector<vector<string>>();
+        auto queens=vector<int>(n,-1);
+        auto col=unordered_set<int>();
+        auto diag1=unordered_set<int>();
+        auto diag2=unordered_set<int>();
+        backtrack(Sol,queens,n,0,col,diag1,diag2);
+        return Sol;
+    }
+};
+
+//位运算
+//用位运算记录皇后的位置信息
+
+//三个整数 col diag1 diag2 记录每一列/斜线上是否有皇后
+//0代表可以放 1代表不能放 这是方便进入下一行时换算
+//斜线必要时画图辅助
+
+//进入下一行时 col不变 diag1左移 diag2右移
+//x&(-x) 取最低位的1
+//x&(x-1)将最低位1置为0
+
+
+class Solution {
+private:
+    vector<string> generateBoard(vector<int>& queens,int n)
+    {
+        auto board=vector<string>();
+        for(int i=0;i<n;i++)
+        {
+            string row=string(n,'.');
+            row[queens[i]]='Q';
+            board.emplace_back(row);
+        }
+        return board;
+    }
+    void backtrack(vector<vector<string>>& Sol,vector<int>& queens,int n,int row,int col,int diag1,int diag2)
+    {
+        if(row==n)
+        {
+            vector<string> board=generateBoard(queens,n);
+            Sol.emplace_back(board);      
+        }
+        else
+        {
+            //1表示可以放皇后 0表示不能放皇后
+	    //注意取反要加掩码限制位数!
+            int availablePos=((1<<n)-1)&(~(col|diag1|diag2));
+            while(availablePos!=0)
+            {
+                int pos=availablePos&(-availablePos);
+                availablePos=availablePos&(availablePos-1);
+                // builtin_ctz读出末尾为0的个数
+                // curCol之后在数组中刚好为放置皇后的位置
+                int curCol=__builtin_ctz(pos);
+                queens[row]=curCol;
+                //col|pos 进入下一行时将当前放置皇后的位置为1
+                backtrack(Sol,queens,n,row+1,col|pos,(diag1|pos)>>1,(diag2|pos)<<1);
+                queens[row]=-1;
+            }
+        }
+    }
+public:
+    vector<vector<string>> solveNQueens(int n) {
+        auto Sol=vector<vector<string>>();
+        auto queens=vector<int>(n,-1);
+        backtrack(Sol,queens,n,0,0,0,0);
+        return Sol;
+    }
+};

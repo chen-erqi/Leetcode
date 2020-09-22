@@ -1,0 +1,44 @@
+//dfs
+//回溯
+
+class Solution {
+private:
+    int dx[4]={-1,1,0,0};
+    int dy[4]={0,0,1,-1};
+    bool mem[205][205];
+    bool dfs(vector<vector<char>>& board,int i,int j,string& word,int pos)
+    {
+        if(pos==word.size())
+            return true;
+        for(int k=0;k<4;k++)
+        {
+            int x=dx[k]+i;
+            int y=dy[k]+j;
+            if(x>=0&&x<board.size()&&y>=0&&y<board[0].size()&&mem[x][y]==false&&word[pos]==board[x][y])
+            {
+                mem[x][y]=true;
+                if(dfs(board,x,y,word,pos+1))
+                    return true;
+		//注意返回
+                mem[x][y]=false;
+            }
+        }
+        return false;
+    }
+public:
+    bool exist(vector<vector<char>>& board, string word) {
+        for(int i=0;i<board.size();i++)
+            for(int j=0;j<board[0].size();j++)
+            {
+                if(board[i][j]==word[0])
+                {
+                    mem[i][j]=true;
+                    if(dfs(board,i,j,word,1))
+                        return true;
+		    //注意返回
+                    mem[i][j]=false;
+                }
+            }
+        return false;
+    }
+};

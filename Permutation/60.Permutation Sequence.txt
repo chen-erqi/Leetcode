@@ -1,0 +1,96 @@
+//数学方法缩小规模
+//对于n个不同的元素 全排列是n!
+//以1为a1的全排列有(n-1)!个
+//...
+//以n为a1的全排列有(n-1)!个
+//即k<=x*(n-1)!
+//即之后的所求的为第(k-1)%(n-1)+1个元素
+
+//对于浮点数来说 floor是更好选择
+//对于int类来说 k/m向上取整=(k-1)/m+1
+
+
+class Solution {
+public:
+    string getPermutation(int n, int k) {
+        vector<int> f(n);
+        f[0]=1;
+        for(int i=1;i<n;i++)
+            f[i]=f[i-1]*i;
+        k--;
+        string ans;
+        vector<int> vaild(n+1,1);
+        for(int i=1;i<=n;i++)
+        {
+            int order=k/f[n-i]+1;
+            for(int j=1;j<=n;j++)
+            {
+                order-=vaild[j];
+                //order此时可以认为是剩余数字中第order小的
+                if(!order)
+                {
+                    ans+=(j+'0');
+                    vaild[j]=0;
+                    break;
+                }
+            }
+            //此时k得出的是接下来的从0开始的第k个全排列
+            k%=f[n-i];
+        }
+        return ans;
+    }
+};
+
+
+//dfs+剪枝
+
+class Solution {
+private:
+    bool flag=true;
+    string res;
+    vector<int> f;
+    unordered_set<int> st;
+
+    void dfs(string& str,int n,int& k)
+    {
+        if(!flag)
+            return;
+        if(str.size()==n)
+        {
+            res=str;
+            flag=false;
+            return;
+        }
+        //以当前位置开始的全排列个数为(n-i)!
+        //最多也就(n-1)!种可能
+        //f数组只需存储1~(n-1)的阶乘即可
+        //当str.size()==0时 对应 (n-1)!
+        int temp=f[n-str.size()-1];
+        for(int i=1;i<=n;i++)
+        {
+            if(!st.count(i))
+            {
+                if(temp<k)
+                {
+                    k-=temp;
+                    continue;
+                }
+                str+=('0'+i);
+                st.insert(i);
+                dfs(str,n,k);
+                str.pop_back();
+                st.erase(i);
+            }
+        }
+    }
+public:
+    string getPermutation(int n, int k) {
+        string str="";
+        f.resize(n+1);
+        f[0]=1;
+        for(int i=1;i<n;i++)
+            f[i]=f[i-1]*i;
+        dfs(str,n,k);
+        return res;
+    }
+};

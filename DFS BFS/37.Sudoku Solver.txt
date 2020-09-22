@@ -1,0 +1,209 @@
+//回溯
+//line[i][j]表示j+1在第i行已经出现
+
+
+class Solution {
+private:
+    bool valid;
+    bool line[9][9];
+    bool column[9][9];
+    bool block[3][3][9];
+    vector<pair<int,int>> spaces;
+    void dfs(vector<vector<char>>& board,int pos)
+    {
+        if(pos==spaces.size())
+        {
+            valid=true;
+            return;
+        }
+        auto [i,j]=spaces[pos];
+        for(int dig=0;dig<9&&!valid;dig++)
+        {
+            if(!line[i][dig]&&!column[j][dig]&&!block[i/3][j/3][dig])
+            {
+                line[i][dig]=column[j][dig]=block[i/3][j/3][dig]=true;
+                board[i][j]=dig+1+'0';
+                dfs(board,pos+1);
+                line[i][dig]=column[j][dig]=block[i/3][j/3][dig]=false;
+            }
+        }
+    }
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        memset(line,false,sizeof(line));
+        memset(column,false,sizeof(column));
+        memset(block,false,sizeof(block));
+        valid=false;
+
+        for(int i=0;i<9;i++)
+            for(int j=0;j<9;j++)
+            {
+                if(board[i][j]=='.')
+                    spaces.emplace_back(i,j);
+                else
+                {
+                    int x=board[i][j]-'0'-1;
+                    line[i][x]=column[j][x]=block[i/3][j/3][x]=true;
+                }
+            }
+        
+        dfs(board,0);
+    }
+};
+
+//位运算
+
+class Solution {
+private:
+    int valid;
+    int line[9];
+    int column[9];
+    int block[3][3];
+    vector<pair<int,int>> spaces;
+    //将该数字记录 第k位的数字已经被使用
+    void flip(int i,int j,int x)
+    {
+        line[i]^=(1<<x);
+        column[j]^=(1<<x);
+        block[i/3][j/3]^=(1<<x);
+    }
+    void dfs(vector<vector<char>>& board,int pos)
+    {
+        if(pos==spaces.size())
+        {
+            valid=true;
+            return;
+        }
+        auto [i,j]=spaces[pos];
+        //当前的状态 0为不能使用
+        int mask=~(line[i]|column[j]|block[i/3][j/3])&0x1ff;
+        //a&=(a-1)为去掉当前的最低位1
+        for(;mask&&!valid;mask&=(mask-1))
+        {
+	    //(-b)以补码形式存储 等于~b+1 
+	    //~b+1之后 最低位的连续1会变成0 最低位的0会变成1
+	    //对应到b中即为最低位1
+            //取最后的1
+            int digmask=mask&(-mask);
+            //因为0为不能使用 取尾部有几个0 
+            int dig=__builtin_ctz(digmask);
+            //把这次使用的位加入数组
+            flip(i,j,dig);
+            board[i][j]=dig+1+'0';
+            dfs(board,pos+1);
+            flip(i,j,dig);
+        }
+    }
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        memset(line,0,sizeof(line));
+        memset(column,0,sizeof(column));
+        memset(block,0,sizeof(block));
+        valid=false;
+
+        for(int i=0;i<9;i++)
+            for(int j=0;j<9;j++)
+            {
+                if(board[i][j]=='.')
+                    spaces.emplace_back(i,j);
+                else
+                {
+                    int x=board[i][j]-'0'-1;
+                    flip(i,j,x);
+                }
+            }
+        
+        dfs(board,0);
+    }
+};
+
+//优化
+
+class Solution {
+private:
+    int valid;
+    int line[9];
+    int column[9];
+    int block[3][3];
+    vector<pair<int,int>> spaces;
+    //将该数字记录 第k位的数字已经被使用
+    void flip(int i,int j,int x)
+    {
+        line[i]^=(1<<x);
+        column[j]^=(1<<x);
+        block[i/3][j/3]^=(1<<x);
+    }
+    void dfs(vector<vector<char>>& board,int pos)
+    {
+        if(pos==spaces.size())
+        {
+            valid=true;
+            return;
+        }
+        auto [i,j]=spaces[pos];
+        //当前的状态 0为不能使用
+        int mask=~(line[i]|column[j]|block[i/3][j/3])&0x1ff;
+        //a&=(a-1)为去掉最后的1
+        for(;mask&&!valid;mask&=(mask-1))
+        {
+            //取最后的1
+            int digmask=mask&(-mask);
+            //因为0为不能使用 取尾部有几个0 
+            int dig=__builtin_ctz(digmask);
+            //把这次使用的位加入数组
+            flip(i,j,dig);
+            board[i][j]=dig+1+'0';
+            dfs(board,pos+1);
+            flip(i,j,dig);
+        }
+    }
+public:
+    void solveSudoku(vector<vector<char>>& board) {
+        memset(line,0,sizeof(line));
+        memset(column,0,sizeof(column));
+        memset(block,0,sizeof(block));
+        valid=false;
+
+        for(int i=0;i<9;i++)
+            for(int j=0;j<9;j++)
+            {
+                if(board[i][j]!='.')
+                {
+                    int x=board[i][j]-'0'-1;
+                    flip(i,j,x);
+                }
+            }
+        //预运算
+        //将一次就可以确定的空格全部算出来
+        while(true)
+        {
+            int modify=false;
+            for(int i=0;i<9;i++)
+                for(int j=0;j<9;j++)
+                {
+                    if(board[i][j]=='.')
+                    {
+                        int mask=~(line[i]|column[j]|block[i/3][j/3])&0x1ff;
+                        if(!(mask&(mask-1)))
+                        {
+                            int x=__builtin_ctz(mask);
+                            flip(i,j,x);
+                            board[i][j]=x+1+'0';
+                            modify=true;
+                        }
+                    }
+                }
+            if(!modify)
+                break;
+        }
+        for(int i=0;i<9;i++)
+            for(int j=0;j<9;j++)
+            {
+                if(board[i][j]=='.')
+                    spaces.emplace_back(i,j);
+            }
+
+
+        dfs(board,0);
+    }
+};

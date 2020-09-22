@@ -1,0 +1,51 @@
+//递归
+
+class Solution {
+private:
+    bool isLeafNode(TreeNode* root){
+        return !root->left&&!root->right;
+    }
+    int dfs(TreeNode* root){
+        int tem=0;
+        if(root->left)
+            tem+=isLeafNode(root->left)?root->left->val:dfs(root->left);
+        if(root->right&&!isLeafNode(root->right))
+            tem+=dfs(root->right);
+        return tem;
+    }
+public:
+    int sumOfLeftLeaves(TreeNode* root) {
+        return root?dfs(root):0;
+    }
+};
+
+//迭代
+
+class Solution {
+private:
+    bool isLeafNode(TreeNode* root){
+        return root&&!root->left&&!root->right;
+    }
+public:
+    int sumOfLeftLeaves(TreeNode* root) {
+        if(!root)
+            return 0;
+        queue<TreeNode*> q;
+        q.emplace(root);
+        int sum=0;
+        while(!q.empty()){
+            int size=q.size();
+            for(int i=0;i<size;i++){
+                TreeNode* x=q.front();
+                q.pop();
+                if(isLeafNode(x->left))
+                    sum+=x->left->val;
+                else if(x->left)
+                    q.emplace(x->left);
+                if(x->right&&!isLeafNode(x->right))
+                    q.emplace(x->right);
+            }
+        }
+        return sum;
+    }
+};

@@ -1,0 +1,32 @@
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        int L=0,R=nums.size()-1;
+        while(L<R)
+        {
+            if(nums[L]+nums[R]<target)
+                L++;
+            else if(nums[L]+nums[R]>target)
+                R--;
+            else 
+                return {nums[L],nums[R]};
+        }
+        return {};
+    }
+};
+
+class Solution {
+public:
+    vector<int> twoSum(vector<int>& nums, int target) {
+        unordered_set<int> st;
+        for(int& x:nums)
+        {
+            int cur=target-x;
+            if(st.count(cur))
+                return {cur,x};
+            else
+                st.emplace(x);
+        }
+        return {};
+    }
+};

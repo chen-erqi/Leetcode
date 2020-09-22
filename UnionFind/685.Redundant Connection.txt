@@ -1,0 +1,73 @@
+//并查集
+//树中除了根 每个节点都有父节点
+//1.附加的边指向根 一定有环路
+//2.指向非根 恰有两个父节点
+//在构建数的过程中寻找冲突
+
+//parent记录节点的父节点
+//初有parent[i]=i
+
+//创建并查集
+//1.访问[u,v]
+//有parent[v]!=v 说明v有两个冲突点 当前边为冲突边
+//令parent[v]=u 在并查集中查找是否有共同祖先 若有 则环路出现
+
+//若没有冲突边 ->附件边
+//若有冲突边 记为[u,v] 
+//判断是否有环路边 有->[parent[v],v]
+//                 无->[u,v]
+
+struct UnionFind{
+    vector<int> pre;
+    UnionFind(int n){
+        pre.resize(n);
+        for(int i=0;i<n;i++)
+            pre[i]=i;
+    }
+    int find(int index){
+        return pre[index]==index?index:pre[index]=find(pre[index]);
+    }
+    void merge(int u,int v){
+        pre[find(u)]=find(v);
+    }
+};
+class Solution {
+public:
+    vector<int> findRedundantDirectedConnection(vector<vector<int>>& edges) {
+        int N=edges.size();
+        UnionFind uf=UnionFind(N+1);
+        auto parent=vector<int>(N+1);
+        for(int i=1;i<=N;i++)
+            parent[i]=i;
+        int conflict=-1;
+        int cycle=-1;
+        for(int i=0;i<N;i++){
+            auto edge=edges[i];
+            int u=edge[0], v=edge[1];
+            if(parent[v]!=v)
+                conflict=i;
+            else{
+                parent[v]=u;
+                if(uf.find(v)==uf.find(u))
+                    cycle=i;
+                else
+                    uf.merge(u,v);
+            }
+        }
+        if(conflict<0){
+            auto redundant=vector<int>{edges[cycle][0],edges[cycle][1]};
+            return redundant;
+        }
+        else{
+            auto conflictEdge=edges[conflict];
+            if(cycle>=0){
+                auto redundant=vector<int>{parent[conflictEdge[1]],conflictEdge[1]};
+                return redundant;
+            }
+            else{
+                auto redundant=vector<int>{conflictEdge[0],conflictEdge[1]};
+                return redundant;
+            }
+        }
+    }
+};

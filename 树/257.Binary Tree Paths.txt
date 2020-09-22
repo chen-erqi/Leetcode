@@ -1,0 +1,62 @@
+//dfs
+
+class Solution {
+private:
+    void dfs(vector<string>& Sol,string cur,TreeNode* x)
+    {
+        if(!x)
+            return;
+        cur+=to_string(x->val);
+        if(!x->left&&!x->right)
+            Sol.emplace_back(cur);
+        cur+="->";
+        dfs(Sol,cur,x->left);
+        dfs(Sol,cur,x->right);
+
+    }
+public:
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> Sol;
+        dfs(Sol,"",root);
+        return Sol;
+    }
+};
+
+//bfs
+//node和对应的路径在队列中的顺序是相等的 
+
+class Solution {
+public:
+    vector<string> binaryTreePaths(TreeNode* root) {
+        vector<string> Sol;
+        if(!root)
+            return Sol;
+        queue<string> path_queue;
+        queue<TreeNode*> node_queue;
+        node_queue.emplace(root);
+        path_queue.emplace(to_string(root->val));
+        while(!node_queue.empty())
+        {
+            TreeNode* cur_node=node_queue.front();
+            string cur_str=path_queue.front();
+            node_queue.pop();
+            path_queue.pop();
+            if(!cur_node->left&&!cur_node->right)
+                Sol.emplace_back(cur_str);
+            else
+            {
+                if(cur_node->left)
+                {
+                    node_queue.emplace(cur_node->left);
+                    path_queue.emplace(cur_str+"->"+to_string(cur_node->left->val));
+                }
+                if(cur_node->right)
+                {
+                    node_queue.emplace(cur_node->right);
+                    path_queue.emplace(cur_str+"->"+to_string(cur_node->right->val));
+                }
+            }
+        }
+        return Sol;
+    }
+};

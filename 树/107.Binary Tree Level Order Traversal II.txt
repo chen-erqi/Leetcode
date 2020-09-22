@@ -33,7 +33,7 @@ public:
                     q.push(q.front()->right);
                 q.pop();
             }
-            res.insert(res.begin(),cur);
+            res.emplace(res.begin(),cur);
         }
         return res;
     }

@@ -1,0 +1,35 @@
+//排序去重
+
+class Solution {
+private:
+    vector<int> temp;
+    vector<vector<int>> Sol;
+    void dfs(vector<int>& nums,vector<bool>& mem){
+        if(temp.size()==nums.size()){
+            Sol.emplace_back(temp);
+            return;
+        }
+        for(int i=0;i<nums.size();i++){
+            if(mem[i]||(i>0&&nums[i]==nums[i-1]&&mem[i-1]))
+                continue;
+            mem[i]=true;
+            temp.emplace_back(nums[i]);
+            dfs(nums,mem);
+            temp.pop_back();
+            mem[i]=false;
+        }
+    }
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        auto mem=vector<bool>(nums.size(),false);
+        sort(nums.begin(),nums.end());
+        for(int i=0;i<nums.size();i++){
+            mem[i]=true;
+            temp.emplace_back(nums[i]);
+            dfs(nums,mem);
+            temp.pop_back();
+            mem[i]=false;
+        }
+        return Sol;
+    }
+};

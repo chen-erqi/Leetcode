@@ -1,0 +1,46 @@
+//回溯
+//关键在于去重
+//采集数字出现频率 并排序
+//之后在每一次选择时 一次选择多个数字
+//一次选择多个数字表现为rest-i*cnt
+
+class Solution {
+private:
+    vector<int> temp;
+    vector<pair<int,int>> fre;
+    vector<vector<int>> Sol;
+    void dfs(int cur,int rest)
+    {
+        if(rest==0)
+        {
+            Sol.emplace_back(temp);
+            return;
+        }
+        if(cur==fre.size()||rest<fre[cur].first)
+            return;
+        //跳过
+        dfs(cur+1,rest);
+        //选择
+        int most=min(rest/fre[cur].first,fre[cur].second);
+        for(int i=1;i<=most;i++)
+        {
+            temp.emplace_back(fre[cur].first);
+            dfs(cur+1,rest-i*fre[cur].first);
+        }
+        for(int i=1;i<=most;i++)
+            temp.pop_back();
+    }
+public:
+    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        sort(candidates.begin(),candidates.end());
+        for(int x:candidates)
+        {
+            if(fre.empty()||x!=fre.back().first)
+                fre.emplace_back(x,1);
+            else 
+                fre.back().second++;
+        }
+        dfs(0,target);
+        return Sol;
+    }
+};

@@ -1,0 +1,30 @@
+// 回溯
+
+class Solution {
+private:
+    vector<int> temp;
+    vector<vector<int>> Sol;
+    void dfs(int cur,vector<int>& candidates,int target)
+    {
+        if(target==0)
+        {
+            Sol.emplace_back(temp);
+            return;
+        }
+        // 只选择 不跳过 
+        for(int i=cur;i<candidates.size();i++)
+        {
+            int x=candidates[i];
+            if(target<x)
+                continue;
+            temp.emplace_back(candidates[i]);
+            dfs(i,candidates,target-x);
+            temp.pop_back();
+        }
+    }
+public:
+    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
+        dfs(0,candidates,target);
+        return Sol;
+    }
+};

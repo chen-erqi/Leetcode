@@ -1,0 +1,70 @@
+//回溯
+
+class Solution {
+private:
+    vector<int> temp;
+    vector<vector<int>> Sol;
+    void dfs(int cur,int n,int k)
+    {
+        // 剩余长度小于k 不可能构造
+        if(temp.size()+(n-cur+1)<k)
+            return;
+        if(temp.size()==k)
+        {
+            Sol.emplace_back(temp);
+            return;
+        }
+        temp.emplace_back(cur);
+        dfs(cur+1,n,k);
+        temp.pop_back();
+        dfs(cur+1,n,k);
+    }
+public:
+    vector<vector<int>> combine(int n, int k) {
+        dfs(1,n,k);
+        return Sol;
+    }
+};
+
+//字典序法
+//将空间复杂度降为K
+
+//next(x)
+//1.x的最低位为1 末尾有t个连续1
+//  将倒数t位的1和t+1位的0替换
+//2.x的最低位为0 末尾有t个连续0 m个连续1
+//  将t+m的1和t+m-1的1替换
+//  将倒数t+1到t+m-1的1移动到最低位
+
+//可以将1视为2在t=0的特殊情况
+
+class Solution {
+private:
+    vector<int> temp;
+    vector<vector<int>> Sol;
+public:
+    vector<vector<int>> combine(int n, int k) {
+        for(int i=1;i<=k;i++)
+            temp.emplace_back(i);
+        // 设置哨兵
+        temp.emplace_back(n+1);
+        int j=0;
+        while(j<k)
+        {
+            Sol.emplace_back(temp.begin(),temp.begin()+k);
+            j=0;
+            // 寻找第一个t[j]+1!=t[j+1]的位置
+	    // 不等时即说明中间不连续 末尾有0
+            while(j<k&&temp[j]+1==temp[j+1])
+            {
+                // 恢复j+1
+		// 等同于将二进制中1移动到最低位
+                temp[j]=j+1;
+                j++;
+            }
+	    // 等同于将t和t+1替换
+            temp[j]++;
+        }
+        return Sol;
+    }
+};

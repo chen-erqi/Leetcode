@@ -1,0 +1,59 @@
+//dfs
+
+class Solution {
+private:
+    int dfs(vector<int>& nums,int start,int end,int turn)
+    {
+        if(start==end)
+            return nums[start]*turn;
+        int scoreStart=nums[start]*turn+dfs(nums,start+1,end,-turn);
+        int scoreEnd=nums[end]*turn+dfs(nums,start,end-1,-turn);
+        //turn为1时 比较最大值 turn为-1时 比较最小值
+        return max(scoreStart*turn,scoreEnd*turn)*turn;
+    }
+public:
+    bool PredictTheWinner(vector<int>& nums) {
+        return dfs(nums,0,nums.size()-1,1)>=0;
+    }
+};
+
+
+//dp
+
+class Solution {
+public:
+    bool PredictTheWinner(vector<int>& nums) {
+        vector<vector<int>> dp(nums.size(),vector<int>(nums.size(),0));
+        for(int i=0;i<nums.size();i++)
+            dp[i][i]=nums[i];
+        for(int i=nums.size()-2;i>=0;i--)
+        {
+            for(int j=i+1;j<nums.size();j++)
+            {
+                //自底向上 扩充dp区间 
+                dp[i][j]=max(nums[i]-dp[i+1][j],nums[j]-dp[i][j-1]);
+            }
+        }
+        return dp[0][nums.size()-1]>=0;
+    }
+};
+
+//内存优化
+
+class Solution {
+public:
+    bool PredictTheWinner(vector<int>& nums) {
+        vector<int> dp(nums.size());
+        for(int i=0;i<nums.size();i++)
+            dp[i]=nums[i];
+        for(int i=nums.size()-2;i>=0;i--)
+        {
+            for(int j=i+1;j<nums.size();j++)
+            {
+                //自底向上 扩充dp区间 
+                dp[j]=max(nums[i]-dp[j],nums[j]-dp[j-1]);
+            }
+        }
+        return dp[nums.size()-1]>=0;
+    }
+};

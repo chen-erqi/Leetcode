@@ -1,0 +1,31 @@
+//二分查找左边界和右边界
+//注意左右边界与target不等
+
+//
+//nums[mid]<target target在[m+1,right]中
+//nums[mid]>target target在[left,m-1]中
+//nums[mid]=target：
+//		1.查找右边界 右边界在[mid+1,right]
+//		2.查找左边界 左边界在[left,mid-1] 
+
+class Solution {
+private:
+    int findRightBound(vector<int>& nums,int tar)
+    {
+        int left=0, right=nums.size()-1;
+	//这里加等号是在右边界为nums.size()时 可以兼容
+        while(left<=right)
+        {
+            int mid=left+(right-left)/2;
+            if(nums[mid]<=tar)
+                left=mid+1;
+            else
+                right=mid-1;
+        }
+        return left;
+    }
+public:
+    int search(vector<int>& nums, int target) {
+        return findRightBound(nums,target)-findRightBound(nums,target-1);
+    }
+};

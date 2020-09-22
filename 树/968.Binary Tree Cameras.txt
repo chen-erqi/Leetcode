@@ -1,0 +1,37 @@
+//由二叉树可得递归思路
+//递归可以统计后续节点的状态 并返回当前节点
+
+//a:root必须放置的数量
+//b:无论root是否放置 覆盖整棵树的数量
+//c:无所谓root是否被监控到 覆盖两子树
+
+//a>=b>=c
+//左子树为 la lb lc
+//右子树为 ra rb rc
+
+//a=lc+rc+1
+//b=min(a,min(la+rb,lb+ra))
+//c=min(a,lb+rb)
+
+struct Status{
+    int a,b,c;
+ };
+class Solution {
+private:
+    Status dfs(TreeNode* root){
+        if(!root)
+        // 节点为空时返回一个大整数表示不可能
+            return {INT_MAX/2,0,0};
+        auto [la,lb,lc]=dfs(root->left);
+        auto [ra,rb,rc]=dfs(root->right);
+        int a=lc+rc+1;
+        int b=min(a,min((la+rb),(ra+lb)));
+        int c=min(a,lb+rb);
+        return {a,b,c};
+    }
+public:
+    int minCameraCover(TreeNode* root) {
+        auto [a,b,c]=dfs(root);
+        return b;
+    }
+};

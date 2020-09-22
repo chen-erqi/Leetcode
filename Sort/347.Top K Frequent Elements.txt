@@ -1,0 +1,102 @@
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int,int> mp;
+        for(int x:nums)
+            mp[x]++;
+        vector<pair<int,int>> v;
+        for(auto x:mp)
+            v.emplace_back(x);
+        sort(v.begin(),v.end(),[](pair<int,int>& p1,pair<int,int>& p2){
+            return p1.second>p2.second;
+        });
+        vector<int> res;
+        for(int i=0;i<k;i++)
+            res.emplace_back(v[i].first);
+        return res;
+    }
+};
+
+//基于快排
+//由于每次只选择一边递归
+//时间复杂度为O(n^2)
+
+class Solution {
+private:
+    void qsort(vector<pair<int,int>>& val,int start,int end,vector<int>& res,int k)
+    {
+        int picked=rand()%(end-start+1)+start;
+        swap(val[picked],val[start]);
+
+        int pivot=val[start].second;
+        int index=start;
+        for(int i=start+1;i<=end;i++)
+        {
+            if(val[i].second>=pivot)
+            {
+                swap(val[index+1],val[i]);
+                index++;
+            }
+        }
+        swap(val[index],val[start]);
+
+        if(k<=index-start)
+            qsort(val,start,index-1,res,k);
+        else
+        {
+            for(int i=start;i<=index;i++)
+                res.emplace_back(val[i].first);
+            if(k>index-start+1)
+                qsort(val,index+1,end,res,k-(index-start+1));
+        }
+    }
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int,int> occur;
+        for(int& x:nums)
+            occur[x]++;
+        vector<pair<int,int>> val;
+        for(auto& x:occur)
+            val.emplace_back(x);
+        vector<int> res;
+        qsort(val,0,val.size()-1,res,k);
+        return res;
+    }
+};
+
+//基于堆排
+
+class Solution {
+private:
+    static bool cmp(pair<int,int>& k1,pair<int,int>& k2)
+    {
+        return k1.second>k2.second;
+    }
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        unordered_map<int,int> occur;
+        for(int& x:nums)
+            occur[x]++;
+        priority_queue<pair<int,int>,vector<pair<int,int>>,decltype(&cmp)> q(cmp);
+        for(auto& [num,count]:occur)
+        {
+            if(q.size()==k)
+            {
+                if(q.top().second<count)
+                {
+                    q.pop();
+                    q.emplace(num,count);
+                }
+            }
+            else
+                q.emplace(num,count);
+        }
+        vector<int> res;
+        while(!q.empty())
+        {
+            res.emplace_back(q.top().first);
+            q.pop();
+        }
+        return res;
+    }
+};

@@ -1,0 +1,20 @@
+class Solution {
+private:
+    int sum;
+    void dfs(TreeNode* root){
+        if(!root)
+            return;
+        dfs(root->right);
+        root->val+=sum;
+        sum=root->val;
+        dfs(root->left);
+    }
+public:
+    TreeNode* convertBST(TreeNode* root) {
+        this->sum=0;
+        dfs(root);
+        return root;
+    }
+};
+
+//moris遍历
