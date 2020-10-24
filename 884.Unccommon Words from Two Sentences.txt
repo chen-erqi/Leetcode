@@ -1,0 +1,28 @@
+class Solution {
+private:
+    void func(string& str,unordered_map<string,int>& mp){
+        string cur="";
+        str+=' ';
+        for(int i=0;i<str.size();i++){
+            if(str[i]==' '){
+                mp[cur]++;
+                cur="";
+            }
+            else
+                cur+=str[i];
+        }
+    }
+public:
+    vector<string> uncommonFromSentences(string A, string B) {
+        vector<string> Sol;
+        unordered_map<string,int> mp;
+        func(A,mp);
+        func(B,mp);
+        for(auto m=mp.begin();m!=mp.end();m++){
+            if(m->second==1){
+                Sol.emplace_back(m->first);
+            }
+        }
+        return Sol;
+    }
+};

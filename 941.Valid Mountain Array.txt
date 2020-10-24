@@ -1,0 +1,23 @@
+//老想着那标记法干啥呢?
+
+class Solution {
+public:
+    bool validMountainArray(vector<int>& A) {
+        int N=A.size();
+        if(N<3)
+            return false;
+        int i=0;
+        // 爬山
+        while(i+1<N&&A[i]<A[i+1])
+            i++;
+
+        // 最高或最低不能在两端
+        if(i==0||i==N-1)
+            return false;
+        
+        // 下山
+        while(i+1<N&&A[i]>A[i+1])
+            i++;
+        return i==N-1;
+    }
+};

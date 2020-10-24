@@ -1,0 +1,27 @@
+//重构链表
+
+class Solution {
+public:
+    void reorderList(ListNode* head) {
+        if(!head)
+            return;
+        vector<ListNode*> mp;
+        ListNode* p=head;
+        while(p){
+            mp.emplace_back(p);
+            p=p->next;
+        }
+        int i=0,j=mp.size()-1;
+        while(i<j){
+            mp[i]->next=mp[j];
+            i++;
+            if(i==j)
+                break;
+            mp[j]->next=mp[i];
+            j--;
+        }
+        mp[i]->next=nullptr;
+    }
+};
+
+//

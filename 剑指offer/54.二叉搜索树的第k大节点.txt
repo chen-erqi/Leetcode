@@ -1,0 +1,18 @@
+class Solution {
+private:
+    int res;
+    void dfs(TreeNode* root,int& k){
+        if(!k||!root)
+            return;
+        dfs(root->right,k);
+        if(k==1)
+            res=root->val;
+        k--;
+        dfs(root->left,k);
+    }
+public:
+    int kthLargest(TreeNode* root, int k) {
+        dfs(root,k);
+        return res;
+    }
+};

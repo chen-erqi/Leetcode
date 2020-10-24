@@ -1,0 +1,23 @@
+class Solution {
+public:
+    vector<string> commonChars(vector<string>& A) {
+        vector<string> Sol;
+        vector<int> freq(26);
+        vector<int> minFreq(26,INT_MAX);
+        for(string& str:A){
+            fill(freq.begin(),freq.end(),0);
+            for(char& ch:str){
+                freq[ch-'a']++;
+            }
+            for(int i=0;i<26;i++){
+                minFreq[i]=min(minFreq[i],freq[i]);
+            }
+        }
+        for(int i=0;i<minFreq.size();i++){
+            for(int j=0;j<minFreq[i];j++){
+                Sol.emplace_back(1,i+'a');
+            }
+        }
+        return Sol;
+    }
+};

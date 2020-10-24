@@ -1,0 +1,48 @@
+//快慢指针找中间结点
+//翻转后半并比较 结束还原
+//并发要求锁定 该方法不友好
+
+class Solution {
+private:
+    ListNode* findMid(ListNode* head){
+        ListNode* slow=head;
+        ListNode* fast=head;
+        while(fast->next&&fast->next->next){
+            slow=slow->next;
+            fast=fast->next->next;
+        }
+        return slow;
+    }
+    ListNode* reverseList(ListNode* head){
+        ListNode* pre=nullptr;
+        ListNode* p=head;
+        while(p){
+            ListNode* next=p->next;
+            p->next=pre;
+            pre=p;
+            p=next;
+        }
+        return pre;
+    }
+    bool isOk(ListNode* p,ListNode* q){
+        ListNode* a=p;
+        ListNode* b=q;
+        while(a&&b){
+            if(a->val!=b->val)
+                return false;
+            a=a->next;
+            b=b->next;
+        }
+        return true;
+    }
+public:
+    bool isPalindrome(ListNode* head) {
+        if(!head)
+            return true;
+        ListNode* p=findMid(head);
+        ListNode* q=reverseList(p->next);
+        bool Sol=isOk(head,q);
+        p->next=reverseList(q);
+        return Sol;
+    }
+};

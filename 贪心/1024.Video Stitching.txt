@@ -1,0 +1,24 @@
+//贪心 类似1520
+
+class Solution {
+public:
+    int videoStitching(vector<vector<int>>& clips, int T) {
+        int last=0,pre=0,Sol=0;
+        vector<int> maxn(T,0);
+        for(vector<int>& it:clips){
+            if(it[0]<T){
+                maxn[it[0]]=max(maxn[it[0]],it[1]);
+            }
+        }
+        for(int i=0;i<T;i++){
+            last=max(last,maxn[i]);
+            if(i==last)
+                return -1;//说明下一个位置已经无法覆盖
+            if(i==pre){//上一个结束的区间右端点为pre
+                Sol++;
+                pre=last;
+            }
+        }
+        return Sol;
+    }
+};

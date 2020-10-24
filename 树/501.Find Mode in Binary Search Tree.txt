@@ -1,0 +1,41 @@
+//中序
+//注意有出现频率相等的情况
+
+class Solution {
+private:
+    int cnt;
+    int maxCnt;
+    int curNum;
+    vector<int> Sol;
+    void dfs(TreeNode* root){
+        if(!root)
+            return;
+        dfs(root->left);
+        if(curNum==root->val){
+            cnt++;
+        }
+        else{
+            cnt=1;
+            curNum=root->val;
+        }
+        //每次都保持更新 这样可以不用处理最后一个数据
+        if(cnt>maxCnt){
+            maxCnt=cnt;
+            Sol=vector<int>{curNum};
+        }
+        else if(cnt==maxCnt){
+            Sol.emplace_back(curNum);
+        }
+        dfs(root->right);
+    }
+public:
+    vector<int> findMode(TreeNode* root) {
+        this->cnt=-1;
+        this->maxCnt=-1;
+        this->curNum=-1;
+        dfs(root);
+        return Sol;
+    }
+};
+
+//Moris

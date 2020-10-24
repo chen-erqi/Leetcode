@@ -1,0 +1,47 @@
+class Solution {
+private:
+    vector<int> Sol;
+    void dfs(TreeNode* root){
+        if(!root)
+            return;
+        dfs(root->left);
+        dfs(root->right);
+        Sol.emplace_back(root->val);
+    }
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        dfs(root);
+        return Sol;
+    }
+};
+
+//迭代
+
+class Solution {
+public:
+    vector<int> postorderTraversal(TreeNode* root) {
+        if(!root)
+            return {};
+        vector<int> Sol;
+        TreeNode* pre=nullptr;
+        TreeNode* p=root;
+        stack<TreeNode*> st;
+        while(p||!st.empty()){
+            while(p){
+                st.emplace(p);
+                p=p->left;
+            }
+            p=st.top();
+            // pre记录前一个 如果前一个是右孩子时 
+            if(!p->right||p->right==pre){
+                Sol.emplace_back(p->val);
+                st.pop();
+                pre=p;
+                p=nullptr;
+            }
+            else
+                p=p->right;
+        }
+        return Sol;
+    }
+};

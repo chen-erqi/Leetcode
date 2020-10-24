@@ -1,0 +1,13 @@
+class Solution {
+public:
+    bool rotateString(string A, string B) {
+        if(A.size()==B.size()){
+            return (A+A).find(B)!=string::npos;
+        }
+        return false;
+    }
+};
+
+//计算偏移量的实质还是穷举每个可能的偏移量
+//string.find返回的是下标和npos
+//npos可能为任意值

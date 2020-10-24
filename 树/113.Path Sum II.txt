@@ -1,0 +1,25 @@
+class Solution {
+private:
+    vector<int> temp;
+    vector<vector<int>> Sol;
+    void dfs(TreeNode* root,int sum){
+        if(!root)
+            return;
+        sum-=root->val;
+        temp.emplace_back(root->val);
+        if(!sum&&!root->left&&!root->right){
+            Sol.emplace_back(temp);
+            //return;
+        }
+        dfs(root->left,sum);
+        dfs(root->right,sum);
+        temp.pop_back();
+    }
+public:
+    vector<vector<int>> pathSum(TreeNode* root, int sum) {
+        dfs(root,sum);
+        return Sol;
+    }
+};
+
+//BFS

@@ -1,0 +1,19 @@
+class Solution {
+private:
+    void dfs(TreeNode* root,int& pre,int& res){
+        if(!root)
+            return;
+        dfs(root->left,pre,res);
+        if(pre!=-1)
+            res=min(res,abs(pre-root->val));
+        pre=root->val;
+        dfs(root->right,pre,res);
+    }
+public:
+    int getMinimumDifference(TreeNode* root) {
+        int res=INT_MAX;
+        int pre=-1;
+        dfs(root,pre,res);
+        return res;
+    }
+};

@@ -1,0 +1,32 @@
+//充分条件:
+//除去大小王之外 无重复
+//最大牌-最小牌<5
+
+//3种情况
+//0个王 ABCDE
+//1个王 0BCDE
+//2个王 00CDE
+
+class Solution {
+public:
+    bool isStraight(vector<int>& nums) {
+        if(nums.empty())
+            return false;
+        unordered_set<int> st;
+        int maxV=INT_MIN;
+        int minV=INT_MAX;
+        for(int& x:nums){
+            if(x==0)
+                continue;
+            if(st.count(x))
+                return false;
+            else 
+                st.insert(x);
+            if(x>maxV)
+                maxV=x;
+            if(x<minV)
+                minV=x;
+        }
+        return maxV-minV<5;
+    }
+};

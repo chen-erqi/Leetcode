@@ -1,0 +1,57 @@
+class Solution {
+public:
+    Node* connect(Node* root) {
+        if(!root)
+            return nullptr;
+        queue<Node*> q;
+        q.emplace(root);
+        while(!q.empty()){
+            int size=q.size();
+            Node* pre=nullptr;
+            for(int i=0;i<size;i++){
+                Node* cur=q.front();
+                q.pop();
+                if(cur->left)
+                    q.emplace(cur->left);
+                if(cur->right)
+                    q.emplace(cur->right);
+                if(i)
+                    pre->next=cur;
+                pre=cur;
+            }
+        }
+        return root;
+    }
+};
+
+//线性空间为1的层序遍历
+
+class Solution {
+private:
+    void handle(Node* &last,Node* &nextStart,Node* &p){
+        if(last)
+            last->next=p;
+        // 下一行开始的结点 是当前行第一个不为空的子节点！
+        if(!nextStart)
+            nextStart=p;
+        last=p;
+    }
+public:
+    Node* connect(Node* root) {
+        if(!root)
+            return nullptr;
+        Node* start=root;
+        while(start){
+            Node* pre=nullptr;
+            Node* nextStart=nullptr;
+            for(Node* p=start;p!=nullptr;p=p->next){
+                if(p->left)
+                    handle(pre,nextStart,p->left);
+                if(p->right)
+                    handle(pre,nextStart,p->right);
+            }
+            start=nextStart;
+        }
+        return root;
+    }
+};
