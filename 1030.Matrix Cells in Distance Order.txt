@@ -1,0 +1,27 @@
+//bucket sort
+//better than C++.sort()
+
+class Solution {
+private:
+    int dist(int r1,int c1,int r2,int c2){
+        return abs(r1-r2)+abs(c1-c2);
+    }
+public:
+    vector<vector<int>> allCellsDistOrder(int R, int C, int r0, int c0) {
+        int maxDist=max(r0,R-1-r0)+max(c0,C-1-c0);
+        vector<vector<vector<int>>> bucket(maxDist+1);
+        for(int i=0;i<R;i++){
+            for(int j=0;j<C;j++){
+                int d=dist(i,j,r0,c0);
+                bucket[d].push_back({i,j});
+            }
+        }
+        vector<vector<int>> Sol;
+        for(int i=0;i<=maxDist;i++){
+            for(auto& it:bucket[i]){
+                Sol.emplace_back(it);
+            }
+        }
+        return Sol;
+    }
+};

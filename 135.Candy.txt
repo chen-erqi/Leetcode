@@ -1,0 +1,61 @@
+// iterating the array twice from left and right
+
+class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        int N=ratings.size();
+        vector<int> left(N,0);
+        for(int i=0;i<N;i++){
+            if(i>0&&ratings[i-1]<ratings[i]){
+                left[i]=left[i-1]+1;
+            }
+            else{
+                left[i]=1;
+            }
+        }
+        int sum=0;
+        int right=1;
+        for(int i=N-1;i>=0;i--){
+            if(i<N-1&&ratings[i]>ratings[i+1]){
+                right+=1;
+            }
+            else{
+                right=1;
+            }
+            sum+=max(right,left[i]);
+        }
+        return sum;
+    }
+};
+
+
+//将从左至右看作是递增 将从右至左的递增看作是从左至右的递减
+//每次res加上当前递减序列长度dec即可
+//需注意 当dec==inc==1时 由于res+=max(lefe,right) 所以dec++
+
+class Solution {
+public:
+    int candy(vector<int>& ratings) {
+        int n=ratings.size();
+        int res=1;
+        int inc=1,dec=0,pre=1;
+        for(int i=1;i<n;i++){
+            if(ratings[i]>=ratings[i-1]){
+                dec=0;
+                pre=ratings[i]==ratings[i-1]?1:pre+1;
+                res+=pre;
+                inc=pre;
+            }
+            else{
+                dec++;
+                // 
+                if(dec==inc){
+                    dec++;
+                }
+                res+=dec;
+                pre=1;
+            }
+        }
+        return res;
+    }
+};

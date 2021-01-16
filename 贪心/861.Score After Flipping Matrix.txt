@@ -1,0 +1,28 @@
+//先全部行翻转再进行列翻转
+//每行最左边的数必定为1
+//贡献计数法
+//每一列的贡献是 (1的个数)*(0/1中较多的个数)(按列修改)
+//在原矩阵上进行操作
+
+class Solution {
+public:
+    int matrixScore(vector<vector<int>>& A) {
+        int N=A.size(),M=A[0].size();
+        int Sol=N*(1<<(M-1));
+        for(int i=1;i<M;i++){
+            int cnt=0;
+            for(int j=0;j<N;j++){
+                //表示该行已经修改完成 加上此时的值即可
+                if(A[j][0]==1){
+                    cnt+=A[j][i];
+                }
+                //表示该行需要修改 加上翻转后的值
+                else{
+                    cnt+=(1-A[j][i]);
+                }
+            }
+            Sol+=(max(N-cnt,cnt)*(1<<(M-i-1)));
+        }
+        return Sol;
+    }
+};

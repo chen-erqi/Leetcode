@@ -1,0 +1,51 @@
+//完全二叉树最左结点一定位于最底层
+//求出最大层数h 
+//root结点为第0层
+//最底层为[2^h,2^(h+1)-1]
+//在这个范围内二分搜索
+//通过序号的二进制决定左节点还是右节点
+//O((logn)^2)
+
+class Solution {
+private:
+    bool exist(TreeNode* root,int level,int mid){
+        int bits=1<<(level-1);
+        TreeNode* p=root;
+        while(p&&bits>0){
+            if(!(bits&mid)){
+                p=p->left;
+            }
+            else{
+                p=p->right;
+            }
+            bits>>=1;
+        }
+        return p!=nullptr;
+    }
+public:
+    int countNodes(TreeNode* root) {
+        if(!root){
+            return 0;
+        }
+        int level=0;
+        TreeNode* p=root;
+        while(p->left){
+            p=p->left;
+            level++;
+        }
+        int low=1<<level;
+        int high=(1<<(level+1))-1;
+        while(low<high){
+            //这里+1是因为查找最后一个之后的结点不存在
+            //下界会保持在一个地方不动 而low=mid+1又会跳过这个结点
+            int mid=(high-low+1)/2+low;
+            if(exist(root,level,mid)){
+                low=mid;
+            }
+            else{
+                high=mid-1;
+            }
+        }
+        return low;
+    }
+};

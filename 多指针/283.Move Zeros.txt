@@ -1,0 +1,18 @@
+//双指针
+//l指向0
+//r指向第一个不为0的数 交换即可
+
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int N=nums.size();
+        int l=0,r=0;
+        while(l<N&&r<N){
+            if(nums[r]!=0){
+                swap(nums[r],nums[l]);
+                l++;
+            }
+            r++;
+        }
+    }
+};

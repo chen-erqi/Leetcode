@@ -58,3 +58,64 @@ public:
         return cnt;
     }
 };
+
+//归并
+
+class Solution {
+private:
+    int mergeSort(vector<int>& nums,int left,int right){
+        if(left==right){
+            return 0;
+        }
+        else{
+            //注意这里是下限
+            int mid=left+(right-left)/2;
+            int resLeft=mergeSort(nums,left,mid);
+            int resRight=mergeSort(nums,mid+1,right);
+            int res=resLeft+resRight;
+
+            //统计下标
+            int i=left,j=mid+1;
+            while(i<=mid){
+                while(j<=right&&(long long)nums[i]>2*(long long)nums[j]){
+                    j++;
+                }
+		//因为左边已经有序 所以要把前面的都加进去
+                res+=(j-mid-1);
+                i++;
+            }
+
+            //合并有序数组
+            vector<int> sorted(right-left+1);
+            int p1=left,p2=mid+1;
+            int p=0;
+            while(p1<=mid||p2<=right){
+                if(p1>mid){
+                    sorted[p++]=nums[p2++];
+                }
+                else if(p2>right){
+                    sorted[p++]=nums[p1++];
+                }
+                else{
+                    if(nums[p1]<nums[p2]){
+                        sorted[p++]=nums[p1++];
+                    }
+                    else{
+                        sorted[p++]=nums[p2++];
+                    }
+                }
+            }
+            for(int i=0;i<sorted.size();i++){
+                nums[left+i]=sorted[i];
+            }
+            return res;
+        }
+    }
+public:
+    int reversePairs(vector<int>& nums) {
+        if(nums.size()<2){
+            return 0;
+        }
+        return mergeSort(nums,0,nums.size()-1);
+    }
+};

@@ -1,0 +1,31 @@
+//排序
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        sort(s.begin(),s.end());
+        sort(t.begin(),t.end());
+        return s==t;
+    }
+};
+
+//哈希
+//若长度不相等 则必然不同
+
+class Solution {
+public:
+    bool isAnagram(string s, string t) {
+        if(s.size()!=t.size())
+            return false;
+        vector<int> v(26,0);
+        for(char& x:s){
+            v[x-'a']++;
+        }
+        for(char& x:t){
+            v[x-'a']--;
+            if(v[x-'a']<0){
+                return false;
+            }
+        }
+        return true;
+    }
+};

@@ -1,45 +1,39 @@
-//桶排
-//桶的个数为 (max-min)/((int)nums.size()-1)
-//桶的区间长度为 (max-min)/桶的个数+1   因为时前闭后开，所以要+1。
-//间距就为相邻桶的最大间距。
-//最大间距一定不会出现在一个桶内，因为最大间距>平均间距=(max-min)/((int)nums.size()-1)>桶内间距
+//基数排序
+//对整数可以在O(N)内完成
 
 class Solution {
-private:
-    class Bucket{
-    public:
-        bool used=false;
-        int min_val=INT_MAX;
-        int max_val=INT_MIN;
-    };
 public:
     int maximumGap(vector<int>& nums) {
-        if(nums.empty()||nums.size()<2)
+        int N=nums.size();
+        if(N<2){
             return 0;
-        
-        int mini=*min_element(nums.begin(),nums.end());
-        int maxi=*max_element(nums.begin(),nums.end());
-        int bucketLen=max(1,(maxi-mini)/((int)nums.size()-1));
-        int bucketNum=(maxi-mini)/bucketLen+1;
-        vector<Bucket> buckets(bucketNum);
-
-        for(auto&& num:nums)
-        {
-            int Idx=(num-mini)/bucketLen;
-            buckets[Idx].used=true;
-            buckets[Idx].min_val=min(num,buckets[Idx].min_val);
-            buckets[Idx].max_val=max(num,buckets[Idx].max_val);
         }
+        int exp=1;
+        vector<int> buf(N);
+        int maxVal=*max_element(nums.begin(),nums.end());
 
-        int prevBucketMax=mini,maxGap=0;
-        for(auto&& bucket:buckets)
-        {
-            if(!bucket.used)
-                continue;
-            maxGap=max(maxGap,bucket.min_val-prevBucketMax);
-            prevBucketMax=bucket.max_val;
+        while(maxVal>=exp){
+            vector<int> cnt(10);
+            for(int i=0;i<N;i++){
+                // 取当前最低位
+                int digit=(nums[i]/exp)%10;
+                cnt[digit]++;
+            }
+            for(int i=1;i<10;i++){
+                cnt[i]+=cnt[i-1];
+            }
+            for(int i=N-1;i>=0;i--){
+                int digit=(nums[i]/exp)%10;
+                buf[cnt[digit]-1]=nums[i];
+                cnt[digit]--;
+            }
+            copy(buf.begin(),buf.end(),nums.begin());
+            exp*=10;
         }
-
-        return maxGap;
+        int res=0;
+        for(int i=1;i<N;i++){
+            res=max(res,nums[i]-nums[i-1]);
+        }
+        return res;
     }
 };

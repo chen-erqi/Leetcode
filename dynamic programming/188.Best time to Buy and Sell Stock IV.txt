@@ -1,0 +1,40 @@
+// dp equation
+// buy[i][j] indicates that the maximum profit of J transactions with holding stocks.
+// sell[i][j] indicates that the maximum profit of J transactions with stocks.
+// only selling stocks is recorded as a transaction.
+// buy[i][j]=max{buy[i-1][j],sell[i-1][j]-prices[i]}
+// sell[i][j]=max{sell[i-1][j],buy[i-1][j-1]+prices[i]}
+// the result is the maximum value of sell[n-1][0...n]
+
+// boundary condition:
+// sell[0][0]=0
+// buy[0][0]=-prices[0]
+// buy[0][1..k] is invalid value
+// sell[0][1..k] is invalid value
+
+
+class Solution {
+public:
+    int maxProfit(int k, vector<int>& prices) {
+        if(prices.empty()){
+            return 0;
+        }
+        int len=prices.size();
+        k=min(k,len/2); 
+        vector<int> sell(k+1);
+        vector<int> buy(k+1);
+        buy[0]=-prices[0];
+        sell[0]=0;
+        for(int i=1;i<=k;i++){
+            buy[i]=sell[i]=INT_MIN/2;
+        }
+        for(int i=1;i<len;i++){
+            buy[0]=max(buy[0],sell[0]-prices[i]);
+            for(int j=1;j<=k;j++){
+                buy[j]=max(buy[j],sell[j]-prices[i]);
+                sell[j]=max(sell[j],buy[j-1]+prices[i]);
+            }
+        }
+        return *max_element(sell.begin(),sell.end());
+    }
+};

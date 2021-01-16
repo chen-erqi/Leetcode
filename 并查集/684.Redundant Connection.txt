@@ -1,0 +1,49 @@
+//并查集
+
+class dsu{
+private:
+    int n;
+    vector<int> f,rank;
+public:
+    dsu(int _n){
+        n=_n;
+        f.resize(n);
+        rank.resize(n,1);
+        for(int i=0;i<n;i++){
+            f[i]=i;
+        }
+    }
+    int find(int x){
+        return f[x]==x?x:f[x]=find(f[x]);
+    }
+    bool Union(int x,int y){
+        int fx=find(x);
+        int fy=find(y);
+        if(fx==fy){
+            return false;
+        }
+        if(rank[fx]<rank[fy]){
+            swap(fx,fy);
+        }
+        f[fy]=fx;
+        rank[fx]+=rank[fy];
+        return true;
+    }
+}; 
+class Solution {
+public:
+    vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+        vector<int> res;
+        //结点的数量比边的数量+1
+        dsu unionSet(edges.size()+1);
+        for(auto& edge:edges){
+            if(unionSet.Union(edge[0],edge[1])){
+                continue;
+            }else{
+                res.emplace_back(edge[0]);
+                res.emplace_back(edge[1]);
+            }
+        }
+        return res;
+    }
+};

@@ -1,0 +1,31 @@
+//主要在于分别查找左边界和右边界 
+//用一个flag进行统一！ 
+
+class Solution {
+private:
+    int binaryBound(vector<int>& nums,int target,bool left){
+        int L=0,R=nums.size()-1;
+        //L<=R的情况下 L/R都需要修改
+        while(L<=R){
+            int mid=(R-L)/2+L;
+            if(nums[mid]>target||(left&&nums[mid]>=target)){
+                R=mid-1;
+            }
+            else{
+                L=mid+1;
+            }
+        }
+        return L;
+    }
+public:
+    vector<int> searchRange(vector<int>& nums, int target) {
+        vector<int> Sol{-1,-1};
+        int L=binaryBound(nums,target,true);
+        if(L==nums.size()||nums[L]!=target){
+            return Sol;
+        }
+        Sol[0]=L;
+        Sol[1]=binaryBound(nums,target,false)-1;
+        return Sol;
+    }
+};

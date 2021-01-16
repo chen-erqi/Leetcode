@@ -1,0 +1,40 @@
+// 计数排序
+//当N是奇数且出现最多的字母次数为(n+1)/2时 该字母必须全部位于偶数下标
+//将偶数和奇数情况综合
+
+class Solution {
+public:
+    string reorganizeString(string S) {
+        int N=S.size();
+        if(N<2){
+            return S;
+        }
+        vector<int> cnt(26,0);
+        int maxCnt=0;
+        for(char& ch:S){
+            cnt[ch-'a']++;
+            maxCnt=max(maxCnt,cnt[ch-'a']);
+        }
+        if(maxCnt>(N+1)/2){
+            return "";
+        }
+        string reStr(N,' ');
+        int evenIdx=0;
+        int oddIdx=1;
+        int halfSize=N/2;
+        for(int i=0;i<26;i++){
+            char ch='a'+i;
+            while(cnt[i]>0&&cnt[i]<=halfSize&&oddIdx<N){
+                reStr[oddIdx]=ch;
+                cnt[i]--;
+                oddIdx+=2;
+            }
+            while(cnt[i]>0&&evenIdx<N){
+                reStr[evenIdx]=ch;
+                cnt[i]--;
+                evenIdx+=2;
+            }
+        }
+        return reStr;
+    }
+};

@@ -1,0 +1,30 @@
+//   For positive integer X,if all the numbers in [1,x-1] are covered,
+// then all the numbers in [1,2x-1] are covered.
+//   If X is missing,at least one number less than or equal to X must
+// be added to cover X.
+//   Every time we find the smallest integer X which is not covered by
+// the array,then add X to the array, then we find the next smallest 
+// integer which is not covered until all the numbers in the interval are
+// covered.
+
+class Solution {
+public:
+    int minPatches(vector<int>& nums, int n) {
+        int patches=0;
+        int index=0;
+        int len=static_cast<int>(nums.size());
+        //x=1！
+        long x=1;
+        while(x<=n){
+            if(index<len&&nums[index]<=x){
+                x+=nums[index];
+                index++;
+            }
+            else{
+                x<<=1;
+                patches++;
+            }
+        }
+        return patches;
+    }
+};

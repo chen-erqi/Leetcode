@@ -1,0 +1,52 @@
+class Solution {
+public:
+    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+        int left=newInterval[0];
+        int right=newInterval[1];
+        bool flag=false;
+        vector<vector<int>> Sol;
+        for(const auto& interval:intervals){
+            if(interval[0]>right){
+                if(!flag){
+                    Sol.push_back({left,right});
+                    flag=true;
+                }
+                Sol.emplace_back(interval);
+            }
+            else if(interval[1]<left){
+                Sol.emplace_back(interval);
+            }
+            else{
+                left=min(left,interval[0]);
+                right=max(right,interval[1]);
+            }
+        }
+        if(!flag){
+            Sol.push_back({left,right});
+        }
+        return Sol;
+    }
+};
+
+class Solution {
+public:
+    vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+        vector<vector<int>> Sol;
+        int i=0;
+        while(i<intervals.size()&&newInterval[0]>intervals[i][1]){
+            Sol.emplace_back(intervals[i]);
+            i++;
+        }
+        while(i<intervals.size()&&newInterval[1]>=intervals[i][0]){
+            newInterval[0]=min(newInterval[0],intervals[i][0]);
+            newInterval[1]=max(newInterval[1],intervals[i][1]);
+            i++;
+        }
+        Sol.emplace_back(newInterval);
+        while(i<intervals.size()){
+            Sol.emplace_back(intervals[i]);
+            i++;
+        }
+        return Sol;
+    }
+};

@@ -1,0 +1,31 @@
+//设置dummy统一找尾结点的操作
+//统一更新工作指针为tail->next
+
+class Solution {
+public:
+    ListNode* insertionSortList(ListNode* head) {
+        if(!head){
+            return head;
+        }
+        ListNode* dummy=new ListNode(-1);
+        dummy->next=head;
+        ListNode* cur=head->next;
+        ListNode* tail=head;
+        while(cur){
+            if(tail->val<=cur->val){
+                tail=tail->next;
+            }
+            else{
+                ListNode* pre=dummy;
+                while(pre->next->val<=cur->val){
+                    pre=pre->next;
+                }
+                tail->next=cur->next;
+                cur->next=pre->next;
+                pre->next=cur;
+            }
+            cur=tail->next;
+        }
+        return dummy->next;
+    }
+};

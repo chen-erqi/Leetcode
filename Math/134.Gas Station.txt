@@ -1,0 +1,33 @@
+//若当前加油站无法完成遍历 都无法到达右端点加油站的下一个
+//从当前右端点的下一个开始遍历
+
+//通过gas和cost求和不等式递推可以证明
+
+class Solution {
+public:
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int N=gas.size();
+        int i=0;
+        while(i<N){
+            int sumOfGas=0;
+            int sumOfCost=0;
+            int cnt=0;
+            while(cnt<N){
+                int j=(i+cnt)%N;
+                sumOfCost+=cost[j];
+                sumOfGas+=gas[j];
+                if(sumOfCost>sumOfGas){
+                    break;
+                }
+                cnt++;
+            }
+            if(cnt==N){
+                return i;
+            }
+            else{
+                i=i+cnt+1;
+            }
+        }
+        return -1;
+    }
+};

@@ -1,0 +1,38 @@
+//哈希+最小堆
+//将数组分割成一个或多个连续子序列
+//由子序列最后一个数字和子序列的长度 就可以确定子序列
+//当x在数组中 存在一个以x-1结尾 长度为k 则将x加入该序列
+//当存在多个以x-1结尾的子序列 应将x加入最短子序列
+//若不存在 则新建一个子序列 长度为1
+
+//取出以x-1结尾的最小子序列长度 将子序列长度+1后作为以x结尾的子序列长度
+//遍历检查最小堆的堆顶最短子序列长度是否小于3
+
+class Solution {
+public:
+    bool isPossible(vector<int>& nums) {
+        unordered_map<int,priority_queue<int,vector<int>,greater<int>>> mp;
+        for(int& x:nums){
+            if(mp.find(x)==mp.end()){
+                mp[x]=priority_queue<int,vector<int>,greater<int>>();
+            }
+            if(mp.find(x-1)!=mp.end()){
+                int preLen=mp[x-1].top();
+                mp[x-1].pop();
+                if(mp[x-1].empty()){
+                    mp.erase(x-1);
+                }
+                mp[x].push(preLen+1);
+            }
+            else{
+                mp[x].push(1);
+            }
+        }
+        for(auto it=mp.begin();it!=mp.end();it++){
+            if(it->second.top()<3){
+                return false;
+            }
+        }
+        return true;
+    }
+};

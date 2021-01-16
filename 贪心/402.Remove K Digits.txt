@@ -1,0 +1,32 @@
+//最左边的不同数字决定两个数字的大小
+//保证靠前的数字尽可能小
+//贪心
+//从左至右 找第一个Di<Di-1
+//若不存在 则说明序列单调不降 删去最后一个数字即可
+
+class Solution {
+public:
+    string removeKdigits(string num, int k) {
+        vector<char> v;
+        for(char& digi:num){
+            while(v.size()>0&&v.back()>digi&&k){
+                v.pop_back();
+                k--;
+            }
+            v.emplace_back(digi);
+        }
+        for(;k>0;k--){
+            v.pop_back();
+        }
+        string res="";
+        bool isLeadingZero=true;
+        for(char& digi:v){
+            if(isLeadingZero&&digi=='0'){
+                continue;
+            }
+            isLeadingZero=false;
+            res+=digi;
+        }
+        return res==""?"0":res;
+    }
+};
